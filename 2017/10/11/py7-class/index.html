@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Class |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-py7-class"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Class
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/11/py7-class/" class="article-date">
+  <time datetime="2017-10-11T13:28:55.000Z" itemprop="datePublished">2017-10-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="1-Create-and-use-classes"><a href="#1-Create-and-use-classes" class="headerlink" title="1 Create and use classes"></a>1 Create and use classes</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span>():</span></span><br><span class="line"> <span class="string">&quot;&quot;&quot;A simple attempt to simulate a puppy&quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, age</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize attributes name and age&quot;&quot;&quot;</span></span><br><span class="line">self.name = name</span><br><span class="line">self.age = age</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sit</span>(<span class="params">self</span>)</span></span><br><span class="line"><span class="function">&quot;&quot;&quot;<span class="title">Simulate</span> <span class="title">a</span> <span class="title">puppy</span> <span class="title">squatting</span> <span class="title">down</span> <span class="title">when</span> <span class="title">ordered</span>&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="title">print</span>(<span class="params">self.name.title(<span class="params"></span>) + <span class="string">&quot;is now sitting.&quot;</span></span>)</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">def</span> <span class="title">roll_over</span>(<span class="params">self</span>):</span></span><br><span class="line">print(self.name.title() + <span class="string">&quot;rell over!&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>The functions in the class are called methods<br><strong>init</strong>() is a special method, Python will automatically run it whenever you create a new instance based on the Dog class.</p>
+<p>When Python calls this <strong>init</strong>() method to create a Dog instance, it will automatically pass in the actual parameter self. Each method call associated with the class automatically passes the actual parameter self, which is a reference to the instance itself, allowing the instance to access the properties and methods in the class. When we create a Dog instance, Python will call the method <strong>init</strong>() of the Dog class. We will pass the name and 17 age to Dog() through the actual parameters; self will pass it automatically, so we don’t need to pass it. Whenever we create an instance based on the Dog class, we only need to provide values ​​for the last two formal parameters (name and age).<br>Variables that can be accessed through an instance are called attributes.</p>
+<p><strong>Create instance</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog = Dog(<span class="string">&#x27;willie&#x27;</span>, <span class="number">6</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>Access properties</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog.name</span><br></pre></td></tr></table></figure>
+<p><strong>Call method</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog.sit()</span><br></pre></td></tr></table></figure>
+
+<p><strong>Specify default values ​​for attributes</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span>():</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize the attributes describing the car&quot;&quot;&quot;</span></span><br><span class="line">self.make = make</span><br><span class="line">self.model = model</span><br><span class="line">self.year = year</span><br><span class="line">self.odometer_reading = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><strong>Directly modify the value of the attribute</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_new_car.odometer_reading = <span class="number">23</span></span><br></pre></td></tr></table></figure>
+<p><strong>Increment the value of the attribute through the method</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">increment_odometer</span>(<span class="params">self, miles</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Increase the odometer reading by the specified amount&quot;&quot;&quot;</span></span><br><span class="line">self.odometer_reading += miles `insert code piece here`</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Inheritance"><a href="#2-Inheritance" class="headerlink" title="2 Inheritance"></a>2 Inheritance</h3><p>When creating a subclass, the parent class must be included in the current file and be in front of the subclass.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ElectricCar</span>(<span class="params">Car</span>):</span> <span class="comment">#When defining a subclass, you must specify the name of the parent class in parentheses.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;The uniqueness of electric vehicles&quot;&quot;&quot;</span></span><br><span class="line">To</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span> <span class="comment">#Method __init__() accepts the information needed to create a Car instance</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize the properties of the parent class&quot;&quot;&quot;</span></span><br><span class="line">To</span><br><span class="line">super().__init__(make, model, year) <span class="comment">#super() at # is a special function that helps Python associate the parent class with the subclass.</span></span><br></pre></td></tr></table></figure>
+<p>If a property or method is available in any car and not unique to electric cars, it should be added to the Car class instead of the ElectricCar class. In this way, people who use the Car class will get the corresponding functions, while the ElectricCar class only contains code that handles the specific attributes and behavior of electric vehicles.</p>
+<p><strong>Rewrite the parent class</strong><br>As for the method of the parent class, as long as it does not conform to the behavior of the object simulated by the subclass, it can be rewritten. To this end, you can define a method in the subclass that has the same name as the superclass method to be overridden. In this way, Python will not consider the method of the parent class, but only focus on the corresponding method you defined in the subclass.</p>
+<p><strong>Big categories are split into small categories</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Battery</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;A simple attempt to simulate an electric car battery&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, battery_size=<span class="number">70</span></span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize battery properties&quot;&quot;&quot;</span></span><br><span class="line">self.battery_size = battery_size</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">describe_battery</span>(<span class="params">self</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Print a message describing battery capacity&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;This car has a &quot;</span>+ str(self.battery_size) + <span class="string">&quot;-kWh battery.&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ElectricCar</span>(<span class="params">Car</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;The uniqueness of electric vehicles&quot;&quot;&quot;</span></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot; Initialize the properties of the parent class, and then initialize the specific properties of electric vehicles &quot;&quot;&quot;</span></span><br><span class="line">super().__init__(make, model, year)</span><br><span class="line">To</span><br><span class="line">self.battery = Battery() <span class="comment">#Added a property called self.battery</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="3-Import-class"><a href="#3-Import-class" class="headerlink" title="3 Import class"></a>3 Import class</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> car <span class="keyword">import</span> Car <span class="comment">#import a single class</span></span><br><span class="line">my_new_car = Car(<span class="string">&#x27;audi&#x27;</span>,<span class="string">&#x27;a4&#x27;</span>, <span class="number">2016</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> car <span class="keyword">import</span> Car, ElectricCar <span class="comment">#import multiple</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> car <span class="comment">#import the entire module</span></span><br><span class="line">my_beetle = car.Car(<span class="string">&#x27;volkswagen&#x27;</span>,<span class="string">&#x27;beetle&#x27;</span>, <span class="number">2016</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="4-Standard-Library"><a href="#4-Standard-Library" class="headerlink" title="4 Standard Library"></a>4 Standard Library</h3><p>You can use any function and class in the standard library, for this you only need to include a simple import statement at the beginning of the program.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</span><br></pre></td></tr></table></figure>
+<p>Module <a target="_blank" rel="noopener" href="http://pymotw.com/">http://pymotw.com/</a></p>
+<h3 id="5-Coding-style"><a href="#5-Coding-style" class="headerlink" title="5 Coding style"></a>5 Coding style</h3><p>The class name should adopt the camel case nomenclature, that is, the first letter of each word in the class name should be capitalized without underscore. Both the instance name and the module name are in lower case, with underscores between words.<br>For each class, a docstring should be included immediately after the class definition.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2017/10/11/py7-class/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2017/10/11/py6-function/" class="article-nav-link">
+        <strong class="article-nav-caption">next article</strong>
+        <div class="article-nav-title">Function</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2020
+        <i class="ri-heart-fill heart_icon"></i> Hanqi ZHOU
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hanqi ZHOU"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">Home</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">Blog</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/life">Life</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">About Me</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
