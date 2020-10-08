@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Archives |  
+    API |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -43,245 +43,116 @@
       
     <main class="content on">
       <section class="outer">
-  
-  <article class="articles">
+  <article
+  id="post-py12-API"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">Archives</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2017" class="archive-year">2017</a>
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  API
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/13/py12-API/" class="article-date">
+  <time datetime="2017-10-13T15:50:55.000Z" itemprop="datePublished">2017-10-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
     </div>
-    <div class="archives">
       
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/13/py12-API/" class="archive-article-date">
-  <time datetime="2017-10-13T15:50:55.000Z" itemprop="datePublished">10/13</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/13/py12-API/"
-    >API</a> 
-</h2>
- 
+    <div class="tocbot"></div>
 
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/13/py11-download/" class="archive-article-date">
-  <time datetime="2017-10-13T10:50:55.000Z" itemprop="datePublished">10/13</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/13/py11-download/"
-    >Download Data</a> 
-</h2>
- 
 
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/12/py10-data/" class="archive-article-date">
-  <time datetime="2017-10-12T10:50:55.000Z" itemprop="datePublished">10/12</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/12/py10-data/"
-    >Generated Data</a> 
-</h2>
- 
 
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/12/py9-spaceships/" class="archive-article-date">
-  <time datetime="2017-10-12T10:50:55.000Z" itemprop="datePublished">10/12</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/12/py9-spaceships/"
-    >Armed Spaceship</a> 
-</h2>
- 
 
-    </header>
-    
-    
-  </div>
-</article>
-      
   
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/12/py8-files/" class="archive-article-date">
-  <time datetime="2017-10-12T07:30:55.000Z" itemprop="datePublished">10/12</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/12/py8-files/"
-    >Files and Excepetions</a> 
-</h2>
- 
+  <h2 id="1-Use-WebAPI"><a href="#1-Use-WebAPI" class="headerlink" title="1. Use WebAPI"></a>1. Use WebAPI</h2><h4 id="Processing-API-response"><a href="#Processing-API-response" class="headerlink" title="Processing API response"></a>Processing API response</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="comment"># Execute API call and store response</span></span><br><span class="line">url =<span class="string">&#x27;https://api.github.com/search/repositories?q=language:python&amp;sort=stars&#x27;</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line">print(<span class="string">&quot;Status code:&quot;</span>, r.status_code)</span><br><span class="line"><span class="comment"># Store the API response in a variable</span></span><br><span class="line">response_dict = r.json()</span><br><span class="line"><span class="comment"># process result </span></span><br><span class="line">print(response_dict.keys())</span><br></pre></td></tr></table></figure>
+<p>The attribute named status_code, which lets us know whether the request was successful (status code 200 means the request was successful)<br>This API returns information in JSON format, so we use the method json() to convert this information into a Python dictionary. We store the converted dictionary in response_dict.</p>
+<h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">repo_dicts = response_dict[<span class="string">&#x27;items&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;Name:&#x27;</span>, repo_dict[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Owner:&#x27;</span>, repo_dict[<span class="string">&#x27;owner&#x27;</span>][<span class="string">&#x27;login&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Stars:&#x27;</span>, repo_dict[<span class="string">&#x27;stargazers_count&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Repository:&#x27;</span>, repo_dict[<span class="string">&#x27;html_url&#x27;</span>])</span><br></pre></td></tr></table></figure>
 
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/11/py7-class/" class="archive-article-date">
-  <time datetime="2017-10-11T13:28:55.000Z" itemprop="datePublished">10/11</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/11/py7-class/"
-    >Class</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/11/py6-function/" class="archive-article-date">
-  <time datetime="2017-10-11T08:52:55.000Z" itemprop="datePublished">10/11</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/11/py6-function/"
-    >Function</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/10/py5-input/" class="archive-article-date">
-  <time datetime="2017-10-10T19:52:55.000Z" itemprop="datePublished">10/10</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/10/py5-input/"
-    >Input and While Loop</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/10/py4-dictionary/" class="archive-article-date">
-  <time datetime="2017-10-10T19:02:55.000Z" itemprop="datePublished">10/10</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/10/py4-dictionary/"
-    >Dictionary</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2017/10/09/py3-if/" class="archive-article-date">
-  <time datetime="2017-10-09T15:30:55.000Z" itemprop="datePublished">10/09</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2017/10/09/py3-if/"
-    >IF Conditional Statement</a> 
-</h2>
- 
-
-    </header>
-    
-    
-  </div>
-</article>
-      
+<h4 id="Rate"><a href="#Rate" class="headerlink" title="Rate"></a>Rate</h4><p>Most APIs have rate limits, that is, there is a limit on the number of requests you can execute within a certain period of time.<br><a target="_blank" rel="noopener" href="https://api.github.com/rate_limit">https://api.github.com/rate_limit</a></p>
+<h2 id="2-Use-Pygal-to-visualize-the-warehouse"><a href="#2-Use-Pygal-to-visualize-the-warehouse" class="headerlink" title="2. Use Pygal to visualize the warehouse"></a>2. Use Pygal to visualize the warehouse</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pygal</span><br><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle <span class="keyword">as</span> LCS, LightenStyle <span class="keyword">as</span> LS</span><br><span class="line"></span><br><span class="line">my_style = LS(<span class="string">&#x27;#333366&#x27;</span>, base_style=LCS)</span><br><span class="line">chart = pygal.Bar(style=my_style, x_label_rotation=<span class="number">45</span>, show_legend=<span class="literal">False</span>)</span><br><span class="line">chart.title =<span class="string">&#x27;Most-Starred Python Projects on GitHub&#x27;</span></span><br><span class="line">chart.x_labels = names</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
       
     </div>
-  </div>
-  
-  
-
-  
-  <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">next page</a>
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2017/10/13/py12-API/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2017/10/13/py11-download/" class="article-nav-link">
+        <strong class="article-nav-caption">next article</strong>
+        <div class="article-nav-title">Download Data</div>
+      </a>
+    
   </nav>
+
   
+     
+</article>
+
 </section>
       <footer class="footer">
   <div class="outer">
@@ -408,6 +279,23 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">

@@ -114,6 +114,350 @@
     
     
     <article
+  id="post-py12-API"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/13/py12-API/"
+    >API</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/13/py12-API/" class="article-date">
+  <time datetime="2017-10-13T15:50:55.000Z" itemprop="datePublished">2017-10-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="1-Use-WebAPI"><a href="#1-Use-WebAPI" class="headerlink" title="1. Use WebAPI"></a>1. Use WebAPI</h2><h4 id="Processing-API-response"><a href="#Processing-API-response" class="headerlink" title="Processing API response"></a>Processing API response</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="comment"># Execute API call and store response</span></span><br><span class="line">url =<span class="string">&#x27;https://api.github.com/search/repositories?q=language:python&amp;sort=stars&#x27;</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line">print(<span class="string">&quot;Status code:&quot;</span>, r.status_code)</span><br><span class="line"><span class="comment"># Store the API response in a variable</span></span><br><span class="line">response_dict = r.json()</span><br><span class="line"><span class="comment"># process result </span></span><br><span class="line">print(response_dict.keys())</span><br></pre></td></tr></table></figure>
+<p>The attribute named status_code, which lets us know whether the request was successful (status code 200 means the request was successful)<br>This API returns information in JSON format, so we use the method json() to convert this information into a Python dictionary. We store the converted dictionary in response_dict.</p>
+<h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">repo_dicts = response_dict[<span class="string">&#x27;items&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;Name:&#x27;</span>, repo_dict[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Owner:&#x27;</span>, repo_dict[<span class="string">&#x27;owner&#x27;</span>][<span class="string">&#x27;login&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Stars:&#x27;</span>, repo_dict[<span class="string">&#x27;stargazers_count&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Repository:&#x27;</span>, repo_dict[<span class="string">&#x27;html_url&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<h4 id="Rate"><a href="#Rate" class="headerlink" title="Rate"></a>Rate</h4><p>Most APIs have rate limits, that is, there is a limit on the number of requests you can execute within a certain period of time.<br><a target="_blank" rel="noopener" href="https://api.github.com/rate_limit">https://api.github.com/rate_limit</a></p>
+<h2 id="2-Use-Pygal-to-visualize-the-warehouse"><a href="#2-Use-Pygal-to-visualize-the-warehouse" class="headerlink" title="2. Use Pygal to visualize the warehouse"></a>2. Use Pygal to visualize the warehouse</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pygal</span><br><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle <span class="keyword">as</span> LCS, LightenStyle <span class="keyword">as</span> LS</span><br><span class="line"></span><br><span class="line">my_style = LS(<span class="string">&#x27;#333366&#x27;</span>, base_style=LCS)</span><br><span class="line">chart = pygal.Bar(style=my_style, x_label_rotation=<span class="number">45</span>, show_legend=<span class="literal">False</span>)</span><br><span class="line">chart.title =<span class="string">&#x27;Most-Starred Python Projects on GitHub&#x27;</span></span><br><span class="line">chart.x_labels = names</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-py11-download"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/13/py11-download/"
+    >Download Data</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/13/py11-download/" class="article-date">
+  <time datetime="2017-10-13T10:50:55.000Z" itemprop="datePublished">2017-10-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="1-CSV-file-format"><a href="#1-CSV-file-format" class="headerlink" title="1.CSV file format"></a>1.CSV file format</h2><p>To store data in a text file, the easiest way is to write the data as a series of comma-separated values ​​(CSV) to the file.<br>The reader processes the first line of data separated by commas in the file, and stores each item of data as an element in the list.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">highs = []</span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> reader:</span><br><span class="line">highs.append(row[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">or</span></span><br><span class="line"></span><br><span class="line">high = int(row[<span class="number">1</span>])</span><br><span class="line">highs.append(high)</span><br></pre></td></tr></table></figure>
+<h4 id="Module-datetime"><a href="#Module-datetime" class="headerlink" title="Module datetime"></a>Module datetime</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line">first_date = datetime.strptime(<span class="string">&#x27;2014-7-1&#x27;</span>,<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line">print(first_date)</span><br></pre></td></tr></table></figure>
+<p>The method strptime() accepts various arguments and decides how to interpret the date based on them.</p>
+<h4 id="Picture-coloring"><a href="#Picture-coloring" class="headerlink" title="Picture coloring"></a>Picture coloring</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(dates, lows, c=<span class="string">&#x27;blue&#x27;</span>, alpha=<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+<p>Alpha value 0 means completely transparent, 1 (default setting) means completely opaque. By setting alpha to 0.5, you can make the red and blue polylines look lighter.</p>
+<h4 id="check-for-errors"><a href="#check-for-errors" class="headerlink" title="check for errors"></a>check for errors</h4><p>Prevent empty data sets</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">current_date = datetime.strptime(row[<span class="number">0</span>], <span class="string">&quot;%Y-%m-%d&quot;</span>)</span><br><span class="line">high = int(row[<span class="number">1</span>])</span><br><span class="line">low = int(row[<span class="number">3</span>])</span><br><span class="line"><span class="keyword">except</span> ValueError:</span><br><span class="line">print(current_date,<span class="string">&#x27;missing data&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">dates.append(current_date)</span><br><span class="line">highs.append(high)</span><br><span class="line">lows.append(low)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="2-Making-a-world-population-map-JSON-format"><a href="#2-Making-a-world-population-map-JSON-format" class="headerlink" title="2. Making a world population map: JSON format"></a>2. Making a world population map: JSON format</h2><h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;Downloads/population_data.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f:</span><br><span class="line">    pop_data = json.load(f) <span class="comment">#list</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> pop_dict <span class="keyword">in</span> pop_data:</span><br><span class="line">    <span class="keyword">if</span> pop_dict[<span class="string">&#x27;Year&#x27;</span>] == <span class="string">&#x27;2010&#x27;</span>: <span class="comment">#Dictionary</span></span><br><span class="line">        country_name = pop_dict[<span class="string">&#x27;Country Name&#x27;</span>]</span><br><span class="line">        population = pop_dict[<span class="string">&#x27;Value&#x27;</span>]</span><br><span class="line">        print(country_name + <span class="string">&quot;: &quot;</span>+ population)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Data-processing"><a href="#Data-processing" class="headerlink" title="Data processing"></a>Data processing</h4><p>Each key and value in population_data.json is a string. To process these demographic data, we need to represent people<br>The number of strings is converted to a numeric value, for this we use the function <strong>int()</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">population = int(pop_dict[<span class="string">&#x27;Value&#x27;</span>])</span><br><span class="line">print(country_name + <span class="string">&quot;: &quot;</span>+ str(population))</span><br></pre></td></tr></table></figure>
+<p>Python cannot directly convert the string ‘1127437398.85751’ containing a decimal point to an integer<br>To eliminate this error, we first convert the string to a floating point number, and then convert the floating point number to an integer</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">population = int(float(pop_dict[<span class="string">&#x27;Value&#x27;</span>]))</span><br></pre></td></tr></table></figure>
+<p>The map making tool in Pygal requires the data to be in a specific format:<br>Use country codes to represent countries and numbers to represent populations. When processing geopolitical data, several standardized country code sets are often used.<br>The country code used by Pygal is stored in the module i18n (abbreviation for internationalization)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.i18n <span class="keyword">import</span> COUNTRIES</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> country_code <span class="keyword">in</span> sorted(COUNTRIES.keys()):</span><br><span class="line">print(country_code, COUNTRIES[country_code])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_country_code</span>(<span class="params">country_name</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Returns the two-letter country code used by Pygal according to the specified country&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> code, name <span class="keyword">in</span> COUNTRIES.items():</span><br><span class="line"><span class="keyword">if</span> name == country_name:</span><br><span class="line"><span class="keyword">return</span> code</span><br><span class="line"><span class="comment"># If the specified country is not found, return None</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Making-a-world-map"><a href="#Making-a-world-map" class="headerlink" title="Making a world map"></a>Making a world map</h4><p><img src="https://img-blog.csdnimg.cn/20191110053541496.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
+<h4 id="Set-up-the-map"><a href="#Set-up-the-map" class="headerlink" title="Set up the map"></a>Set up the map</h4><p>Add numbers</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wm.add(<span class="string">&#x27;North America&#x27;</span>, &#123;<span class="string">&#x27;ca&#x27;</span>: <span class="number">34126000</span>,<span class="string">&#x27;us&#x27;</span>: <span class="number">309349000</span>,<span class="string">&#x27;mx&#x27;</span>: <span class="number">113423000</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>Add color</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> RotateStyle</span><br><span class="line">wm_style = RotateStyle(<span class="string">&#x27;#336699&#x27;</span>)</span><br><span class="line">wm = pygal.Worldmap(style=wm_style)</span><br></pre></td></tr></table></figure>
+<p>Pygal will choose the default base color. To set the color, you can use RotateStyle, and use LightColorizedStyle as the basic style.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle, RotateStyle</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-py10-data"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/12/py10-data/"
+    >Generated Data</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/12/py10-data/" class="article-date">
+  <time datetime="2017-10-12T10:50:55.000Z" itemprop="datePublished">2017-10-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="1-Draw-a-simple-line-chart"><a href="#1-Draw-a-simple-line-chart" class="headerlink" title="1. Draw a simple line chart"></a>1. Draw a simple line chart</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">squares = [<span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">16</span>, <span class="number">25</span>]</span><br><span class="line">plt.plot(squares, linewidth=<span class="number">5</span>) <span class="comment">#The thickness of the drawn line</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Set icon title, axis label</span></span><br><span class="line">plt.title(<span class="string">&quot;Square Numbers&quot;</span>, fontsize=<span class="number">24</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;Value&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;Square of Value&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Scale mark size</span></span><br><span class="line">plt.tick_params(axis=<span class="string">&#x27;both&#x27;</span>, labelsize=<span class="number">14</span>) <span class="comment">#Set the style of scale</span></span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20191108042648749.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
+<h4 id="1-1-Correction-graphics"><a href="#1-1-Correction-graphics" class="headerlink" title="1.1 Correction graphics"></a>1.1 Correction graphics</h4><p>When you provide a series of numbers to plot(), it assumes that the x coordinate value of the first data point is 0, but our first<br>The x value corresponding to the point is 1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">input_values ​​= [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line">squares = [<span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">16</span>, <span class="number">25</span>]</span><br><span class="line">plt.plot(input_values, squares, linewidth=<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-Scatter-chart"><a href="#1-2-Scatter-chart" class="headerlink" title="1.2 Scatter chart"></a>1.2 Scatter chart</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x_values ​​= list(range(<span class="number">1</span>,<span class="number">1001</span>))</span><br><span class="line">y_values ​​= [x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> x_values]</span><br><span class="line"></span><br><span class="line">plt.scatter(x_values, y_values, s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line">plt.title(<span class="string">&quot;Square Numbers&quot;</span>, fontsize=<span class="number">24</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;Value&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;Square of Value&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line"></span><br><span class="line">plt.tick_params(axis=<span class="string">&#x27;both&#x27;</span>, which=<span class="string">&#x27;major&#x27;</span>, labelsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>,<span class="number">1100</span>,<span class="number">0</span>,<span class="number">1100000</span>]) <span class="comment">#Coordinate axis range</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20191108043804540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Delete data outline</span></span><br><span class="line">plt.scatter(x_values, y_values, edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Custom color</span></span><br><span class="line">plt.scatter(x_values, y_values, c=<span class="string">&#x27;red&#x27;</span>, edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">40</span>)</span><br><span class="line">plt.scatter(x_values, y_values, c=(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.8</span>), edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Color mapping</span></span><br><span class="line">plt.scatter(x_values, y_values, c=y_values, cmap=plt.cm.Blues, edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Save</span></span><br><span class="line">plt.savefig(<span class="string">&#x27;squares_plot.png&#x27;</span>, bbox_inches=<span class="string">&#x27;tight&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Random-walk"><a href="#2-Random-walk" class="headerlink" title="2. Random walk"></a>2. Random walk</h3><h4 id="2-1-Create-RandomWalk-class"><a href="#2-1-Create-RandomWalk-class" class="headerlink" title="2.1 Create RandomWalk() class"></a>2.1 Create RandomWalk() class</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> len(self.x_values) &lt;self.num_points:</span><br><span class="line">    x_direction = choice([<span class="number">1</span>,<span class="number">-1</span>])</span><br><span class="line">    x_distance = choice([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">    x_step = x_direction * x_distance</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191108180626828.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
+<h4 id="2-2-Set-the-style-of-random-walk-graph"><a href="#2-2-Set-the-style-of-random-walk-graph" class="headerlink" title="2.2 Set the style of random walk graph"></a>2.2 Set the style of random walk graph</h4><p>Use color mapping to point out the order of the points in the stroll, and delete the black outline of each point to make their colors more obvious<br><img src="https://img-blog.csdnimg.cn/20191108181605699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lly1122334/article/details/88535217">Refer to the use of cmap</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">#Window size</span></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>,<span class="number">6</span>))</span><br><span class="line">    </span><br><span class="line"><span class="comment">#range() generates a list of numbers, which contains the same number of numbers as the number of points in the walk</span></span><br><span class="line">    point_numbers = list(range(rw.num_points))</span><br><span class="line">    <span class="comment">#Coloring</span></span><br><span class="line">    plt.scatter(rw.x_values, rw.y_values, c=point_numbers, cmap=<span class="string">&#x27;Blues&#x27;</span>, edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#Highlight the starting point and ending point</span></span><br><span class="line">    plt.scatter(<span class="number">0</span>, <span class="number">0</span>, c=<span class="string">&#x27;green&#x27;</span>, edgecolors=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">100</span>)</span><br><span class="line">    plt.scatter(rw.x_values[<span class="number">-1</span>], rw.y_values[<span class="number">-1</span>], c=<span class="string">&#x27;red&#x27;</span>, edgecolors=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">100</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">    <span class="comment">#Hide axis</span></span><br><span class="line">    plt.axes().get_xaxis().set_visible(<span class="literal">False</span>)</span><br><span class="line">    plt.axes().get_yaxis().set_visible(<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-Use-Pygal-to-simulate-dice-rolls"><a href="#3-Use-Pygal-to-simulate-dice-rolls" class="headerlink" title="3. Use Pygal to simulate dice rolls"></a>3. Use Pygal to simulate dice rolls</h3><h4 id="3-1-Create-Die-class"><a href="#3-1-Create-Die-class" class="headerlink" title="3.1 Create Die class"></a>3.1 Create Die class</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> randint(<span class="number">1</span>, self.num_sides)</span><br></pre></td></tr></table></figure>
+<p>dice</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> roll_num <span class="keyword">in</span> range(<span class="number">100</span>):</span><br><span class="line">result = die.roll()</span><br><span class="line">results.append(result)</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-py9-spaceships"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/12/py9-spaceships/"
+    >Armed Spaceship</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/12/py9-spaceships/" class="article-date">
+  <time datetime="2017-10-12T10:50:55.000Z" itemprop="datePublished">2017-10-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h5 id="1-Create-Pygame-window-and-respond-to-user-input"><a href="#1-Create-Pygame-window-and-respond-to-user-input" class="headerlink" title="1. Create Pygame window and respond to user input"></a>1. Create Pygame window and respond to user input</h5><p>alien_invasion.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> pygame</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_game</span>():</span></span><br><span class="line"><span class="comment">#Initialize the game and create a screen object</span></span><br><span class="line">pygame.init()</span><br><span class="line">screen = pygame.display.set.mode((<span class="number">1200</span>,<span class="number">800</span>))</span><br><span class="line">pygame.dispaly.set_caption(<span class="string">&quot;Alien Invasion&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Start the main loop of the game</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line"></span><br><span class="line"><span class="comment">#Monitor keyboard and mouse events</span></span><br><span class="line"><span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line"><span class="keyword">if</span> event.type == pygame.QUIT:</span><br><span class="line">sys.exit()</span><br><span class="line"></span><br><span class="line"><span class="comment">#Make the recently drawn screen visible</span></span><br><span class="line">pygame.dispaly.flip()</span><br><span class="line"></span><br><span class="line">run_game()</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-Create-a-settings-class-to-include-settings-for-the-game"><a href="#2-Create-a-settings-class-to-include-settings-for-the-game" class="headerlink" title="2. Create a settings class to include settings for the game"></a>2. Create a settings class to include settings for the game</h5><h5 id="3-Add-pictures"><a href="#3-Add-pictures" class="headerlink" title="3. Add pictures"></a>3. Add pictures</h5><p>The best is the bmp diagram<br>In Pygame, the origin (0,0) is located at the upper left corner of the screen. When moving to the lower right, the coordinate value will increase. On a 1200×800 screen, the origin is at the upper left corner, and the coordinates of the lower right corner are (1200, 800).</p>
+<h5 id="4-Refactoring-module-game-functions"><a href="#4-Refactoring-module-game-functions" class="headerlink" title="4. Refactoring: module game_functions"></a>4. Refactoring: module game_functions</h5><p>Start by writing the code as simple as possible, and refactor as the project becomes more and more complex.</p>
+<h5 id="5-Driving-the-spaceship"><a href="#5-Driving-the-spaceship" class="headerlink" title="5. Driving the spaceship"></a>5. Driving the spaceship</h5><p><strong>Corresponding button</strong><br>Whenever the user presses a key, an event will be registered in Pygame. Events are obtained through the method pygame.event.get(), so in the function check_events(), we need to specify which types of events to check. Each key press is registered as a KEYDOWN event.</p>
+<p><strong>Continuous movement</strong><br>We will let the game detect the pygame.KEYUP event so that we can know this when the player releases the right arrow key; then, we will combine the KEYDOWN and KEYUP events with a flag named moving_right to achieve continuous movement.</p>
+<p><strong>Move left and right</strong></p>
+<p><strong>Adjust the speed of the spacecraft</strong><br>You can add the property ship_speed_factor to the Settings class to control the speed of the spacecraft<br>By specifying the speed setting as a small value, you can control the speed of the spacecraft in more detail when speeding up the game later. However, attributes such as centerx of rect can only store integer values, so we need to make some modifications to the Ship class</p>
+<p><strong>Limit the scope of movement of the spacecraft</strong><br><strong>Refactoring check_events()</strong></p>
+<h5 id="6-Simple-summary"><a href="#6-Simple-summary" class="headerlink" title="6. Simple summary"></a>6. Simple summary</h5><p><strong>alien_invasion.py</strong><br> The main file alien_invasion.py creates a series of objects used throughout the game: the settings stored in ai_settings, the main display surface stored in the screen, and a spaceship instance. The file alien_invasion.py also contains the main loop of the game, which is a while loop that calls check_events(), ship.update(), and update_screen().<br>To play the game “Alien Invasion”, just run the file alien_invasion.py. The codes contained in other files (settings.py, game_functions.py, ship.py) are directly or indirectly imported into this file.</p>
+<p><strong>settings.py</strong><br> The file settings.py contains the Settings class. This class only contains the method <strong>init</strong>(), which initializes the properties that control the appearance of the game and the speed of the spacecraft.</p>
+<p><strong>game_functions.py</strong><br> The file game_functions.py contains a series of functions, most of the work of the game is done by them. The function check_events() detects related events, such as key-down and release, and uses auxiliary functions check_keydown_events() and check_keyup_events() to handle these events. For now, these functions manage the movement of the spacecraft. The module game_functions also contains the function update_screen(), which is used to redraw the screen every time the main loop is executed.</p>
+<p><strong>ship.py</strong><br> The file ship.py contains the Ship class, which contains the method <strong>init</strong>(), the update() method for managing the position of the spaceship, and the method blitme() for drawing the spaceship on the screen. Indicates that the image of the spacecraft is stored in the file ship.bmp under the folder images</p>
+<h5 id="7-Shooting"><a href="#7-Shooting" class="headerlink" title="7. Shooting"></a>7. Shooting</h5><p><strong>Add Bullet Settings</strong><br>First, update settings.py to store the required values ​​for the new class Bullet at the end of its method <strong>init</strong>()</p>
+<p><strong>Create Bullet class</strong></p>
+<p><strong>Store bullets in groups</strong><br>After defining the Bullet class and the necessary settings, you can write code to shoot a bullet every time the player presses the space bar. First, we will create a group in alien_invasion.py to store all valid bullets so that we can manage all the bullets that are fired.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-py8-files"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/12/py8-files/"
+    >Files and Excepetions</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/12/py8-files/" class="article-date">
+  <time datetime="2017-10-12T07:30:55.000Z" itemprop="datePublished">2017-10-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="1-Read-data-from-file"><a href="#1-Read-data-from-file" class="headerlink" title="1 Read data from file"></a>1 Read data from file</h3><p><strong>file path</strong><br>Python looks for the specified file in the directory where the currently executed file is located.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;pi_digits.txt&#x27;</span>) <span class="keyword">as</span> file_object:</span><br><span class="line">contents = file_object.read()</span><br><span class="line">print(contents)</span><br></pre></td></tr></table></figure>
+<p>open(‘pi_digits.txt’) returns an object representing the file pi_digits.txt<br>You just open the file and use it when needed, and Python will automatically close it when appropriate.<br>We use the method <strong>read()</strong> to read the entire content of this file and store it as a long string in the variable contents. In this way, by printing the value of contents, the entire contents of the text file can be displayed<br>When read() reaches the end of the file, it returns an empty string print(contents.rstrip())</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ith open(<span class="string">&#x27;text_files/filename.txt&#x27;</span>) <span class="keyword">as</span> file_object:</span><br></pre></td></tr></table></figure>
+<p>This line of code tells Python to search for the specified .txt file in the text_files folder under the folder python_work.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file_path =<span class="string">&#x27;/home/ehmatthes/other_files/text_files/filename.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(file_path) <span class="keyword">as</span> file_object:</span><br></pre></td></tr></table></figure>
+<h6 id="Read-line-by-line"><a href="#Read-line-by-line" class="headerlink" title="Read line by line"></a>Read line by line</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> file_object:</span><br><span class="line">print(line)</span><br><span class="line">print(line.rstrip()) <span class="comment">#Eliminate blank lines</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line">lines = file_object.readlines()</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">print(line.rstrip())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_30_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line">lines = file_object.readlines()</span><br><span class="line"></span><br><span class="line">pi_string =<span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">pi_string += line.strip() <span class="comment">#Remove the left space</span></span><br><span class="line">print(pi_string)</span><br><span class="line">print(pi_string[:<span class="number">52</span>] + <span class="string">&quot;...&quot;</span>) <span class="comment">#Handle any amount of data</span></span><br><span class="line">print(len(pi_string))</span><br></pre></td></tr></table></figure>
+<p>When reading a text file, Python interprets all the text in it as a string. If you read a number and want to use it as a value, you must use the function int() to convert it to an integer, or use the function float() to convert it to a floating point number.</p>
+<h3 id="2-Write-file"><a href="#2-Write-file" class="headerlink" title="2 Write file"></a>2 Write file</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;programming.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> file_object:</span><br><span class="line">file_object.write(<span class="string">&quot;I love programming.&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>The first argument is also the name of the file to be opened;<br>The second argument (‘w’) tells Python that we want to open the file in write mode.<br>When opening a file, you can specify <strong>read mode (‘r’)</strong>, <strong>write mode (‘w’)</strong>, <strong>addition mode (‘a’</strong>) or allow you to <strong>read The mode of fetching and writing files (‘r+’)</strong>.<br>If you omit the mode argument, Python will open the file in the default <strong>read-only mode</strong>.<br>If the file you want to write does not exist, the function open() will <strong>automatically create</strong> it.<br>However, be careful when opening a file in write (‘w’) mode, because if the specified file already exists, Python will <strong>empty the file</strong> before returning the file object.<br>Python** can only write strings** to text files. To store numeric data in a text file, you must first use the function str() to convert it to string format.</p>
+<p>Need to include a newline character in the write() statement</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file_object.write(<span class="string">&quot;I love programming.\n&quot;</span>)</span><br><span class="line">file_object.write(<span class="string">&quot;I love creating new games.\n&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h6 id="Additional-mode-‘a’"><a href="#Additional-mode-‘a’" class="headerlink" title="Additional mode ‘a’"></a>Additional mode ‘a’</h6><p>When you open the file in append mode, Python will not empty the file before returning the file object, and the lines you write to the file will be added to the end of the file.</p>
+<h3 id="3-Exception"><a href="#3-Exception" class="headerlink" title="3 Exception"></a>3 Exception</h3><p>When you think an error may have occurred, you can write a try-except code block to handle the possible exception.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">     print(<span class="number">5</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> ZeroDivisionError:</span><br><span class="line">print(<span class="string">&quot;You can&#x27;t divide by zero!&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>We put the code line print(5/0) that caused the error in a try code block. If the code in the try code block runs without problems, Python will skip the except code block; if the code in the try code block causes an error, Python will look for such an except code block and run the code in it, that is, the code specified in it. The error is the same as the error raised.</p>
+<p>A program crash is not good, but it is not a good idea to let users see the traceback. Users who do not understand the technology will be confused by them, and if the user is malicious, he will learn information you do not want him to know through traceback. For example, he will know the name of your program file, and will also see some code that does not run correctly. Sometimes, a well-trained attacker can use this information to determine what kind of attacks can be launched on your code.</p>
+<h6 id="try-except-else-code-block"><a href="#try-except-else-code-block" class="headerlink" title="try-except-else code block"></a>try-except-else code block</h6><p>The working principle is roughly as follows: Python tries to execute the code in the try block; only the code that may cause an exception needs to be placed in the try statement. Sometimes there are codes that need to be run only when the try block is successfully executed; these codes should be placed in the else block. The except code block tells Python what to do if the specified exception is raised when it tries to run the code in the try code block.</p>
+<h6 id="word-count-py"><a href="#word-count-py" class="headerlink" title="word_count.py"></a>word_count.py</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">:<span class="comment"># Calculate how many words the file contains</span></span><br><span class="line">words = contents.split()</span><br><span class="line">num_words = len(words)</span><br><span class="line">print(<span class="string">&quot;The file &quot;</span>+ filename +<span class="string">&quot; has about &quot;</span>+ str(num_words) +</span><br><span class="line"><span class="string">&quot;words.&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h6 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">--snip--</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line"><span class="keyword">pass</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    --snip--</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Store-data"><a href="#4-Store-data" class="headerlink" title="4 Store data"></a>4 Store data</h3><p>The JSON (JavaScriptObjectNotation) format was originally developed for JavaScript, but then it became a common format and adopted by many languages ​​including Python.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line">numbers = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>]</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;numbers.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(numbers, f_obj)</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;numbers.json&#x27;</span> <span class="number">12</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">numbers = json.load(f_obj)</span><br><span class="line">print(numbers)</span><br></pre></td></tr></table></figure>
+<p>The function json.dump() accepts two actual parameters: the data to be stored and the file object that can be used to store the data.<br>Use the function json.load() to load the information stored in numbers.json and store it in the variable numbers.</p>
+<h6 id="remember-me-py"><a href="#remember-me-py" class="headerlink" title="remember_me.py"></a>remember_me.py</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="comment"># If the user name was previously stored, load it</span></span><br><span class="line"><span class="comment"># Otherwise, prompt the user to enter the user name and store it filename =&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">username = json.load(f_obj)</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">username = input(<span class="string">&quot;What is your name? &quot;</span>)</span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(username, f_obj)</span><br><span class="line">print(<span class="string">&quot;We&#x27;ll remember you when you come back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Welcome back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h6 id="Refactor"><a href="#Refactor" class="headerlink" title="Refactor"></a>Refactor</h6><p>The code can run correctly, but it can be further improved—divide the code into a series of functions that accomplish specific tasks. This process is called reconstruction.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_stored_username</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;If the user name is stored, get it&quot;&quot;&quot;</span></span><br><span class="line">filename =<span class="string">&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">username = json.load(f_obj)</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line"><span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line"><span class="keyword">return</span> username</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">greet_user</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Greeting to the user and indicating their name&quot;&quot;&quot;</span></span><br><span class="line">username = get_stored_username()</span><br><span class="line"><span class="keyword">if</span> username:</span><br><span class="line">print(<span class="string">&quot;Welcome back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">username = input(<span class="string">&quot;What is your name? &quot;</span>)</span><br><span class="line">filename =<span class="string">&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(username, f_obj)</span><br><span class="line">print(<span class="string">&quot;We&#x27;ll remember you when you come back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"></span><br><span class="line">greet_user()</span><br><span class="line"></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
   id="post-py7-class"
   class="article article-type-post"
   itemscope
@@ -494,157 +838,14 @@
 </article>
 
     
-    <article
-  id="post-py2-lists"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/09/py2-lists/"
-    >Lists</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/09/py2-lists/" class="article-date">
-  <time datetime="2017-10-09T12:29:55.000Z" itemprop="datePublished">2017-10-09</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bicycles = [<span class="string">&#x27;trek&#x27;</span>, <span class="string">&#x27;cannondale&#x27;</span>, <span class="string">&#x27;redline&#x27;</span>, <span class="string">&#x27;specialized&#x27;</span>]</span><br><span class="line">print(bicycles[<span class="number">0</span>])</span><br><span class="line">print(bicycles[<span class="number">0</span>].title())</span><br></pre></td></tr></table></figure>
-<h3 id="1-Index"><a href="#1-Index" class="headerlink" title="1. Index"></a>1. Index</h3><p>By specifying the index as -1, Python returns the last list element. Index -2 returns the penultimate list element, index -3 returns the penultimate list element, and so on.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">essage = <span class="string">&quot;My first bicycle was a &quot;</span> + bicycles[<span class="number">0</span>].title() + <span class="string">&quot;.&quot;</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-Modify"><a href="#2-Modify" class="headerlink" title="2. Modify"></a>2. Modify</h3><p>Add elements to the end of the list</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>] </span><br><span class="line">print(motorcycles)</span><br><span class="line">motorcycles.append(<span class="string">&#x27;ducati&#x27;</span>) </span><br><span class="line">print(motorcycles)</span><br></pre></td></tr></table></figure>
-<p>To control the user, first create an empty list to store the values that the user will enter, and then append each new value provided by the user to the list.</p>
-<h3 id="3-Delete"><a href="#3-Delete" class="headerlink" title="3. Delete"></a>3. Delete</h3><p><strong>del delete element</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line"><span class="keyword">del</span> motorcycles[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-<p><strong>pop delete element</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line">print(motorcycles)</span><br><span class="line">popped_motorcycle = motorcycles.pop()  <span class="comment">#删除末尾元素</span></span><br><span class="line">first_owned = motorcycles.pop(<span class="number">0</span>)  <span class="comment">#删除任意位置元素</span></span><br></pre></td></tr></table></figure>
-<p>If you want to delete an element from the list and no longer use it in any way, use the del statement; if you want to continue using it after deleting the element, use the pop() method.</p>
-<p><strong>Remove elements based on value</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>, <span class="string">&#x27;ducati&#x27;</span>]</span><br><span class="line">print(motorcycles)</span><br><span class="line">motorcycles.remove(<span class="string">&#x27;ducati&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="4-Sorting"><a href="#4-Sorting" class="headerlink" title="4. Sorting"></a>4. Sorting</h3><p>sort() Permanently sort by the first letter (assuming all lowercase</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>] </span><br><span class="line">cars.sort()</span><br><span class="line">cars.sort(reverse=<span class="literal">True</span>)    <span class="comment">#反向</span></span><br></pre></td></tr></table></figure>
-<p><strong>sorted()</strong> Temporary sorting<br><strong>reverse()</strong> reverse the order<br><strong>len()</strong> determines the length of the list<br>When an index error occurs but you cannot find a solution, try to print the list or its length. The list may be very different from what you think, especially if the program is dynamically processing it. By looking at the list or the number of elements it contains, it can help you find this logic error.</p>
-<h3 id="5-Traverse"><a href="#5-Traverse" class="headerlink" title="5. Traverse"></a>5. Traverse</h3><p>for loop</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">magicians = [<span class="string">&#x27;alice&#x27;</span>, <span class="string">&#x27;david&#x27;</span>, <span class="string">&#x27;carolina&#x27;</span>] </span><br><span class="line"><span class="keyword">for</span> magician <span class="keyword">in</span> magicians:</span><br><span class="line">	print(magician)</span><br></pre></td></tr></table></figure>
-<p>You can specify any name for the temporary variable used to store each value in the list.<br>Using singular and plural names can help you determine whether the code segment deals with a single list element or the entire list.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">magicians = [<span class="string">&#x27;alice&#x27;</span>, <span class="string">&#x27;david&#x27;</span>, <span class="string">&#x27;carolina&#x27;</span>] </span><br><span class="line"><span class="keyword">for</span> magician <span class="keyword">in</span> magicians:</span><br><span class="line">	print(magician.title() + <span class="string">&quot;, that was a great trick!&quot;</span>)</span><br><span class="line">	print(<span class="string">&quot;I can&#x27;t wait to see your next trick, &quot;</span> + magician.title() + <span class="string">&quot;.\n&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>After the for loop, the <strong>unindented code</strong> is executed only once, and not repeated.<br>To avoid accidental indentation errors, indent only the code that needs indentation.<br><strong>Note the : after for</strong></p>
-<h3 id="6-Numerical-value"><a href="#6-Numerical-value" class="headerlink" title="6. Numerical value"></a>6. Numerical value</h3><p><strong>range()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">print(value)</span><br></pre></td></tr></table></figure>
-<p>Output number 1 2 3 4</p>
-<p><strong>Convert the output number directly into a list list()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">numbers = list(range(<span class="number">1</span>,<span class="number">6</span>))</span><br><span class="line">print(numbers)</span><br><span class="line">even_numbers = list(range(<span class="number">2</span>,<span class="number">11</span>,<span class="number">2</span>)) <span class="comment">#specify step size</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>square.py</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">squares = []</span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">square = value**<span class="number">2</span></span><br><span class="line">squares.append(square)</span><br><span class="line">print(squares)</span><br></pre></td></tr></table></figure>
-<p>or</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">squares = []</span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">squares.append(value**<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<p>or</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">squares = [value**<span class="number">2</span> <span class="keyword">for</span> value <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">11</span>)]</span><br><span class="line">print(squares)</span><br></pre></td></tr></table></figure>
-
-<p><strong>min() max() sum() calculation</strong></p>
-<h3 id="7-Part-of-the-list"><a href="#7-Part-of-the-list" class="headerlink" title="7. Part of the list"></a>7. Part of the list</h3><p>slice</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">players = [<span class="string">&#x27;charles&#x27;</span>,<span class="string">&#x27;martina&#x27;</span>,<span class="string">&#x27;michael&#x27;</span>,<span class="string">&#x27;florence&#x27;</span>,<span class="string">&#x27;eli&#x27;</span>]</span><br><span class="line">print(players[<span class="number">0</span>:<span class="number">3</span>]) <span class="comment">#1 2 3 elements</span></span><br><span class="line">print(players[<span class="number">1</span>:<span class="number">4</span>]) <span class="comment">#2 3 4 elements</span></span><br><span class="line">print(players[:<span class="number">4</span>]) <span class="comment">#The first 4 elements</span></span><br><span class="line">print(players[<span class="number">2</span>:]) <span class="comment">#to the end</span></span><br><span class="line">print(players[<span class="number">-3</span>:]) <span class="comment">#last 3 elements</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> player <span class="keyword">in</span> players[:<span class="number">3</span>]:</span><br><span class="line">         print(player.title()) <span class="comment">#traversal</span></span><br><span class="line">         </span><br><span class="line">friend_foods = my_foods[:] <span class="comment">#copy</span></span><br></pre></td></tr></table></figure>
-<p>The difference between <strong>copy</strong> and <strong>assignment</strong>:<br>assign my_foods to friend_foods instead of storing a copy of my_foods in friend_foods. This syntax actually makes Python associate the new variable friend_foods to the list contained in my_foods, so both variables point to the same list. In view of this, when we add’cannoli’ to my_foods, it will also appear in friend_foods; also, although’ice cream’ seems to have only been added to friend_foods, it will also appear in these two lists.</p>
-<h3 id="8-Tuples"><a href="#8-Tuples" class="headerlink" title="8. Tuples"></a>8. Tuples</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dimensions = (<span class="number">200</span>, <span class="number">50</span>)</span><br><span class="line">print(dimensions[<span class="number">0</span>])</span><br><span class="line">print(dimensions[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> dimension <span class="keyword">in</span> dimensions:</span><br><span class="line">print(dimension) <span class="comment">#traversal</span></span><br></pre></td></tr></table></figure>
-<p>Attempts to modify tuples are prohibited, and it is legal to assign values ​​to tuple variables<br>Compared to lists, tuples are simpler data structures. If a set of values ​​that need to be stored does not change throughout the life of the program, use tuples.</p>
-<h3 id="9-Format"><a href="#9-Format" class="headerlink" title="9. Format"></a>9. Format</h3><p>PEP 8 recommends four spaces for each level of indentation<br>It is recommended that the line length of the comment does not exceed 72 characters<br><a target="_blank" rel="noopener" href="https://www.python.org/dev/peps/pep-0008/">Link</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py1-variables"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/08/py1-variables/"
-    >Vriabales and Data Types</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/08/py1-variables/" class="article-date">
-  <time datetime="2017-10-08T11:56:47.000Z" itemprop="datePublished">2017-10-08</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h4 id="Variable-Name"><a href="#Variable-Name" class="headerlink" title="Variable Name"></a>Variable Name</h4><p>Variable names can only contain letters, numbers and underscores. Cannot start with a number.<br>Variable names cannot contain spaces, but you can use underscores to separate words.  </p>
-<p>A traceback is a record that points out where the interpreter got stuck when trying to run the code.  </p>
-<h4 id="String"><a href="#String" class="headerlink" title="String"></a>String</h4><p>All quotation marks are strings, the quotation marks can be single quotation marks’’ or double quotation marks””<br><strong>title()</strong> displays each word in capital letters, that is, the first letter of each word is changed to capital.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;ada lovelace&quot;</span> </span><br><span class="line">print(name.title())</span><br><span class="line">print(name.upper()) </span><br><span class="line">print(name.lower())</span><br></pre></td></tr></table></figure>
-<p>Use the plus sign (+) to combine strings.<br>Tab table \t<br>Newline \n<br>Remove all blank <strong>strip()</strong><br>Remove the leading blank <strong>lstrip()</strong><br>Remove the blank at the end <strong>rstrip()</strong>  </p>
-<h4 id="Number"><a href="#Number" class="headerlink" title="Number"></a>Number</h4><p>Python uses two multiplication signs to represent power operations<br>When using an integer in a string, you need to explicitly indicate that you want Python to use this integer as a string. To do this, call the function str(), which tells Python to represent non-string values as strings:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">23</span></span><br><span class="line">message = <span class="string">&quot;Happy &quot;</span> + str(age) + <span class="string">&quot;rd Birthday!&quot;</span></span><br><span class="line">print(message)</span><br></pre></td></tr></table></figure>
-<p>In Python 2, the result of integer division contains only the integer part, and the decimal part is deleted. To avoid this, make sure that at least one operand is a floating point number, so the result will also be a floating point number  </p>
-<h4 id="Comment"><a href="#Comment" class="headerlink" title="Comment"></a>Comment</h4><p>Comments are marked with a pound sign (#)</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
   </article>
   
 
+  
+  <nav class="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">next page</a>
+  </nav>
   
 </section>
 </div>
