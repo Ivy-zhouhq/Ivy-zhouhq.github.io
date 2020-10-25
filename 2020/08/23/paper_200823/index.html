@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Learning from Web Data with Memory Module |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-paper_200823"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Learning from Web Data with Memory Module
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/08/23/paper_200823/" class="article-date">
+  <time datetime="2020-08-23T18:50:55.000Z" itemprop="datePublished">2020-08-23</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>How does weak supervision do image classification?<br>Tu, Yi, et al. “Learning from Web Data with Memory Module.” arXiv (2019): arXiv-1906.</p>
+<p>In this paper, researchers use network data to study image classification tasks. <strong>They found that web images usually contain two kinds of noise, namely label noise and background noise.</strong> The former is because when a category name is used as a keyword to crawl web images, images that do not belong to the category may appear in the search results. The latter is because the content and sources of online pictures are very diverse, resulting in captured pictures often containing more irrelevant background information than standard image classification data sets. The two pictures in the picture below are both captured with the keyword “dog”. The content of the picture on the left is dog food rather than dogs, which belongs to label noise; in the image on the right, grassland occupies most of the entire image, and children also occupy a more prominent position than dogs, which belong to background noise.  </p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gju7j8ffdjj30h406xmxm.jpg"></p>
+<p>These two kinds of noises bring a lot of additional difficulties to learning image classifiers using network data, and the existing methods either rely heavily on additional supervision information or cannot cope with background noise. The paper proposes a method that does not require additional supervision information to deal with these two types of noise at the same time, and experiments on four benchmark data sets prove the effectiveness of the method. This paper has been accepted by CVPR2020.</p>
+<h2 id="Method-Overview"><a href="#Method-Overview" class="headerlink" title="Method Overview"></a>Method Overview</h2><p>The method of the paper is based on the framework of Multi-Instance Learning. Before training the classifier, first use an unsupervised proposal extraction method EdgeBox to extract a large number of proposals from each network picture, and use ROI (Region Of Interest) to refer to the picture and its proposal at the same time. According to the concept of multi-instance learning, the researcher treats each ROI as an instance, and composes all the ROIs of several pictures of the same category into a bag with multi-Instance. During training, the bag-leve representation, which is the weighted sum of the ROI-level representation, is used to train the image classifier. Since each bag has a higher probability of having a clean ROI, it is possible to assign different weights to the ROI to make its bag-level representation have less label noise and background noise, thereby obtaining a better image classifier.</p>
+<p>In order to assign appropriate weights to ROI, the researchers designed a novel Self-organizing Memory Module. Through self-organizing memory module clustering, the most discriminative and representativeness representations in each image category are obtained, and the weight of each ROI is adjusted through the relationship between each ROI and these representations. The entire framework of the method is shown in the figure below:</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjvc4kpxgcj30ny08ojse.jpg"></p>
+<p>The main function of the self-organizing memory module is to assign appropriate weights to the ROI in each bag, so that the bag-level representation is closer to a noise-free picture. Its principle is to find several clustering centers of each category by clustering all bag-level representations, and then use these clustering centers to adjust the weight of the closest ROI. Although some traditional clustering methods, such as K-means, can also achieve similar functions, the self-organizing memory module we designed is more flexible and powerful. Not only can it be integrated into an end-to-end training system, but it can also store and update some useful information as an aid.</p>
+<p>Specifically, the self-organizing memory module is composed of key slot and value slot. Among them, the key slot is used to store the representation of the cluster center, and the value slot stores the discriminative score (d-score) and representative score (r-score) of each category of the key slot. The higher the d-score and r-score in a certain category, it indicates that the key slot has greater discrimination and representativeness for this category.</p>
+<p>When using the self-organizing memory module, we first find the key slot (winner slot) that is closest to each ROI in a bag, and then use the winner slot to adjust the weight of the ROI in the bag category d-score and r-score, thus Improve the bag-level representation to make it closer to a clean picture representation. Then, the improved bag-level representation can help learn to get better key slot and value slot again.</p>
+<p><strong>Inspired by the self-organizing map (SOM), the researchers also designed a neighborhood constraint on the key slot to make the self-organizing memory module insensitive to initialization and can produce a more balanced clustering result, so the memory used The module is named self-organizing memory module</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjvd53ouu2j309y076gls.jpg"></p>
+<p>This model has done a lot of experiments on four benchmark data sets, and the experimental results show that the model has significant advantages. In addition to the quantitative results, the team also provided in-depth qualitative analysis.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjvd5ftp3ij30ny09yt9s.jpg"></p>
+<p>Taking the Clothing1M dataset as an example, three key slots are visualized for the category of Suit. Each pie chart shows the d-scores of the corresponding key slot in 14 categories and its r-scores in the suit category. At the same time, the paper also shows the 5 ROIs with the highest cosine similarity with each key slot.</p>
+<p>As shown in the pie chart, the d-score of the first key slot is the lowest because it contains a lot of suits and windbreaker bags at the same time, so the distinction between suits is not great. At the same time, the bag belonging to the suit is also less than the other two key slots, which is not representative, so the r-score is also the lowest. In other words, the first key slot is neither distinguishable nor representative of the suit category. In comparison, the last two key slots have higher d-scores because they represent suits of different colors, namely, colored suits and dark suits. In addition, because there are fewer colored suits in this dataset than dark suits, the third key slot is more representative of the suit category than the second, so its corresponding r-score is also higher.</p>
+<p>In order to further demonstrate the characteristics of the self-organizing memory module, the researchers also visualized the d-scores of all key slots on Clothing1M. From the pie chart, you can see that bags of the same category are clustered together in the key slot space. In addition, they also used histograms to show the r-scores of all key slots on sweaters and suits. It can be seen that the two types of bags also occupy key slots in different regions, indicating that the clustering results of our method have a very reasonable structure.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>In this article, under the framework of multi-instance learning, the researchers designed a self-organizing memory module to simultaneously solve the problem of label noise and background noise in network pictures, and achieved excellent results in image classification experiments. The rich visualization results show the effectiveness of the method and help understand the internal structure of the clustering results.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/08/23/paper_200823/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/weak-supervision/" rel="tag">weak supervision</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/08/27/shallow_bot3/" class="article-nav-link">
+        <strong class="article-nav-caption">last article</strong>
+        <div class="article-nav-title">
+          
+            Think about Bot 3
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/08/20/shallow_bot2/" class="article-nav-link">
+        <strong class="article-nav-caption">next article</strong>
+        <div class="article-nav-title">Think about Bot 2</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2020
+        <i class="ri-heart-fill heart_icon"></i> Hanqi ZHOU
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hanqi ZHOU"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">Home</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">Blog</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/life">Life</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">About Me</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

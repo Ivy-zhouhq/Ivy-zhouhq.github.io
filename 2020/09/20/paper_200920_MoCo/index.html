@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    the Second Edition of Momentum Comparison (MoCo) |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-paper_200920_MoCo"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  the Second Edition of Momentum Comparison (MoCo)
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/20/paper_200920_MoCo/" class="article-date">
+  <time datetime="2020-09-20T18:50:55.000Z" itemprop="datePublished">2020-09-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Unsupervised training method of the second edition of momentum comparison (MoCo)</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yuxdzo7j30rm07p74g.jpg"></p>
+<p>Contrastive unsupervised learning has recently made encouraging progress, such as momentum comparison (MoCo) and SimCLR. In this article, we verify their effectiveness by implementing two design improvements of SimCLR in the MoCo framework. Through a simple modification of MoCo—that is, using an MLP projection head and more data enhancement—we established a stronger benchmark than SimCLR, and does not require a lot of training. We hope this will make the most advanced unsupervised learning research more accessible. The code will be made public.</p>
+<p>Recent studies on unsupervised representation learning from images [16,13,8,17,1,9,15,6,12,2] all focus on a central concept, namely contrast learning [5]. The results are very promising: For example, momentum comparison (MoCo) [6] shows that in multiple detection and segmentation tasks, unsupervised pre-training can surpass its image supervision, while SimCLR [2] further reduces unsupervised and The pre-training before supervision indicates the performance gap between the linear classifiers.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ywcnbrmj31460qkabf.jpg"></p>
+<p>This article describes the establishment of a stronger and more feasible baseline within the MoCo framework. We report two design improvements used in SimCLR, namely an MLP projection head and stronger data enhancement, which are orthogonal to MoCo and SimCLR frameworks. When used with MoCo, they will bring better image classification. And target detection migration learning results. In addition, the MoCo framework can handle a large number of negative samples without the need for a large number of training batches (Figure 1). Compared with the large 4k∼8k batch of SimCLR that requires TPU support, our “MoCo v2” baseline can run on a typical 8-GPU machine and achieve better results than SimCLR. We hope that these improved baselines can provide references for future unsupervised learning research.</p>
+<h1 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h1><p>Contrastive learning and its latest progress can be seen as training an encoder for dictionary lookup tasks.</p>
+<p>Suppose there is a coded query q and a set of coded samples {k0, k1, k2, …}, which are the keys of the dictionary. There is a key (k+) in the dictionary that matches q. The contrast loss is a function whose value is very low when q is similar to its positive key k+ and different from all other keys (the negative key of q). Researchers use the similarity measure of dot product, which is a form of contrast loss function called InfoNCE. This article uses this function:<br>$$<br>\mathcal{L}<em>{q}=-\log \frac{\exp \left(q \cdot k</em>{+} / \tau\right)}{\sum_{i=0}^{K} \exp \left(q \cdot k_{i} / \tau\right)}<br>$$<br>This contrast loss function serves as an unsupervised objective function for training the encoder network that characterizes queries and keys. In general, the query representation is q = f_q(x^q), where f_q is an encoder network, and x^q is the query sample.</p>
+<h1 id="Improved-Design"><a href="#Improved-Design" class="headerlink" title="Improved Design"></a>Improved Design</h1><p>SimCLR[2] improves the end-to-end variant of instance recognition in three aspects: (i) larger batch processing (4k or 8k) that can provide more negative samples; (ii) the output fc projection head [ 16] Replaced with MLP header; (3) Data expansion capability is enhanced.</p>
+<p>In the MoCo framework, a large number of negative samples are readily available; the instantiation methods of MLP header and data expansion and contrast learning are orthogonal. Next, we study these improvements in MoCo.</p>
+<h1 id="Experimental-setup"><a href="#Experimental-setup" class="headerlink" title="Experimental setup"></a>Experimental setup</h1><p>Unsupervised learning is performed on the 1.28M ImageNet[3] training set. (i) ImageNet linear classification: freeze the features and train a supervised linear classifier; we report 1 crop (224×224), which ranks first in verification accuracy. (ii) Migrating to VOC target detection [4]: Faster R-CNN detector [14] (c4-backbone) on the VOC 07+12 training set for all entries (including supervision and MoCo v1 baseline) End fine-tuning, we make 24k iterative fine-tuning of VOC, which is higher than the 18k in [6]. And use the COCO standard [10] for evaluation on the VOC 07 test set. We use the same hyperparameters (unless otherwise noted) and code base as MoCo [6]. All results use standard size ResNet-50 [7].</p>
+<p>MLP header After [2], we replaced the fc header in MoCo with a 2-layer MLP header (hidden layer 2048-d, using ReLU). Note that this only affects the unsupervised training phase; this MLP header is not used in the linear classification or migration phase. [2] After that, we look for the best τ for the accuracy of ImageNet linear classification:</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yyll6idj30hp0303yf.jpg"></p>
+<p>Using the default τ = 0.07[16,6], the trained MLP head is improved from 60.6% to 62.9%; switching to the optimal value of MLP (0.2), the accuracy is improved to 66.2%. Table 1(a) shows its detection results: Compared with the big leap on ImageNet, the detection gain is smaller.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yz83zo5j30i70acgmc.jpg"></p>
+<p>Data enhancement We extend the original enhancement in [6] by adding blur enhancement in [2] (we found that the stronger color distortion in [2] has diminishing gain in our higher baseline). A separate addition (ie (no MLP)) increased the MoCo baseline on ImageNet by 2.8% to 63.4%, as shown in Table 1(b). Interestingly, its detection accuracy is higher than that of using MLP alone, Table 1 (b) and (a), although the linear classification accuracy is much lower (63.4% vs. 66.2%). This shows that the linear classification accuracy and the migration performance in detection are not monotonously related. For MLP, the additional enhancement will be the ImageNet The accuracy is improved to 67.3%, see Table 1(c).</p>
+<p>Comparison with SimCLR Table 2 compares SimCLR [2] with our result MoCo v2. For fair comparison, we also studied a cosine (half-period) learning rate scheduling adopted by SimCLR [11]. Table 1 (d, e). MoCo v2 uses 200 epochs and 256 batch sizes for pre-training, and achieves 67.5% accuracy on ImageNet, which is 5.6% higher than SimCLR’s accuracy under the same epoch and batch size, and 66.6% higher than SimCLR’s large batch results. . Through 800-epoch pre-training, MoCo v2 reached 71.1%, surpassing SimCLR’s 69.3%, reaching 1000 epochs.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yzlfqmcj30la0j2gn7.jpg"></p>
+<h1 id="Computing-costs"><a href="#Computing-costs" class="headerlink" title="Computing costs"></a>Computing costs</h1><p>In Table 3, we report the realized memory and time costs. The end-to-end case reflects the cost of SimCLR in the GPU (instead of the TPUs in [2]). Even on high-end 8-GPU machines, 4k batch sizes are difficult to handle. Moreover, with the same batch size of 256, the end-to-end variant is still more expensive in memory and time, because it propagates backwards to the q and k encoders, while MoCo only propagates backwards to the q encoders .</p>
+<p>Table 2 and Table 3 show that in order to obtain good accuracy, a large training batch is not required. The improvement we researched only requires a few lines of code changes to MoCo v1, and we will make the code public for future research.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/20/paper_200920_MoCo/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/27/paper_200927/" class="article-nav-link">
+        <strong class="article-nav-caption">last article</strong>
+        <div class="article-nav-title">
+          
+            Learning with Noisy Label
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/13/paper_200913/" class="article-nav-link">
+        <strong class="article-nav-caption">next article</strong>
+        <div class="article-nav-title">A Neural Probabilistic Language Model</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2020
+        <i class="ri-heart-fill heart_icon"></i> Hanqi ZHOU
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hanqi ZHOU"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">Home</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">Blog</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/life">Life</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">About Me</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

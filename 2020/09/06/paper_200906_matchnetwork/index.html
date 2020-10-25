@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Matching Networks for One Shot Learning |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-paper_200906_matchnetwork"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Matching Networks for One Shot Learning
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/06/paper_200906_matchnetwork/" class="article-date">
+  <time datetime="2020-09-06T18:50:55.000Z" itemprop="datePublished">2020-09-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1606.04080">Matching Networks for One Shot Learning</a></p>
+<p><em>This article accounts for my first exposure to a new field in learning.</em></p>
+<p>Something about “one-shot” learning, that is, learning from one (or very few) sample instead of the large data sets. After all, a child can know what a giraffe is through a picture, but the machine needs a lot of samples!</p>
+<p>Matching Networks for One Shot Learning This paper is a paper from Google DeepMind, which is mainly to solve: learn classification based on small samples (or other tasks), and this trained model does not need to be adjusted, and can also be used Categorize the categories that have not appeared in the training process (there may be some twists here, and I will explain in detail later in conjunction with the symbol definition. In fact, I personally feel that this task also has a feeling of “transfer learning”).</p>
+<h1 id="Idea"><a href="#Idea" class="headerlink" title="Idea:"></a>Idea:</h1><p>Train an end-to-end classifier similar to nearest neighbor. The reason why it is similar is because although the overall idea is very similar, for NN, the sample is what the input is, but here you need to learn a sample from the sample The representations, encode them.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjw20pn1gqj30fj0ar74m.jpg"></p>
+<h1 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h1><p>Training process: Given a support set $S=\left{\left(x_{i}, y_{i}\right)\right}<em>{i=1}^{k}$ with k samples, classify the test samples $\hat{x}$ (classification, because the category of $\hat{x}$ is the same as one or several sample categories in S), The category is $C</em>{S}(\hat{x})$.</p>
+<p>Definition $S \rightarrow C_{S}(\hat{x})$ this mapping is $P(\hat{y} \mid \hat{x}, S)$, where the parameters of P are learned through neural networks, and the mapping method is the last model we learned.</p>
+<p>Therefore, in the testing process: Given a new support set $S^{\prime}$, we can use the model learned before to obtain their possible label $\hat{x}$ for each test sample $\hat{y}$.</p>
+<p>For example, given a picture of a Siamese cat and a picture of Corgi as S during training, a new husky picture model can be classified as a dog; in the test, a picture of Xiong Er and A picture of Bugs Bunny and another picture of Winnie the Pooh and ask the machine which category the new picture belongs to, and the machine will tell you that this is a bear (it’s the same category as that bear)</p>
+<h1 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm:"></a>Algorithm:</h1><p>Given a test sample $\hat{x}$, the process of calculating $\hat{y}$ is very similar to Nearest Neighbors:<br>$$<br>\hat{y}=\sum_{i=1}^{k} a\left(\hat{x}, x_{i}\right) y_{i}<br>$$<br>Here a is similar to the kernel function in the attention model, which is used to measure the matching degree between $\hat{x}$ and training sample $x_i$, and then the calculation of the test sample label through $y_i$ is similar to weighted summation:<br>$$<br>a\left(\hat{x}, x_{i}\right)=e^{c\left(f(\hat{x}), g\left(x_{i}\right)\right)} / \sum_{j=1}^{k} e^{c\left(f(\hat{x}), g\left(x_{j}\right)\right)}<br>$$<br>Here, the formula f defines how to encode the test sample into a vector, and the formula g defines how to encode the training sample. From c(), the cos distance is used to calculate the matching degree between the two, and then they are normalized by a softmax.</p>
+<h1 id="Encode-the-training-set-function-g"><a href="#Encode-the-training-set-function-g" class="headerlink" title="Encode the training set (function g)"></a>Encode the training set (function g)</h1><p>The structure of g is a two-way LSTM. The input sequence of this two-way LSTM is each sample $\left(x_{0}, x_{1}, x_{2} \ldots\right)$ in S. $g^{\prime}\left(x_{i}\right)$ is an encoding that first inputs $x_i$ to a neural network (such as VGG, Inception model).</p>
+<p>The definition is based on the support set S, and the coding of the sample $x_i$ is:<br>$$<br>g\left(x_{i}, S\right)=\overrightarrow{h_{i}}+\overline{h_{i}}+g^{\prime}\left(x_{i}\right)<br>$$<br>where<br>$$<br>\begin{aligned}<br>\vec{h}<em>{i}, \vec{c}</em>{i} &amp;=\operatorname{LSTM}\left(g^{\prime}\left(x_{i}\right), \vec{h}<em>{i-1}, \vec{c}</em>{i-1}\right) \<br>\stackrel{\leftarrow}{h}<em>{i}, \bar{c}</em>{i} &amp;=\operatorname{LSTM}\left(g^{\prime}\left(x_{i}\right), \bar{h}<em>{i+1}, \bar{c}</em>{i+1}\right)<br>\end{aligned}<br>$$</p>
+<p>$h_i$ and $c_i$ are both the output of LSTM. If you don’t know much about it, you can take a look at the LSTM algorithm. In addition, the original text did not mention how to sort the unordered reference set samples, but refer to another article of the author: Order Matters: Sequence to Sequence for Sets. It is found that the original unordered support set sample sets are sorted here .</p>
+<p>Some people may wonder why LSTM is used. Models like LSTM and RNN have to remember something, but the categories of these samples are different, so what do you want to remember? My understanding is that the samples of each category are input into the LSTM as a sequence, so that the model looks at all the samples to automatically select the appropriate features to measure. For example, if our goal is to recognize faces, then we need to construct a distance function. To strengthen the appropriate features (such as hair color, face shape, etc.); and if our goal is to recognize posture, then we need to build a distance function that captures the similarity of posture. Here we need to refer to Metric Learning.</p>
+<h1 id="Encode-the-test-set-function-f"><a href="#Encode-the-test-set-function-f" class="headerlink" title="Encode the test set (function f)"></a>Encode the test set (function f)</h1><p>f is an iterative LSTM with K steps (note that k here is k steps, and k above is k samples), and all training samples ($g\left(x_{i}\right)$) are considered in the process of encoding the test set, and finally f The encoding result of is the hidden state output by the last LSTM.<br>$$<br>\begin{aligned} f(\hat{x}, S) &amp;=\operatorname{attLSTM}\left(f^{\prime}(\hat{x}), g(S), K\right) \ \hat{h}<em>{k}, c</em>{k} &amp;=\operatorname{LSTM}\left(f^{\prime}(\hat{x}),\left[h_{k-1}, r_{k-1}\right], c_{k-1}\right) \ h_{k} &amp;=\hat{h}<em>{k}+f^{\prime}(\hat{x}) \ r</em>{k-1} &amp;=\sum_{i=1}^{|S|} a\left(h_{k-1}, g\left(x_{i}\right)\right) g\left(x_{i}\right) \ a\left(h_{k-1}, g\left(x_{i}\right)\right) &amp;=\operatorname{softmax}\left(h_{k-1}^{T} g\left(x_{i}\right)\right) \end{aligned}<br>$$</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/06/paper_200906_matchnetwork/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/one-shot/" rel="tag">one shot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/13/paper_200913/" class="article-nav-link">
+        <strong class="article-nav-caption">last article</strong>
+        <div class="article-nav-title">
+          
+            A Neural Probabilistic Language Model
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/01/shallow_GCN/" class="article-nav-link">
+        <strong class="article-nav-caption">next article</strong>
+        <div class="article-nav-title">First Encounter with GCN</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2020
+        <i class="ri-heart-fill heart_icon"></i> Hanqi ZHOU
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hanqi ZHOU"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">Home</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">Blog</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/life">Life</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">About Me</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

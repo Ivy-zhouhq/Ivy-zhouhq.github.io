@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Learning with Noisy Label |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-paper_200927"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Learning with Noisy Label
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/27/paper_200927/" class="article-date">
+  <time datetime="2020-09-27T18:50:55.000Z" itemprop="datePublished">2020-09-27</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Learning with Noisy Label</p>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>Deep learning relies on a large amount of high-quality annotation data-both time and labor costs are high. How to use semi-(weak) supervised learning and unsupervised learning to achieve results equivalent to the level of supervised learning is a very popular research direction.</p>
+<p>Learning with noisy label:</p>
+<ol>
+<li><p>There is a certain amount of labeled data. - It is easy to get through search engines, public data sets, etc.</p>
+</li>
+<li><p>The quality of the labeling data is not high, and there are high or low labeling errors.</p>
+</li>
+</ol>
+<p>Will not cover unsupervised learning.</p>
+<p>Compared with unsupervised learning, learning with noisy label is closer to the landing of deep learning in the industry. The typical status is as follows:</p>
+<ol>
+<li><p>In the initial stage, there is a certain amount of data with unknown quality.</p>
+</li>
+<li><p>Generally, there will be continuous manual investment to continuously improve the quality of the label. The form of manual input may be paid crowdsourcing, or it may be through user feedback.</p>
+</li>
+<li><p>The attention paid to certain labels and certain errors is higher than others and requires targeted optimization.</p>
+</li>
+</ol>
+<h1 id="Core"><a href="#Core" class="headerlink" title="Core"></a>Core</h1><p>Regardless of the method, it is answering a question: how to distinguish between <strong>clean label</strong> and <strong>noisy label</strong>.</p>
+<ol>
+<li><p>Directly use probability theory models to identify, such as models based on EM algorithms, confidence learning models, etc.</p>
+</li>
+<li><p>Roughly select the loss predicted by the model and iterate repeatedly.</p>
+</li>
+<li><p>Implicitly, the model itself is more tolerant of noise. The core idea is to change to weighted sum loss, the weight of noisy is low, and the weight of clean is high. The question is how to find weight.</p>
+</li>
+</ol>
+<h1 id="Theoretical-Foundation"><a href="#Theoretical-Foundation" class="headerlink" title="Theoretical Foundation"></a>Theoretical Foundation</h1><h2 id="Paper【1】"><a href="#Paper【1】" class="headerlink" title="Paper【1】"></a>Paper【1】</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1611.03530">Understanding deep learning requires rethinking generalization</a></p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1ruu3wiyj30lm07ywez.jpg"></p>
+<p>This is the work of the Google brain Samy Bengio group. The viewpoints put forward and proved by experiments: Deep neural networks easily fit random labels. This view is almost a must for noisy label related articles after 2017.</p>
+<p>Before this article, the introduction was all about crowdsourcing &amp; mistakes are inevitable, and the SOTA model performed poorly. After this article, the theoretical focus is to solve the overfitting caused by noisy label.</p>
+<p>The article also raises a very meaningful question:</p>
+<p>The number of parameters of the neural network is greater than the amount of training data. Some models of generalization error are good and some models are poor. What is the difference?</p>
+<p>Deep neural networks easily fit random labels</p>
+<h3 id="Experimental-program"><a href="#Experimental-program" class="headerlink" title="Experimental program:"></a>Experimental program:</h3><p>Using real data, the label is changed to randomly generated.</p>
+<p>model uses the standard model without any modification.</p>
+<p>Training effect: training error = 0, test error is the same as the result of random selection.</p>
+<h3 id="Explanation-of-the-results"><a href="#Explanation-of-the-results" class="headerlink" title="Explanation of the results:"></a>Explanation of the results:</h3><p>Because the test label is also completely randomly generated, it cannot be predicted. The test error is as expected.</p>
+<p>training error = 0, there are many model parameters, and the ability to remember all dataset points.</p>
+<p>Random data causes the generalization error of the model to increase significantly.</p>
+<h3 id="Comparative-Test"><a href="#Comparative-Test" class="headerlink" title="Comparative Test:"></a>Comparative Test:</h3><p>Based on the original real data set, the label is unchanged, the image pixel is changed to all random, and it can still be 0 training error</p>
+<p>Using random + raw data mixed test, the random ratio increases, and the generalization error rate increases. It means that in the case of random data confusion, it still has the ability to learn some real features.</p>
+<p>Regularization can reduce testing error, but has no direct effect on generalization error.</p>
+<p>Remember the smallest model of all training data.</p>
+<p>two-layer ReLU network with p=2n+d parameters can express any labeling of any sample of size n in d dimension.</p>
+<p>The 2-layer model can memorize all training data.</p>
+<p>explicit regularizers:</p>
+<ul>
+<li>dropout</li>
+<li>weight decay</li>
+</ul>
+<p>regularization is required to ensure small generalization error</p>
+<h2 id="Paper【2】"><a href="#Paper【2】" class="headerlink" title="Paper【2】"></a>Paper【2】</h2><p><a target="_blank" rel="noopener" href="https://www.stat.berkeley.edu/~jordan/638.pdf">Convexity, Classification, and Risk Bounds</a></p>
+<p>most loss functions are not completely robust to label noise</p>
+<h1 id="Based-on-the-probability-model-estimate-noisy-label"><a href="#Based-on-the-probability-model-estimate-noisy-label" class="headerlink" title="Based on the probability model (estimate noisy label)"></a>Based on the probability model (estimate noisy label)</h1><p>Including EM-based model, belief learning, etc.</p>
+<p>The basic mathematical model is:</p>
+<ol>
+<li><p>Noise is related to label. Lions are easily classified as cats, but not as ships.</p>
+</li>
+<li><p>Find the joint probability distribution matrix and transition matrix between noisy label and true label.</p>
+</li>
+<li><p>Use the probability matrix to identify clean label or noise label, and correct the data set.</p>
+</li>
+</ol>
+<h2 id="Paper-1"><a href="#Paper-1" class="headerlink" title="Paper[1]"></a>Paper[1]</h2><p><a target="_blank" rel="noopener" href="https://openreview.net/references/pdf?id=Sk5qglwSl">Training deep neural-networks using a noise adaptation layer</a></p>
+<p>Refer to the communication channel model and use the EM algorithm. A bit like the HMM model in NLP.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1rz644doj30se0m40t4.jpg"></p>
+<h3 id="Modeling-ideas"><a href="#Modeling-ideas" class="headerlink" title="Modeling ideas:"></a>Modeling ideas:</h3><ul>
+<li>The correct unknown label can be viewed as a hidden random variable</li>
+<li>Model the noise processes by a communication channel with unknown parameters.</li>
+</ul>
+<p>Use EM algorithm to find network and correct label. This idea has good articles published in 2012 and 2016.</p>
+<p>The typical process is as follows:</p>
+<ul>
+<li>E-step, estimate the true label</li>
+<li>M-step, retrain the network</li>
+</ul>
+<p>The disadvantage is that each time the label is predicted, the model must be retrained. The idea of improvement is to complete 2 steps end-to-end with a neural network.</p>
+<p>In 2014, Sukhbaatar &amp; Fergus proposed to add a constrained linear layer at the end to connect the correct label and noisy label. It is feasible in some scenarios with strong assumptions.</p>
+<p>The contribution of this paper is to replace the linear layer added by Sukhbaatar with a softmax layer, which improves the universality of the model.</p>
+<h3 id="Author’s-view"><a href="#Author’s-view" class="headerlink" title="Author’s view:"></a>Author’s view:</h3><p>The modified model can be extended to the case where the noise is dependent on both the correct label and the input features.<br>It is suitable for data sets with unknown noisy distribution.</p>
+<h2 id="Paper【2】-1"><a href="#Paper【2】-1" class="headerlink" title="Paper【2】"></a>Paper【2】</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1911.00068">Confident Learning: Estimating Uncertainty in Dataset Labels</a><br>The algorithm principle of the cleanlab library:<br>cleanlab code: <a target="_blank" rel="noopener" href="https://github.com/cgnorthcutt/cleanlab">https://github.com/cgnorthcutt/cleanlab</a><br>Assume that noise is only related to true label and independent of feature.</p>
+<h3 id="Core-idea"><a href="#Core-idea" class="headerlink" title="Core idea:"></a>Core idea:</h3><ol>
+<li>Through prune, count, rank 3 steps, joint probabilities (true and predicted labels) can be calculated efficiently</li>
+<li>Identify label error according to joint probabilities.</li>
+</ol>
+<p>The theoretical basis is Angluin’s 1988 CNP theory.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1s1l5owzj30lw0e7mxy.jpg"></p>
+<h3 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution:"></a>Contribution:</h3><p>we prove CL exactly estimates the joint distribution of noisy and true labels with exact identification of label errors under realistic sufficient conditions.<br>The resulting CL procedure is a model-agnostic family of theory and algorithms for characterizing, finding, and learning with label errors. It uses predicted probabilities and noisy labels to count examples in the unnormalized confident joint, estimate the joint distribution, and prune noisy data, producing clean data as output.</p>
+<h1 id="Iterative-learning"><a href="#Iterative-learning" class="headerlink" title="Iterative learning"></a>Iterative learning</h1><p>Contains curriculum learning, semi-supervised learning, co-training, self-training. There are too many models of this kind.</p>
+<h2 id="Core-idea-1"><a href="#Core-idea-1" class="headerlink" title="Core idea:"></a>Core idea:</h2><ol>
+<li>First train a model with large/all data.</li>
+<li>According to the loss and other parameters, select the label that is probably true.</li>
+<li>Use true label to restart or continue training model.</li>
+<li>Repeat steps 2-3.</li>
+</ol>
+<p>the <strong>difference</strong> lies in:</p>
+<ol>
+<li>Curriculum learning divides the dataset into N groups at a time, from easy to difficult training. In other large methods, only the simplest group is selected each time.</li>
+<li>When repeating training, can the learning goal be more complicated (comprehensive)? Incorporate the parameters learned in the previous round into the learning goal of the new model.</li>
+</ol>
+<h2 id="Paper【1】-1"><a href="#Paper【1】-1" class="headerlink" title="Paper【1】"></a>Paper【1】</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1712.05055">MentorNet: Learning Data-Driven Curriculum for Very Deep Neural Networks on Corrupted Labels</a><br>code: <a target="_blank" rel="noopener" href="https://github.com/google/mentornet">https://github.com/google/mentornet</a></p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1s3ccnprj30qm0bqmxw.jpg"></p>
+<p><strong>Curriculum learning</strong>, learn from the human learning model. In the order of easy first and then complicated, the learning effect is better and the learning speed is faster. Imagine throwing a random addition and calculus task within 100 to a pupil.</p>
+<p>The difficulty lies in how to choose a curriculum?</p>
+<p>It can be traced back to Bengio’s introduction of curriculum learning in 2009. Use a predefined fixed curriculum.</p>
+<p>The main contributions of this article:</p>
+<ul>
+<li>Automatically learn data-driven courses. MentorNet learns a data-driven curriculum to supervise the base deep CNN, naely StudentNet.</li>
+<li>Based on StudentNet’s feedback, update Curriculum.</li>
+</ul>
+<p>The paper also gives a more rigorous mathematical model of Curriculum Learning, which is a good reference.<br>Brief summary: in the objective function, there are 3 parameters w, v, lambda.</p>
+<p>Among them,</p>
+<ul>
+<li>w is the weight to be learned by general CNN.</li>
+<li>Lambda is a hyperparameter, indicating the difficulty of learning.</li>
+<li>v is the weight introduced by curriculum learning, v_i &lt;lambda, which means the i-th data “easy”, participate in this training.</li>
+</ul>
+<p>It can be seen that lambda and v together define the “course”.</p>
+<p>The learning process is: fix v, w in turn, and optimize another parameter.</p>
+<p>As the learning progresses, gradually increase the lambda and introduce more and more learning data.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/27/paper_200927/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/noisy-label/" rel="tag">noisy label</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/10/04/paper_201004/" class="article-nav-link">
+        <strong class="article-nav-caption">last article</strong>
+        <div class="article-nav-title">
+          
+            Evolving Normalization-Activation Layers
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/20/paper_200920_MoCo/" class="article-nav-link">
+        <strong class="article-nav-caption">next article</strong>
+        <div class="article-nav-title">the Second Edition of Momentum Comparison (MoCo)</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2020
+        <i class="ri-heart-fill heart_icon"></i> Hanqi ZHOU
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hanqi ZHOU"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">Home</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">Blog</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/life">Life</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">About Me</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

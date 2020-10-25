@@ -114,7 +114,7 @@
     
     
     <article
-  id="post-py8-files"
+  id="post-paper_200823"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -125,16 +125,644 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2017/10/12/py8-files/"
-    >Files and Excepetions</a> 
+  <a class="article-title" href="/2020/08/23/paper_200823/"
+    >Learning from Web Data with Memory Module</a> 
 </h2>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2017/10/12/py8-files/" class="article-date">
-  <time datetime="2017-10-12T07:30:55.000Z" itemprop="datePublished">2017-10-12</time>
+      <a href="/2020/08/23/paper_200823/" class="article-date">
+  <time datetime="2020-08-23T18:50:55.000Z" itemprop="datePublished">2020-08-23</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>How does weak supervision do image classification?<br>Tu, Yi, et al. “Learning from Web Data with Memory Module.” arXiv (2019): arXiv-1906.</p>
+<p>In this paper, researchers use network data to study image classification tasks. <strong>They found that web images usually contain two kinds of noise, namely label noise and background noise.</strong> The former is because when a category name is used as a keyword to crawl web images, images that do not belong to the category may appear in the search results. The latter is because the content and sources of online pictures are very diverse, resulting in captured pictures often containing more irrelevant background information than standard image classification data sets. The two pictures in the picture below are both captured with the keyword “dog”. The content of the picture on the left is dog food rather than dogs, which belongs to label noise; in the image on the right, grassland occupies most of the entire image, and children also occupy a more prominent position than dogs, which belong to background noise.  </p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gju7j8ffdjj30h406xmxm.jpg"></p>
+<p>These two kinds of noises bring a lot of additional difficulties to learning image classifiers using network data, and the existing methods either rely heavily on additional supervision information or cannot cope with background noise. The paper proposes a method that does not require additional supervision information to deal with these two types of noise at the same time, and experiments on four benchmark data sets prove the effectiveness of the method. This paper has been accepted by CVPR2020.</p>
+<h2 id="Method-Overview"><a href="#Method-Overview" class="headerlink" title="Method Overview"></a>Method Overview</h2><p>The method of the paper is based on the framework of Multi-Instance Learning. Before training the classifier, first use an unsupervised proposal extraction method EdgeBox to extract a large number of proposals from each network picture, and use ROI (Region Of Interest) to refer to the picture and its proposal at the same time. According to the concept of multi-instance learning, the researcher treats each ROI as an instance, and composes all the ROIs of several pictures of the same category into a bag with multi-Instance. During training, the bag-leve representation, which is the weighted sum of the ROI-level representation, is used to train the image classifier. Since each bag has a higher probability of having a clean ROI, it is possible to assign different weights to the ROI to make its bag-level representation have less label noise and background noise, thereby obtaining a better image classifier.</p>
+<p>In order to assign appropriate weights to ROI, the researchers designed a novel Self-organizing Memory Module. Through self-organizing memory module clustering, the most discriminative and representativeness representations in each image category are obtained, and the weight of each ROI is adjusted through the relationship between each ROI and these representations. The entire framework of the method is shown in the figure below:</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjvc4kpxgcj30ny08ojse.jpg"></p>
+<p>The main function of the self-organizing memory module is to assign appropriate weights to the ROI in each bag, so that the bag-level representation is closer to a noise-free picture. Its principle is to find several clustering centers of each category by clustering all bag-level representations, and then use these clustering centers to adjust the weight of the closest ROI. Although some traditional clustering methods, such as K-means, can also achieve similar functions, the self-organizing memory module we designed is more flexible and powerful. Not only can it be integrated into an end-to-end training system, but it can also store and update some useful information as an aid.</p>
+<p>Specifically, the self-organizing memory module is composed of key slot and value slot. Among them, the key slot is used to store the representation of the cluster center, and the value slot stores the discriminative score (d-score) and representative score (r-score) of each category of the key slot. The higher the d-score and r-score in a certain category, it indicates that the key slot has greater discrimination and representativeness for this category.</p>
+<p>When using the self-organizing memory module, we first find the key slot (winner slot) that is closest to each ROI in a bag, and then use the winner slot to adjust the weight of the ROI in the bag category d-score and r-score, thus Improve the bag-level representation to make it closer to a clean picture representation. Then, the improved bag-level representation can help learn to get better key slot and value slot again.</p>
+<p><strong>Inspired by the self-organizing map (SOM), the researchers also designed a neighborhood constraint on the key slot to make the self-organizing memory module insensitive to initialization and can produce a more balanced clustering result, so the memory used The module is named self-organizing memory module</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjvd53ouu2j309y076gls.jpg"></p>
+<p>This model has done a lot of experiments on four benchmark data sets, and the experimental results show that the model has significant advantages. In addition to the quantitative results, the team also provided in-depth qualitative analysis.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjvd5ftp3ij30ny09yt9s.jpg"></p>
+<p>Taking the Clothing1M dataset as an example, three key slots are visualized for the category of Suit. Each pie chart shows the d-scores of the corresponding key slot in 14 categories and its r-scores in the suit category. At the same time, the paper also shows the 5 ROIs with the highest cosine similarity with each key slot.</p>
+<p>As shown in the pie chart, the d-score of the first key slot is the lowest because it contains a lot of suits and windbreaker bags at the same time, so the distinction between suits is not great. At the same time, the bag belonging to the suit is also less than the other two key slots, which is not representative, so the r-score is also the lowest. In other words, the first key slot is neither distinguishable nor representative of the suit category. In comparison, the last two key slots have higher d-scores because they represent suits of different colors, namely, colored suits and dark suits. In addition, because there are fewer colored suits in this dataset than dark suits, the third key slot is more representative of the suit category than the second, so its corresponding r-score is also higher.</p>
+<p>In order to further demonstrate the characteristics of the self-organizing memory module, the researchers also visualized the d-scores of all key slots on Clothing1M. From the pie chart, you can see that bags of the same category are clustered together in the key slot space. In addition, they also used histograms to show the r-scores of all key slots on sweaters and suits. It can be seen that the two types of bags also occupy key slots in different regions, indicating that the clustering results of our method have a very reasonable structure.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>In this article, under the framework of multi-instance learning, the researchers designed a self-organizing memory module to simultaneously solve the problem of label noise and background noise in network pictures, and achieved excellent results in image classification experiments. The rich visualization results show the effectiveness of the method and help understand the internal structure of the clustering results.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/weak-supervision/" rel="tag">weak supervision</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-shallow_bot2"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/20/shallow_bot2/"
+    >Think about Bot 2</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/08/20/shallow_bot2/" class="article-date">
+  <time datetime="2020-08-20T15:50:55.000Z" itemprop="datePublished">2020-08-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><h3 id="2-user-modeling"><a href="#2-user-modeling" class="headerlink" title="2. user modeling"></a>2. user modeling</h3><p>Article [6] addresses the problem of inconsistent responses in multiple rounds of dialogue. Taking user identity (such as background information, user portrait, age, and other information) into the model, a personalized seq2seq model is constructed for different users. , And the same user generates different styles of responses for different requests.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yjoq0wbj30k708fmxn.jpg"></p>
+<p>The model of [6] is called Speaker Model, which is a typical seq2seq model. The difference is that a speaker embedding is added to the decoding part, which is similar to word embedding, except that the user is modeled here. Because the user’s information cannot be modeled explicitly, an embedding method is used to obtain the speaker vector through training. The figure on the left below is the representation of the speaker vector on a two-dimensional plane. Users with similar background information It will be very close, which is the same as the word vector.</p>
+<h3 id="3-reinforcement-learning-model"><a href="#3-reinforcement-learning-model" class="headerlink" title="3. reinforcement learning model"></a>3. reinforcement learning model</h3><p>Using reinforcement learning to solve human-computer dialogue problems has a long history, but with the hype of AlphaGo, deepmind has brought reinforcement learning back to the stage and combined with deep learning to solve some more difficult problems.</p>
+<p>Reinforcement learning uses long term reward as the objective function, which will enable the model to predict higher quality responses after training. The article [7] proposed a model framework with the following capabilities:</p>
+<ol>
+<li><p>Integrate the reward function defined by the developer to achieve the goal.</p>
+</li>
+<li><p>After generating a response, you can quantitatively describe the impact of this response on subsequent stages.</p>
+</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yke1oz3j30oh0bnwfc.jpg"></p>
+<p>Two bots are in a conversation. Initially, an input message is given, and then bot1 generates 5 candidate responses based on the input, and then proceeds sequentially, because each input generates 5 responses. As the turn increases, the response will increase exponentially , Here in each round of dialogue, select 5 as the response of the current round through sample.</p>
+<p>Train a good seq2seq on a large data set as the initial value, and use reinforcement learning to improve the model’s ability to implement a custom reward function to achieve the desired effect.</p>
+<p>The model in article [7] can generate more rounds of dialogue without falling into an infinite loop prematurely, and the generated dialogue diversity is very good.</p>
+<h3 id="4-task-oriented-seq2seq-model"><a href="#4-task-oriented-seq2seq-model" class="headerlink" title="4. task-oriented seq2seq model"></a>4. task-oriented seq2seq model</h3><p>Most of the existing task-oriented bots use rule-based, template-based or example-based or a combination of them, and data driven solutions are very rare. Articles [8] and [9] try to use deep learning techniques on individual parts of the bot, and give practical solutions.</p>
+<p>Article [8] first introduces a well-known scene, how an experienced customer service brings a new customer service, divided into four stages:</p>
+<ol>
+<li><p>Tell the new customer service what “controls” are available, such as: how to find customer information, how to determine customer identity, etc.</p>
+</li>
+<li><p>The new customer service imitates and learns from the good examples made by the old customer service.</p>
+</li>
+<li><p>The new customer service began to try to serve the customer, and the old customer service corrected his mistakes in time.</p>
+</li>
+<li><p>The old customer service will let go, and the new customer service will serve customers alone, keep learning and accumulate experience.</p>
+</li>
+</ol>
+<p>The model framework of [8] is designed according to the above process:</p>
+<ol>
+<li><p>The developer provides a series of alternative actions, including response templates and some API functions, to be called by the bot.</p>
+</li>
+<li><p>Experts provide a series of example dialogues and use RNN to learn.</p>
+</li>
+<li><p>A simulated user randomly generates a query, a bot responds, and an expert corrects it.</p>
+</li>
+<li><p>Bot goes online for service, talks with real customers, and improves bot service quality through feedback.<br><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yl8y707j30t809j3yu.jpg"></p>
+</li>
+</ol>
+<p>When training, a part of high-quality data is used for supervised learning SL, and reinforcement learning RL is used to optimize the model to obtain higher quality results.</p>
+<p>The article [9] balances the advantages and disadvantages of two popular schemes, and proposes a set of reference value and practical seq2seq solutions.</p>
+<h3 id="6-Knowledge-Sources-based-model"><a href="#6-Knowledge-Sources-based-model" class="headerlink" title="6. Knowledge Sources based model"></a>6. Knowledge Sources based model</h3><p>Pure seq2seq can solve many problems, but for specific tasks, adding a related knowledge source on the basis of seq2seq will make the effect much better. The knowledge here can be unstructured text sources, such as the ubuntu manpages in article [10], or structured business data, such as the database in article [9], or it can be a source data and business data The extracted knowledge graph.</p>
+<p>The author of the article [10] defines the bot task as next utterance classification, which is a bit like a question answering task. Given a context and a response candidate list as candidate answers, select the correct response from the candidate list through the context. The contribution of this article lies in the introduction of task-related external professional knowledge base on the basis of context, and this knowledge base is unstructured.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ym1poayj30gz078glx.jpg"></p>
+<p>The model is composed of three rnn encoders, one rnn to encode context, one rnn to encode response, and one rnn to encode knowledge, and then make predictions together to select the most suitable response. The model is called a knowledge encoder. Because the data set is related to ubuntu technical support, ubuntu manpages is used for external resources.</p>
+<h3 id="7-context-sensitive-model"><a href="#7-context-sensitive-model" class="headerlink" title="7. context sensitive model"></a>7. context sensitive model</h3><p>The model in article [11] is relatively simple, but the issues considered are of great significance. The modeling of history information is of great help to bots in solving practical engineering applications, and directly determines whether your bot can work. The author expresses the history context with a bag of words model instead of the rnn we often use, and then passes the context and user query through a simple FNN to get an output.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ymlc3o5j305j0acweh.jpg"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-shallow_bot1"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/13/shallow_bot1/"
+    >Think about Bot 1</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/08/13/shallow_bot1/" class="article-date">
+  <time datetime="2020-08-13T15:50:55.000Z" itemprop="datePublished">2020-08-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><em>Thinking during the internship in HCI group</em></p>
+<p>Chatbot is a word or an application that has been very popular recently. Not only are the major news media hyping up the concept of bots, but major giants have also invested huge resources in research and development.  I have to say that an embarrassing fact is that it is really difficult to find a really useful bot on the market. According to the field involved, bots are divided into open-domain and task-oriented bots. The open domain has a lot to do, and it’s more like a platform that can do anything. No matter what kind of needs you raise, it can solve it. It means true AI, while task-oriented bots focus on doing a good job. Things, booking air tickets, order meals, get passports, etc.</p>
+<p>When it comes to open-domain bots, the ones that everyone comes into contact with the most are entertainment bots that have very nonsensical answers. The bot companies that use deep learning to solve bot technology are all of this type. They can’t solve any practical problems. They can just talk to everyone. And many times the answer is that they are not right, which is very ridiculous.</p>
+<p>Let’s talk about task-oriented bots. The most popular one on the market is customer service robots, whether it’s a bank or an e-commerce company. If you don’t want to answer the user’s questions repeatedly, just use a customer service bot to respond and develop a specific task. The bot requires a lot of work and a lot of maintenance in the later period. Because too many hand crafted features are used, the horizontal scalability of the entire bot framework is relatively poor. </p>
+<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>Bot is a comprehensive problem involving the following three main issues:</p>
+<h3 id="1-Response-generation-selection"><a href="#1-Response-generation-selection" class="headerlink" title="1. Response generation (selection)"></a>1. Response generation (selection)</h3><p>The dialog generation is the last step, the output part. In a brief summary, there are four solutions:</p>
+<p>Solution 1 generates dialogue directly based on context. There are a lot of recent papers in this regard, especially after the seq2seq+attention framework has swept many tasks of NLP, the benchmark generated by dialogue has been refreshed by various models again and again. The problem of dialogue generation is defined as a generative model based on a certain condition. Typically, predict words based on context. When it comes to sentence generation, the evaluation problem will be a more difficult problem.</p>
+<p>Solution 2 Of course, some papers do not define dialogue generation as a language model problem, but a next utterance selection problem, a multiple choice problem, given a context, given a utterance candidate list, select one from the list As a response, of course, this type of problem is much less difficult and very easy to evaluate, but it takes more effort to prepare the data set, and it is not easy to learn from in practical applications.</p>
+<p>Solution 3 rule-based or template-based, the final form of response is actually filled with a template, most of the things are given, only some specific values ​​need to be filled. This type of solution is very suitable for task-oriented bots, but too many manual features and templates make it difficult to port to other tasks.</p>
+<p>Solution 4 query-based or example-based, the response comes from a database called a knowledge base, which contains a large number of rich examples, according to the user’s query, find the closest example, and return the corresponding response as Output. This type of solution is very suitable for entertainment and funny bots. The core technology is to find more data to enrich and clean the knowledge base. But after all, respnose is taken from others, which may be funny, but most of them will be wrong.</p>
+<h3 id="2-dialog-state-tracking-DST"><a href="#2-dialog-state-tracking-DST" class="headerlink" title="2. dialog state tracking (DST)"></a>2. dialog state tracking (DST)</h3><p>Some papers call DST the belief trackers. This component is actually the core of the bot. Its function is to understand or capture user intention or goal. Only when you really know what the user needs can you make the correct action or response. For this part, there will be a Dialog State Tracking Challenge competition. Generally speaking, a range of state is given, and the context is used to predict which state the user belongs to, what kind of needs they have, and whether they need to query the weather or train tickets.</p>
+<h3 id="3-User-modeling"><a href="#3-User-modeling" class="headerlink" title="3. User modeling"></a>3. User modeling</h3><p>The bot is oriented to specific businesses and deals with real users. If it is just a simple FAQ bot, it may not be necessary to answer a few common questions, but if it is other more complex and detailed businesses, it needs to be provided to users. Modeling, the same problem, the response that the bot gives to each person must be different, the reason is very simple. User modeling needs to involve not only simple basic user information and some explicit feedback information of the user, but more importantly the history conversations of the user, these implicit feedback information. It’s like before the recommendation system went viral, everyone was selling things fairly, but some smart people started to analyze user behavior, not only those likes, but also the “clues” left by users inadvertently. In this way, we know what users are potentially interested in, which is what the recommendation system is doing later. Modeling the user is to make a personalized bot, and each response generated has the distinctive characteristics of the user.</p>
+<h2 id="Corpus"><a href="#Corpus" class="headerlink" title="Corpus"></a>Corpus</h2><p>Large-scale corpora are used to train open-domain bot dialogue generation models, and data sources are generally from social networking sites. For task-oriented bots, the size of customer data is generally very small. This is one of the main reasons why it is difficult to directly apply data driven solutions to task-oriented bots.</p>
+<p>The survey of bot training corpus is given in [1].</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yfyvum5j30l208hgmg.jpg"></p>
+<p>The picture comes from the article [13]. There are indeed many English corpora. The corpus of Sina Weibo was released by Huawei’s Noah’s Ark Lab [12]. If bot data is generated from twitter or Weibo, the effect of “conversational in nature” is not as good as the data generated from chat rooms such as ubuntu chat logs, which is more suitable for training response generation models, because it is more natural and pollution-free. The article [5] also uses a large Chinese corpus, with data from Baidu Tieba.</p>
+<h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><p>There are too many papers studying bots. This is a very active research field, and there are many subdivisions. Next, we will introduce some models according to the research questions targeted.</p>
+<h3 id="1-seq2seq-generative-model"><a href="#1-seq2seq-generative-model" class="headerlink" title="1. seq2seq generative model"></a>1. seq2seq generative model</h3><p>The most popular solution now is seq2seq+attention, the encoder feeds the user query feed in, outputs a vector representation to represent the entire query, and then serves as the condition of the decoder, and the decoder is essentially a language model that generates the response step by step, [2 ] Adopting this kind of scheme, Google used a large number of parameters to train such a model and got a good bot.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ygs7tbtj30gt04eaa0.jpg"></p>
+<p>There is a problem with typical seq2seq, that is, it is easy to generate some “huh” responses, that is, some very safe, grammatical but meaningless responses, such as “I don’t know!”. The reason is that traditional seq2seq uses MLE (Maximum Likelihood Estimate) as the objective function in the decoding process, that is, to generate the most grammatical words, not the most useful words. These safe sentences appear in large numbers in the training corpus. After the model learns, It is inevitable that such a response is always generated, and the article [3] draws on some experience in speech recognition, and uses MMI (Maximum Mutual Information) as the objective function when decoding, which improves the diversity of the response.</p>
+<p>The article [4] believes that the fundamental reason for the low quality of human speech generated by language models like RNNLM is that the random feature or noise hidden in utterance is not handled properly, thus generating next token (short term goal) and future tokens (long term goal) have a mediocre effect.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yhyje8pj30lq0bnwfn.jpg"></p>
+<p>When generating each utterance, four parts are needed, encoder RNN, context RNN, latent variable, decoder RNN, which are input and output in sequence. The latent variable here is a bit similar to the LSI in the IR. Latent shows that we can’t tell what they are, but it may represent a topic or sentiment, a representation of dimensionality reduction.</p>
+<p>The article [5] proposed a method called content introducing to generate short text response.</p>
+<p>Step 1 After a given query, predict a keyword as the topic of the response. This topic part of speech is a noun. The keyword here cannot capture complex semantics and grammar, but only predicts a PMI (Pointwise Mutual) based on each word in the query. Information) The highest noun is used as the keyword.</p>
+<p>The model of step 2 [5] is called Sequence To Backward and Forward Sequences. First, a backward step is performed. Given a query, express it with an encoder to get a context. In the decoder part, first give the keyword as the first word, and then perform decoding. The generated part is equivalent to the part in front of the keyword; the next step is forward step, which is also a typical seq2seq. The query is expressed as a context with an encoder, and then given the words generated by the backward and the keyword as the first half of the decoder, continue decoding Generate the second half. The entire process is briefly described as follows:</p>
+<p>step 1 query + keyword =&gt; backward sequence</p>
+<p>step 2 query + keyword + backward sequence(reverse) =&gt; forward sequence</p>
+<p>step 3 response = backward (reverse) sequence + keyword + forward sequence</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-prml_2"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/06/06/prml_2/"
+    >chap2 Probability Distribution</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/06/06/prml_2/" class="article-date">
+  <time datetime="2020-06-06T18:50:55.000Z" itemprop="datePublished">2020-06-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pattern-recognition-and-machine-learning/">pattern recognition and machine learning</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Chapter 2 Probability Distribution</p>
+<h2 id="1-Parametric-amp-Non-parametric-method"><a href="#1-Parametric-amp-Non-parametric-method" class="headerlink" title="1. Parametric &amp; Non-parametric method"></a>1. Parametric &amp; Non-parametric method</h2><p><strong>Parametric method:</strong> assume a specific functional form for the distribution.<br><strong>Nonparametric method:</strong> form of distribution typically depends on the size of the data set. Such models still contain parameters, but control the model complexity rather than the form of the distribution.</p>
+<h2 id="2-The-meaning-of-Conjugate-prior"><a href="#2-The-meaning-of-Conjugate-prior" class="headerlink" title="2. The meaning of Conjugate prior"></a>2. The meaning of Conjugate prior</h2><p><strong>to facilitate Bayesian inference, even sequential Bayesian inference</strong><br>sequential Bayesian inference: After obtaining an observation, the posterior can be calculated; since the conjugate prior is selected, the posterior is the same as the original prior form. The posterior is used as the new priority for the next observation, and so on. For the case of stream of data, real-time can be achieved in this way learning.</p>
+<h2 id="3-Multivariate-Gaussian-distribution"><a href="#3-Multivariate-Gaussian-distribution" class="headerlink" title="3. Multivariate Gaussian distribution"></a>3. Multivariate Gaussian distribution</h2><p><strong>Basic knowledge:</strong> Linear Algebra + Matrix Theory, Multivariate Calculus</p>
+<p><strong>Preparation:</strong><br>The integral calculation of the unary Gaussian function on R;<br>The covariance matrix of any random vector is non-negative definite; for any positive definite matrix A, there is a non-singular matrix G such that A = G’G; double integral substitution theorem;<br>Characteristic function (a Fourier transform of probability density function); the characteristic vector and characteristic value of linear transform;</p>
+<p><strong>Problems to be solved:</strong><br>Prove that the probability density function of multivariate Gauss is normalized;<br>Derive the conditional gauss distribution; (involving: completing the square, that is, the matching method; the method of undetermined coefficients;<br>inverse of partitioned matrix formula) derive marginal gauss distribution;</p>
+<p><strong>Comments on multivariate Gauss:</strong><br>(1) Too many parameters and complicated calculations (the covariance matrix is ​​the number of parameters in the square of the dimension)<br>(2) Unimodal function, limited modeling ability<br>The above two forms a kind of contradiction: On the one hand, there are many parameters and the model should be more flexible; on the other hand, it cannot model multimodal function. </p>
+<p><strong>Multivariate Gaussian extension:</strong> support multimodal function<br>(1) Introducing discrete latent variables: such as Gaussian Mixtures model. (2) introducing continuous latent variables: such as Linear Dynamic System. And there are other extensions.</p>
+<h2 id="4-The-Exponential-Family"><a href="#4-The-Exponential-Family" class="headerlink" title="4. The Exponential Family"></a>4. The Exponential Family</h2><p>The form of the exponential family distribution:<br>$$<br>p(\vec{x} \mid \vec{\eta})=h(\vec{x}) g(\vec{\eta}) \exp \left{\vec{\eta}^{T} \vec{u}(\vec{x})\right}<br>$$<br>Assuming that the MLE method is used for parameter estimation, the derivative of $g(\vec{\eta}) \int h(\vec{x}) \exp \left{\vec{\eta}^{T} \vec{u}(\vec{x})\right} d \vec{x}=1$ with respect to $\vec{\eta}$, and the derivative is 0, we get:<br>$$<br>-\nabla \ln g(\vec{\eta})=E[\vec{u}(\vec{x})]=\frac{1}{N} \sum_{n=1}^{N} \vec{u}\left(\vec{x}_{n}\right)<br>$$<br>The components of the vector at the far right are all sufficient statistics of the exponential family.</p>
+<h2 id="5-No-information-prior"><a href="#5-No-information-prior" class="headerlink" title="5. No information prior"></a>5. No information prior</h2><p>The prior intended to have as litter influence on the posterior distribution as possible.<br>When the value of the parameter is bounded, the uniform distribution is a priori without information;<br>When the value of the parameter is unbounded, the uniform distribution cannot be normalized, which is improper.<br>Translation invariant and Scale invariant are two types of distributions without information prior.</p>
+<h2 id="6-Nonparametric-methods"><a href="#6-Nonparametric-methods" class="headerlink" title="6. Nonparametric methods"></a>6. Nonparametric methods</h2><p><strong>Question:</strong><br>Given N data samples observed in D-dimensional space, estimate the density function p(x) (this is an unsupervised learning)</p>
+<p><strong>Method:</strong><br>Consider the problem in a sufficiently small area R. Take any point x and let the probability of falling into R be P. Assuming that N samples are observed, the probability of falling into K points in R is Bin(K|N,P) respectively.<br>Since R is small enough, p(x) is approximately constant in R, so: P = p(x) * V, V is the measure (volume) of R; since N is large enough, the binomial is Bin(K|N, The value of P) is concentrated near the mean value N*P, that is: K = N * P. Combining the above two formulas, the approximate value of the density function on the region R can be obtained: p(x) = K / (N * V).</p>
+<p><strong>Kernel density estimator (Parzen window method):</strong><br>Fix V (a hypercube), and calculate K in the range of V on the data set. Gaussian function is often used as smoothing kernel function.<br>In order to facilitate the calculation of the number of sample points in a certain area, a kernel function can be defined:<br>$$<br>k(\vec{u})=\left{\begin{array}{l}<br>1,\left|u_{i}\right| \leq 1 / 2, i=1, \ldots, D \<br>0, \text { otherwise }<br>\end{array}\right.<br>$$</p>
+<p><strong>Disadvantages discussion:</strong><br>the size of h is difficult to determine. In regions of high data density, h should be smaller, otherwise it may lead to over-smoothing and washing out of structure that might otherwise be extracted from the data; on the contrary, where data is sparse, h is too small and may lead to noisy estimate. Therefore, the value of h is related to location and should not be one size fits all.</p>
+<p><strong>kNN:</strong><br>Fix K, calculate V (a hypersphere) required to contain K points on the data set. Note that kNN can also be used for classification. The kNN classification algorithm is the largest posterior classification (MAP).</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/booknote/" rel="tag">booknote</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-prml_1"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/20/prml_1/"
+    >chap1 Introduction</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/05/20/prml_1/" class="article-date">
+  <time datetime="2020-05-20T18:50:55.000Z" itemprop="datePublished">2020-05-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pattern-recognition-and-machine-learning/">pattern recognition and machine learning</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Chapter 1 Introduction</p>
+<h2 id="1-Bayesian-interpretation-of-probability"><a href="#1-Bayesian-interpretation-of-probability" class="headerlink" title="1. Bayesian interpretation of probability"></a>1. Bayesian interpretation of probability</h2><p>It is not so much the Bayesian interpretation of the concept of “probability”, as it happens that probability can be used as quantitative Bayesian<br>Means to send the concept of “degree of belief”. The starting point of the Bayesian school is the concept of “uncertainty”, which is given a “degree of belief” to express uncertainty.<br>Cox showed that if numerical values are used to represent degrees of belief, then a simple set of axioms encoding common sense properties of such beliefs leads uniquely to a set of rules for manipulating degrees of belief that are equivalent to the sum and product rules of probability .<br>Therefore, we can use the machinery of probability theory to describe the uncertainty in model parameters.</p>
+<h2 id="2-Views-on-parameter-and-Bayesian’s-interpretation-of-prior-and-posterior-probabilities"><a href="#2-Views-on-parameter-and-Bayesian’s-interpretation-of-prior-and-posterior-probabilities" class="headerlink" title="2. Views on parameter and Bayesian’s interpretation of prior and posterior probabilities"></a>2. Views on parameter and Bayesian’s interpretation of prior and posterior probabilities</h2><p>For <strong>Frequentist</strong>, model parameter w is a fixed quantity, estimated with “estimator”; The most often estimator seen is likelihood.<br>For <strong>Bayesian</strong>, w itself is an uncertainty, and its uncertainty is represented by prior probability p(w).<br>In order to know the w of fixed, Frequentist performs repeated experiments to obtain different data sets D;<br>For Bayesian, there is only a single data set D, namely the one that is actually observed. After obtaining an observation D, the Bayesian school has to adjust the original belief (prior probability) for w, using the posterior probability P (w|D) represents the adjusted belief. The method of adjustment is Bayes’ theorem.<br>Bayesian’s central theorem is Bayes’ theorem, which convert a prior probability into a posterior probability by incorporating the evidence provided by the observed data. Among them, the conditional probability P(D|w) means how probable the observed data set is for different settings of parameter vector w.<br>$$<br>p(w \mid D)=\frac{p(D \mid w) p(w)}{p(D)}=\frac{p(D \mid w) p(w)}{\int p(D \mid w) p(w) d w}<br>$$<br>Among them, p(D) in the denominator is just a quantity used for normalization, so that p(w|D) is indeed a probability. The calculation of p(D) has been given in the denominator above.</p>
+<p><em>(Understand the posterior probability: that is, the modified prior probability. For example, there are C1,…,Ck categories, and the priors are P(C1),…, P(Ck). At this time, if you give an unknown The category data lets us guess which category it is, obviously we should guess the category with the largest prior probability. After observing the data x, calculate the posterior probability P(C1|x),…,P(Ck|x) ; So the “a priori” correction at this time is P’(C1)=P(C1|x),…, P’(Ck)=P(Ck|x). If you now come to an unknown category of data let We guess that the method we guess is still to find the category with the largest prior probability, but the prior probability at this time is P’(C1),…, P’(Ck).)</em></p>
+<h2 id="3-Disadvantages-of-Bayesian-and-Frequentist"><a href="#3-Disadvantages-of-Bayesian-and-Frequentist" class="headerlink" title="3. Disadvantages of Bayesian and Frequentist"></a>3. Disadvantages of Bayesian and Frequentist</h2><p><strong>One of Bayesian’s frequent criticisms:</strong> prior distribution is often selected on the basis of mathematical convenience rather than as a reflection of any prior beliefs. For example, conjugate prior is often selected.<br><strong>Disadvantages of the Frequentist method:</strong> Over-fitting problem can be understood as a general property of maximum likelihood.</p>
+<h2 id="4-Deal-with-over-fitting-problems"><a href="#4-Deal-with-over-fitting-problems" class="headerlink" title="4. Deal with over-fitting problems"></a>4. Deal with over-fitting problems</h2><p><strong>Frequentist methods to control over-fitting:</strong></p>
+<ol>
+<li>Regularization, which means adding a penalty term to the objective function.<br>L2 regularizer is called ridge regression<br>L1 regularizer is called Lasso regression<br>The method of adding penalty is also called shrinkage method, because it can reduce the value of the coefficients.</li>
+<li>cross-validation, that is, set aside some data for validation<br>Cross-validation is also a method of model selection. Using the reserved validation data, you can<br>Choose the best one among multiple trained models.</li>
+</ol>
+<p><strong>Bayesian control over-fitting method:</strong> Prior probability</p>
+<h2 id="5-The-main-problem-faced-by-the-Bayesian-method-marginalization-calculation-is-difficult"><a href="#5-The-main-problem-faced-by-the-Bayesian-method-marginalization-calculation-is-difficult" class="headerlink" title="5. The main problem faced by the Bayesian method: marginalization calculation is difficult"></a>5. The main problem faced by the Bayesian method: marginalization calculation is difficult</h2><p>Marginalization lies at the heart of Bayesian methods.<br>The application of Bayesian methods has long been restricted by marginalization. For a full Bayesian procedure, to make prediction or compare different models, the necessary step is marginalize (sum or integrate) over the whole of parameter space.<br>Two methods developed to overcome the difficulties of marginalization:</p>
+<ul>
+<li>The first is sampling, such as Markov chain Monte Carlo. The Monte Carlo method has the advantage of being flexible and widely used in various models; the disadvantage is computationally intensive, mainly used for small-scale problems. </li>
+<li>The second is deterministic approximation, such as variational Bayes and expectation propagation, and the advantage is that it can be used for large-scale applications.</li>
+</ul>
+<h2 id="6-Curve-fitting-is-an-example-to-demonstrate-three-methods"><a href="#6-Curve-fitting-is-an-example-to-demonstrate-three-methods" class="headerlink" title="6. Curve fitting is an example to demonstrate three methods"></a>6. Curve fitting is an example to demonstrate three methods</h2><ol>
+<li><p>MLE, directly calculate the maximum value of likelihood function to obtain the parameter w. This method belongs to point estimation.</p>
+</li>
+<li><p>MAP (poor man’s bayes), introduce prior probability, find the maximum value of posterior probability, and get w. MAP at this time is equivalent to adding an L2 penalty to the likelihood function of MLE. This method still belongs to point estimation.</p>
+</li>
+<li><p>The fully Bayesian approach requires the use of sum rule and product rule (because the machinery and probability of “degree of belief” are the same, so these two rules are valid for “degree of belief”), and to obtain predictive distribution, marginalize (sum or integrate) over the whole of parameter space w.<br>$$<br>p(t \mid \boldsymbol{x}, \boldsymbol{X}, \boldsymbol{t})=\int p(t \mid \boldsymbol{x}, \boldsymbol{w}) p(\boldsymbol{w} \mid \boldsymbol{X}, \boldsymbol{t}) d \boldsymbol{w}<br>$$<br>Among them, x is the point to be predicted, X is the observed data set, and t is the label corresponding to each data point in the data set.<br>In fact, the posterior probability of parameter w is used as the weight to perform a weighted average of probability; therefore, this process needs to integrate w, that is, marginalization.</p>
+</li>
+</ol>
+<h2 id="7-Three-theories-required-by-PRML"><a href="#7-Three-theories-required-by-PRML" class="headerlink" title="7. Three theories required by PRML"></a>7. Three theories required by PRML</h2><p>Probability theory, decision theory and information theory</p>
+<h2 id="8-Two-stages-inference-and-decision"><a href="#8-Two-stages-inference-and-decision" class="headerlink" title="8. Two stages: inference and decision"></a>8. Two stages: inference and decision</h2><p>The solution of the whole problem is divided into two stages: first make inference, then make decision. In the inference stage, you need to get the joint probability distribution or the posterior probability distribution; in the decision stage, you use posterior probability to make optimal class assignments.</p>
+<h2 id="9-Three-different-ways-to-solve-the-decision-problem"><a href="#9-Three-different-ways-to-solve-the-decision-problem" class="headerlink" title="9. Three different ways to solve the decision problem"></a>9. Three different ways to solve the decision problem</h2><ol>
+<li><p>discriminant function: map inputs x directly into decisions. Therefore, the discriminant function solves inference and decision in one step.</p>
+</li>
+<li><p>Discriminant model: The first step is to solve the inference problem, determining the posterior class probabilities, P(Ck |x); the second step is to solve the decision problem, and assign it to a certain class for the newly given x.</p>
+</li>
+<li><p>Generative model: Explicitly or implicitly model the distribution of inputs as well as outputs. The first step is to get class-conditional density P( x | Ck) or joint distribution P( x, Ck ); the second step is the previous step Draw posterior on the basis of; the third step, decision problem.</p>
+</li>
+</ol>
+<h2 id="10-Comment-on-the-shortcomings-of-the-three-ways-of-solving-decision-making-problems"><a href="#10-Comment-on-the-shortcomings-of-the-three-ways-of-solving-decision-making-problems" class="headerlink" title="10. Comment on the shortcomings of the three ways of solving decision-making problems"></a>10. Comment on the shortcomings of the three ways of solving decision-making problems</h2><p><strong>Disadvantage of the Generative model:</strong> If it is just to make a classification decision, the calculation of the joint distribution is wasteful of computational resources and excessively demanding of data. Generally, a posterior probability is sufficient.</p>
+<p><strong>Disadvantages of Discriminant function:</strong> This method does not seek posterior probability, but there are powerful reasons for wanting to compute the posterior probabilities:<br>(1) When the loss matrix may change over time (for example, financial application), if the posterior probability is calculated, then the expected loss objective function only needs to be modified to solve the decision problem; the discriminant function without posterior probability can only be re-learned.<br>(2) When the positive and negative samples are not balanced (such as X-ray diagnosis of cancer, 99.9% may be cancer-free samples; in the case of spam, most emails are not spam), in order to obtain a good classification It needs to manually make a balanced data set for training; after training to obtain a posterior probability P(Ck |x), you need to compensate for the effects of the modification to the training data, that is, divide P(Ck |x) Take the prior P(Ck) of the balanced data set and multiply it by the prior P(Ck) of the real data to obtain the posterior probability P(Ck |x) of the real data. The discriminant function without posterior probability cannot deal with the imbalance of positive and negative samples with the above methods.<br>(3) Combining models: For complex applications, a problem may be decomposed into multiple sub-problems, such as disease diagnosis. In addition to X-ray image data xI, there may be blood test data xB. Instead of combining these heterogeneous information as input, a more effective method is to build one system to interpret the X-ray images and a different one to interpret the blood data. That is:<br>$$<br>\begin{aligned}<br>P\left(C_{k} \mid x_{I}, x_{B}\right) &amp; \propto P\left(x_{I}, x_{B} \mid C_{k}\right) P\left(C_{k}\right) \<br>&amp; \propto P\left(x_{I} \mid C_{k}\right) P\left(x_{B} \mid C_{k}\right) P\left(C_{k}\right) \propto \frac{P\left(C_{k} \mid x_{I}\right) P\left(C_{k} \mid x_{B}\right)}{P\left(C_{k}\right)}<br>\end{aligned}<br>$$</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/booknote/" rel="tag">booknote</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-prml_0"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/06/prml_0/"
+    >chap0 Summary</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/05/06/prml_0/" class="article-date">
+  <time datetime="2020-05-06T18:50:55.000Z" itemprop="datePublished">2020-05-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pattern-recognition-and-machine-learning/">pattern recognition and machine learning</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="The-main-content-of-the-Frequentist-Bayesian-confrontation"><a href="#The-main-content-of-the-Frequentist-Bayesian-confrontation" class="headerlink" title="The main content of the Frequentist-Bayesian confrontation"></a>The main content of the Frequentist-Bayesian confrontation</h2><table>
+<thead>
+<tr>
+<th align="center">Frequentist</th>
+<th align="center">Bayesian</th>
+<th align="center">Difference</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Linear basis function regression</td>
+<td align="center">Bayesian linear basis function regression</td>
+<td align="center">Both have closed-form solution</td>
+</tr>
+<tr>
+<td align="center">Logistic regression</td>
+<td align="center">Bayesian logitstic regression</td>
+<td align="center">Newton iteration (IRLS)/ Laplace approximation</td>
+</tr>
+<tr>
+<td align="center">Neural network (for regression, classification)</td>
+<td align="center">Bayesian Neural network (for regression, classification)</td>
+<td align="center">gradient decent/Laplace approximation</td>
+</tr>
+<tr>
+<td align="center">SVM (for regression, classification)</td>
+<td align="center">RVM (for regression, classification)</td>
+<td align="center">quadratic programming/iterative, Laplace approximation</td>
+</tr>
+<tr>
+<td align="center">Gaussian mixture model</td>
+<td align="center">Bayesian Gaussian mixture model</td>
+<td align="center">EM/Variation inference</td>
+</tr>
+<tr>
+<td align="center">Probabilistic PCA</td>
+<td align="center">Bayesian probabilistic PCA</td>
+<td align="center">closed-form solution or EM/ Laplace approximation</td>
+</tr>
+<tr>
+<td align="center">Hidden markov model</td>
+<td align="center">Bayesian Hidden markov model</td>
+<td align="center">EM/?</td>
+</tr>
+<tr>
+<td align="center">Linear dynamic system</td>
+<td align="center">Bayesian Linear dynamic system</td>
+<td align="center">EM/?</td>
+</tr>
+</tbody></table>
+<h2 id="Three-forms-of-Bayesian"><a href="#Three-forms-of-Bayesian" class="headerlink" title="Three forms of Bayesian"></a>Three forms of Bayesian</h2><p><strong>Fully Bayesian:</strong> Need marginalize with respect to hyper-parameters as well as parameters. And this is often analytical intractable.<br>For curve fitting $\left(p(\boldsymbol{w} \mid \alpha)=N\left(\boldsymbol{w} \mid \mathbf{0}, \alpha^{-1} \boldsymbol{I}\right), p(t \mid \boldsymbol{x}, \boldsymbol{w}, \beta)=N\left(t \mid y(\boldsymbol{x}, \boldsymbol{w}), \beta^{-1}\right)\right)$:<br>$$<br>p(t \mid \boldsymbol{t})=\iiint p(t \mid \boldsymbol{w}, \beta) p(\boldsymbol{w} \mid \boldsymbol{t}, \alpha, \beta) p(\alpha, \beta \mid \boldsymbol{t}) d \boldsymbol{w} d \alpha d \beta<br>$$</p>
+<p><strong>Empirical Bayes/type 2 maximum likelihood/evidence approximation:</strong> adopt a strategy for hyper-parameter, that is, first find the parameters α* and β* that maximize marginal likelihood, and then make the hyper-parameter take fixed values α* and β <em>, then marginalize w:<br>$$<br>p(t \mid \boldsymbol{t}) \approx p\left(t \mid \boldsymbol{t}, \alpha^{</em>}, \beta^{<em>}\right)=\int p\left(t \mid \boldsymbol{w}, \beta^{</em>}\right) p\left(\boldsymbol{w} \mid \boldsymbol{t}, \alpha^{<em>}, \beta^{</em>}\right) d \boldsymbol{w}<br>$$</p>
+<p><strong>MAP (poor man’s Bayesian):</strong> Does not involve marginalization, but is just a point estimate that maximizes posterior probability.</p>
+<p><em>The Bayesian of PRML mainly refers to Empirical Bayesian.</em></p>
+<h2 id="Optimization-approximation"><a href="#Optimization-approximation" class="headerlink" title="Optimization/approximation"></a>Optimization/approximation</h2><p>Linear/Quadratic/Convex optimization: Find the maximum value of linear/quadratic/convex functions Lagrange multiplier: Maximum value with (equation or inequality) constraints<br>Gradient decent: find the best value<br>Newton iteration: solve equations<br>Laplace approximation: approximation<br>Expectation Maximation (EM): seeking the maximum value/approximation, almost everywhere in latent variable model Variational inference: seeking the maximum value of functional<br>Expectation Propagation (EP): Find the maximum value of the functional<br>MCMC/Gibbs sampling: sampling</p>
+<h2 id="Objective-function-Error-function-Estimator"><a href="#Objective-function-Error-function-Estimator" class="headerlink" title="Objective function/ Error function/Estimator"></a>Objective function/ Error function/Estimator</h2><p>Likelihood: estimator for MLE parameter estimation, the most commonly used objective function<br>Marginal likelihood: used to estimate hyper-parameter Sum-of-square error in emprical Bayes/evidence approximation: regression is commonly used<br>Posterior: MAP parameter estimation<br>Negative log likelihood/cross-entropy: Logistic regression<br>Exponential error: Adaboost objective function<br>Hinge error: SVM objective function</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/booknote/" rel="tag">booknote</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-sketch_killing_commendatore"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/06/23/sketch_killing_commendatore/"
+    >Reading Killing Commerndatore</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/06/23/sketch_killing_commendatore/" class="article-date">
+  <time datetime="2018-06-23T15:50:55.000Z" itemprop="datePublished">2018-06-23</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="KILLING-COMMENDATORE"><a href="#KILLING-COMMENDATORE" class="headerlink" title="KILLING COMMENDATORE"></a>KILLING COMMENDATORE</h2><p><strong>People and countries must learn to coexist with the painful past</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnnkqlm0j30m80vj40e.jpg"></p>
+<p>This time, Murakami is still following the “lost–exploration–discovery–lost again” approach, shaping the loneliness, alienation and predicament in contemporary life, but something is different.</p>
+<p>If one’s life is selfish, most people’s life is just an irreversible and only experience with no special meaning. It is true that we, as an individual, cannot trace history, but Murakami has been asking about the past rationally.</p>
+<p>Many people say that this book is a masterpiece of Murakami. The Murakami style of this book is very clear. He is very good at controlling multiple main lines, and alternating representativeness and concreteness, independent and interrelated. The Murakami world is the expression of each other. </p>
+<p>Murakami seems to be a person who <strong>strives to stop time</strong>. He has a paranoid time concept and living habits, without the fetters of children. He maximizes his time on very few things, so his spiritual world is huge and small. No exception is that “Knight” is also a Murakami-style protagonist. </p>
+<blockquote>
+<p>He has a little money but is not a rich man, so there are few fetters,<br>a high degree of freedom, and his own unique hobbies and make people<br>feel that Unique personality or skills, people who have a relatively<br>fixed partner or a relatively fixed feeling of a partner, seem to be<br>relatively calm about everything, but actually have no sense of<br>restraint.</p>
+</blockquote>
+<p>This kind of protagonist has a very chic life, so he is almost connected with “strange things”. But this book is different from the previous one in that it is a “circle”. He basically explained all the stories clearly, although there are still places that are not the truth (such as who’s child Muro and Marie Kee are). </p>
+<p>The title of the book is not only a famous painting by the artist in the book, but also an important main line concept in the book. The leader of the knight is a metaphor for long-faced people and onlookers. Girl Donna Anna. The climax of the book occurs when the protagonist assassinates the knight leader (idea) to save the girl under the instruction of the knight leader (idea), and leads to the long-faced man who has been observed and recorded, and passes the long-faced man and the faceless man through the river of existence , And with the help of the bystander Donna, return to the original point, and the protagonist is reborn.</p>
+<p>The “I” in the book used to think that the assassination of the knight leader was a failed assassination activity when he was young. The painter joined an organization when he was studying in Vienna. Because he could not stand violent politics, he tried to assassinate someone in exchange for a short period of peaceful time. But unfortunately the plan failed. Except for the painter’s life-long silence, the entire organization survived, and the painter’s girlfriend (the protagonist thought it was Donna’s role) was unable to escape.<br>The soul of the painter’s life is also a shame of silence in his life.<br>Does the painter paint this painting as a record of himself, and the metaphor of “long-faced man” who is timid and dare not say anything?<br>The faceless people need special items as a salary to save people. Is it because the painter can’t help himself to survive without expression and emotion, but at the same time there is no development of right and wrong, so the painter does not know what the face of those people. Is it kind or ugly, that’s why it’s called a faceless person who is alive but has no face?<br>The author of the last double-layer metaphor “white Subaru man” that claimed “I know everything you do” thought it might be a crime in his own body, so if there was a big problem in Vienna back then, now, “I” is going through the comic In the dark, is it the inner demon who almost swallows oneself?</p>
+<p>Murakami finally summed up all possible brain holes with a “circle”. Although the past has passed, it seems that life has returned and developed, but the memory remains the same, the destiny is a ring, and the unresolved ones will always be found in stillness. This is something no one can avoid. </p>
+<p>That painting is over, and the assassination of “I” is also over, but it leaves two doubts about where will be placed objectively with the growth of Keiwa Shima, history Even if you forget, the reality is still there. Perhaps this is what Murakami said before, “between the rock and the egg, I will always choose the side of the egg.” </p>
+<p>Human feelings cannot be forgotten.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/read/" rel="tag">read</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-sketch_reading_interestingly"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/03/01/sketch_reading_interestingly/"
+    >Reading with Interest</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/03/01/sketch_reading_interestingly/" class="article-date">
+  <time datetime="2018-03-01T16:50:55.000Z" itemprop="datePublished">2018-03-01</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Watching Japanese dramas always makes me feel touched, and I felt that way when I watched “Kono Etsuko” this week. Kono Etsuko is indeed a lovely person, full of energy, and moving towards her ideals. Even if she has to detour halfway, she can walk seriously step by step on the road that she doesn’t want to go. </p>
+<p>She originally wanted to be an editor of a fashion magazine, but she has not been enrolled for eight years. In the eighth year, she finally entered the publishing house where the magazine was located, but was sent to the proofreading department. There was no sense of achievement, and she was responsible for picking out the verbal errors and inconsistent parts for various publications. But she still carefully did her own job.<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnijb9paj30hs0a1wer.jpg"></p>
+<p>Once a literary editor asked her why she only wanted to be a fashion magazine editor, but still willing to complete all proofreading work vigorously? She said that in fact, every proofreading job is helpful to becoming an editor in the future. For example, there was once a book proofreading about snake breeding. After careful proofreading, you can remember many types of snakes. Then as a fashion magazine editor in the future, when you need snake skin products, she can ask others what kind of snakes they need. </p>
+<p>She is not that great and cannot accomplish many things at the same time. However, she always takes what she is doing seriously. It is because of her serious attitude that she is truly recognized by colleagues in the proofreading department. </p>
+<hr>
+<p>I have always been a person with a lot of mood swings, and I get depressed very easily. It’s hard to concentrate on completing tasks every time I’m feeling down, so I need to find something that can heal me. When I watched anime since I was young, I also liked watching Healing Xiang anime the most, but recently I have no patience to watch slow-paced anime. So every time I can find a cure for my TV series, I am very happy. Following the plot, I was naturally attracted, substituted in, and smiled warmly when the protagonist was cared for, and my mood soon brightened. This is probably a feeling of “the world has its own true feelings”. </p>
+<p>If you can be protected, you are not afraid of injury.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqni4c4evj30zk0jzwfx.jpg"></p>
+<p>Reading is of course a way for me to heal myself, but at the beginning of this week I always couldn’t read books. I always want to read some more in-depth, more professional books, in order to increase the posture, but I can’t read it anymore, and I look for a lot of Japanese TV dramas because of some self-destructiveness. But I saw the plot in “Kono Etsuko”: The hero is a very literary writer, but the book he wrote is quite boring. People around him said that, in fact, a good book (at least for publishers) should first be a book that others will unconsciously lament “interesting” after reading it.</p>
+<p><strong>I kind of like this expression. I want to write because I have been moved and comforted by other people’s words, so I also want to write words that can touch and comfort others.</strong></p>
+<p>Later this week, I read some reasoning, science fiction, and Wang Xiaobo’s “Black Iron Age”. I have to say that Wang Xiaobo is indeed a very interesting person.</p>
+<p>There is a very special story in “Dark Iron Age”, “East Palace West Palace”, which is about male homosexuality. This story has been included in the book three times, as a novel, a movie script and a stage script respectively, which shows that its value is still quite high. Recently, the topic of homosexuality has been raging. In fact, many writers or public figures like Wang Xiaobo have shown their understanding and tolerance of homosexuality. Today, a department of People’s Daily also published an article on understanding homosexuality. I remember that Shi Tiesheng also wrote similar words, love is the same, everyone may have an object of love, but some people happen to be male, and some are female. Therefore, first there is love and the object of love, and secondly, the gender of the object is judged.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnhrsb8zj30hs0a0gm6.jpg"></p>
+<p>I also real some physiological psychology relevant literature. For men, there is evidence that there are subtle differences between heterosexual and homosexual physiology, and this difference is often innate. Plus, sexual orientation is not an all-or-nothing thing, so this difference means that some men naturally like women more and some men naturally like men more. There is nothing wrong with blame. It cannot be said that this group is wrong just because the relative number is small.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/read/" rel="tag">read</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-py12-API"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/13/py12-API/"
+    >API</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/13/py12-API/" class="article-date">
+  <time datetime="2017-10-13T15:50:55.000Z" itemprop="datePublished">2017-10-13</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/python/">python</a>
@@ -144,38 +772,12 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h3 id="1-Read-data-from-file"><a href="#1-Read-data-from-file" class="headerlink" title="1 Read data from file"></a>1 Read data from file</h3><p><strong>file path</strong><br>Python looks for the specified file in the directory where the currently executed file is located.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;pi_digits.txt&#x27;</span>) <span class="keyword">as</span> file_object:</span><br><span class="line">contents = file_object.read()</span><br><span class="line">print(contents)</span><br></pre></td></tr></table></figure>
-<p>open(‘pi_digits.txt’) returns an object representing the file pi_digits.txt<br>You just open the file and use it when needed, and Python will automatically close it when appropriate.<br>We use the method <strong>read()</strong> to read the entire content of this file and store it as a long string in the variable contents. In this way, by printing the value of contents, the entire contents of the text file can be displayed<br>When read() reaches the end of the file, it returns an empty string print(contents.rstrip())</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ith open(<span class="string">&#x27;text_files/filename.txt&#x27;</span>) <span class="keyword">as</span> file_object:</span><br></pre></td></tr></table></figure>
-<p>This line of code tells Python to search for the specified .txt file in the text_files folder under the folder python_work.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file_path =<span class="string">&#x27;/home/ehmatthes/other_files/text_files/filename.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(file_path) <span class="keyword">as</span> file_object:</span><br></pre></td></tr></table></figure>
-<h6 id="Read-line-by-line"><a href="#Read-line-by-line" class="headerlink" title="Read line by line"></a>Read line by line</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> file_object:</span><br><span class="line">print(line)</span><br><span class="line">print(line.rstrip()) <span class="comment">#Eliminate blank lines</span></span><br></pre></td></tr></table></figure>
+  <h2 id="1-Use-WebAPI"><a href="#1-Use-WebAPI" class="headerlink" title="1. Use WebAPI"></a>1. Use WebAPI</h2><h4 id="Processing-API-response"><a href="#Processing-API-response" class="headerlink" title="Processing API response"></a>Processing API response</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="comment"># Execute API call and store response</span></span><br><span class="line">url =<span class="string">&#x27;https://api.github.com/search/repositories?q=language:python&amp;sort=stars&#x27;</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line">print(<span class="string">&quot;Status code:&quot;</span>, r.status_code)</span><br><span class="line"><span class="comment"># Store the API response in a variable</span></span><br><span class="line">response_dict = r.json()</span><br><span class="line"><span class="comment"># process result </span></span><br><span class="line">print(response_dict.keys())</span><br></pre></td></tr></table></figure>
+<p>The attribute named status_code, which lets us know whether the request was successful (status code 200 means the request was successful)<br>This API returns information in JSON format, so we use the method json() to convert this information into a Python dictionary. We store the converted dictionary in response_dict.</p>
+<h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">repo_dicts = response_dict[<span class="string">&#x27;items&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;Name:&#x27;</span>, repo_dict[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Owner:&#x27;</span>, repo_dict[<span class="string">&#x27;owner&#x27;</span>][<span class="string">&#x27;login&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Stars:&#x27;</span>, repo_dict[<span class="string">&#x27;stargazers_count&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Repository:&#x27;</span>, repo_dict[<span class="string">&#x27;html_url&#x27;</span>])</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line">lines = file_object.readlines()</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">print(line.rstrip())</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_30_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line">lines = file_object.readlines()</span><br><span class="line"></span><br><span class="line">pi_string =<span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">pi_string += line.strip() <span class="comment">#Remove the left space</span></span><br><span class="line">print(pi_string)</span><br><span class="line">print(pi_string[:<span class="number">52</span>] + <span class="string">&quot;...&quot;</span>) <span class="comment">#Handle any amount of data</span></span><br><span class="line">print(len(pi_string))</span><br></pre></td></tr></table></figure>
-<p>When reading a text file, Python interprets all the text in it as a string. If you read a number and want to use it as a value, you must use the function int() to convert it to an integer, or use the function float() to convert it to a floating point number.</p>
-<h3 id="2-Write-file"><a href="#2-Write-file" class="headerlink" title="2 Write file"></a>2 Write file</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;programming.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> file_object:</span><br><span class="line">file_object.write(<span class="string">&quot;I love programming.&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>The first argument is also the name of the file to be opened;<br>The second argument (‘w’) tells Python that we want to open the file in write mode.<br>When opening a file, you can specify <strong>read mode (‘r’)</strong>, <strong>write mode (‘w’)</strong>, <strong>addition mode (‘a’</strong>) or allow you to <strong>read The mode of fetching and writing files (‘r+’)</strong>.<br>If you omit the mode argument, Python will open the file in the default <strong>read-only mode</strong>.<br>If the file you want to write does not exist, the function open() will <strong>automatically create</strong> it.<br>However, be careful when opening a file in write (‘w’) mode, because if the specified file already exists, Python will <strong>empty the file</strong> before returning the file object.<br>Python** can only write strings** to text files. To store numeric data in a text file, you must first use the function str() to convert it to string format.</p>
-<p>Need to include a newline character in the write() statement</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file_object.write(<span class="string">&quot;I love programming.\n&quot;</span>)</span><br><span class="line">file_object.write(<span class="string">&quot;I love creating new games.\n&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h6 id="Additional-mode-‘a’"><a href="#Additional-mode-‘a’" class="headerlink" title="Additional mode ‘a’"></a>Additional mode ‘a’</h6><p>When you open the file in append mode, Python will not empty the file before returning the file object, and the lines you write to the file will be added to the end of the file.</p>
-<h3 id="3-Exception"><a href="#3-Exception" class="headerlink" title="3 Exception"></a>3 Exception</h3><p>When you think an error may have occurred, you can write a try-except code block to handle the possible exception.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">     print(<span class="number">5</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> ZeroDivisionError:</span><br><span class="line">print(<span class="string">&quot;You can&#x27;t divide by zero!&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>We put the code line print(5/0) that caused the error in a try code block. If the code in the try code block runs without problems, Python will skip the except code block; if the code in the try code block causes an error, Python will look for such an except code block and run the code in it, that is, the code specified in it. The error is the same as the error raised.</p>
-<p>A program crash is not good, but it is not a good idea to let users see the traceback. Users who do not understand the technology will be confused by them, and if the user is malicious, he will learn information you do not want him to know through traceback. For example, he will know the name of your program file, and will also see some code that does not run correctly. Sometimes, a well-trained attacker can use this information to determine what kind of attacks can be launched on your code.</p>
-<h6 id="try-except-else-code-block"><a href="#try-except-else-code-block" class="headerlink" title="try-except-else code block"></a>try-except-else code block</h6><p>The working principle is roughly as follows: Python tries to execute the code in the try block; only the code that may cause an exception needs to be placed in the try statement. Sometimes there are codes that need to be run only when the try block is successfully executed; these codes should be placed in the else block. The except code block tells Python what to do if the specified exception is raised when it tries to run the code in the try code block.</p>
-<h6 id="word-count-py"><a href="#word-count-py" class="headerlink" title="word_count.py"></a>word_count.py</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">:<span class="comment"># Calculate how many words the file contains</span></span><br><span class="line">words = contents.split()</span><br><span class="line">num_words = len(words)</span><br><span class="line">print(<span class="string">&quot;The file &quot;</span>+ filename +<span class="string">&quot; has about &quot;</span>+ str(num_words) +</span><br><span class="line"><span class="string">&quot;words.&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h6 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">--snip--</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line"><span class="keyword">pass</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    --snip--</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-Store-data"><a href="#4-Store-data" class="headerlink" title="4 Store data"></a>4 Store data</h3><p>The JSON (JavaScriptObjectNotation) format was originally developed for JavaScript, but then it became a common format and adopted by many languages ​​including Python.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line">numbers = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>]</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;numbers.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(numbers, f_obj)</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;numbers.json&#x27;</span> <span class="number">12</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">numbers = json.load(f_obj)</span><br><span class="line">print(numbers)</span><br></pre></td></tr></table></figure>
-<p>The function json.dump() accepts two actual parameters: the data to be stored and the file object that can be used to store the data.<br>Use the function json.load() to load the information stored in numbers.json and store it in the variable numbers.</p>
-<h6 id="remember-me-py"><a href="#remember-me-py" class="headerlink" title="remember_me.py"></a>remember_me.py</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="comment"># If the user name was previously stored, load it</span></span><br><span class="line"><span class="comment"># Otherwise, prompt the user to enter the user name and store it filename =&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">username = json.load(f_obj)</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">username = input(<span class="string">&quot;What is your name? &quot;</span>)</span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(username, f_obj)</span><br><span class="line">print(<span class="string">&quot;We&#x27;ll remember you when you come back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Welcome back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h6 id="Refactor"><a href="#Refactor" class="headerlink" title="Refactor"></a>Refactor</h6><p>The code can run correctly, but it can be further improved—divide the code into a series of functions that accomplish specific tasks. This process is called reconstruction.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_stored_username</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;If the user name is stored, get it&quot;&quot;&quot;</span></span><br><span class="line">filename =<span class="string">&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">username = json.load(f_obj)</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line"><span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line"><span class="keyword">return</span> username</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">greet_user</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Greeting to the user and indicating their name&quot;&quot;&quot;</span></span><br><span class="line">username = get_stored_username()</span><br><span class="line"><span class="keyword">if</span> username:</span><br><span class="line">print(<span class="string">&quot;Welcome back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">username = input(<span class="string">&quot;What is your name? &quot;</span>)</span><br><span class="line">filename =<span class="string">&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(username, f_obj)</span><br><span class="line">print(<span class="string">&quot;We&#x27;ll remember you when you come back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"></span><br><span class="line">greet_user()</span><br><span class="line"></span><br></pre></td></tr></table></figure> 
+<h4 id="Rate"><a href="#Rate" class="headerlink" title="Rate"></a>Rate</h4><p>Most APIs have rate limits, that is, there is a limit on the number of requests you can execute within a certain period of time.<br><a target="_blank" rel="noopener" href="https://api.github.com/rate_limit">https://api.github.com/rate_limit</a></p>
+<h2 id="2-Use-Pygal-to-visualize-the-warehouse"><a href="#2-Use-Pygal-to-visualize-the-warehouse" class="headerlink" title="2. Use Pygal to visualize the warehouse"></a>2. Use Pygal to visualize the warehouse</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pygal</span><br><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle <span class="keyword">as</span> LCS, LightenStyle <span class="keyword">as</span> LS</span><br><span class="line"></span><br><span class="line">my_style = LS(<span class="string">&#x27;#333366&#x27;</span>, base_style=LCS)</span><br><span class="line">chart = pygal.Bar(style=my_style, x_label_rotation=<span class="number">45</span>, show_legend=<span class="literal">False</span>)</span><br><span class="line">chart.title =<span class="string">&#x27;Most-Starred Python Projects on GitHub&#x27;</span></span><br><span class="line">chart.x_labels = names</span><br></pre></td></tr></table></figure> 
       <!-- reward -->
       
     </div>
@@ -194,7 +796,7 @@
 
     
     <article
-  id="post-py7-class"
+  id="post-py11-download"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -205,16 +807,16 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2017/10/11/py7-class/"
-    >Class</a> 
+  <a class="article-title" href="/2017/10/13/py11-download/"
+    >Download Data</a> 
 </h2>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2017/10/11/py7-class/" class="article-date">
-  <time datetime="2017-10-11T13:28:55.000Z" itemprop="datePublished">2017-10-11</time>
+      <a href="/2017/10/13/py11-download/" class="article-date">
+  <time datetime="2017-10-13T10:50:55.000Z" itemprop="datePublished">2017-10-13</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/python/">python</a>
@@ -224,487 +826,34 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h3 id="1-Create-and-use-classes"><a href="#1-Create-and-use-classes" class="headerlink" title="1 Create and use classes"></a>1 Create and use classes</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span>():</span></span><br><span class="line"> <span class="string">&quot;&quot;&quot;A simple attempt to simulate a puppy&quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, age</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize attributes name and age&quot;&quot;&quot;</span></span><br><span class="line">self.name = name</span><br><span class="line">self.age = age</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sit</span>(<span class="params">self</span>)</span></span><br><span class="line"><span class="function">&quot;&quot;&quot;<span class="title">Simulate</span> <span class="title">a</span> <span class="title">puppy</span> <span class="title">squatting</span> <span class="title">down</span> <span class="title">when</span> <span class="title">ordered</span>&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="title">print</span>(<span class="params">self.name.title(<span class="params"></span>) + <span class="string">&quot;is now sitting.&quot;</span></span>)</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">def</span> <span class="title">roll_over</span>(<span class="params">self</span>):</span></span><br><span class="line">print(self.name.title() + <span class="string">&quot;rell over!&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>The functions in the class are called methods<br><strong>init</strong>() is a special method, Python will automatically run it whenever you create a new instance based on the Dog class.</p>
-<p>When Python calls this <strong>init</strong>() method to create a Dog instance, it will automatically pass in the actual parameter self. Each method call associated with the class automatically passes the actual parameter self, which is a reference to the instance itself, allowing the instance to access the properties and methods in the class. When we create a Dog instance, Python will call the method <strong>init</strong>() of the Dog class. We will pass the name and 17 age to Dog() through the actual parameters; self will pass it automatically, so we don’t need to pass it. Whenever we create an instance based on the Dog class, we only need to provide values ​​for the last two formal parameters (name and age).<br>Variables that can be accessed through an instance are called attributes.</p>
-<p><strong>Create instance</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog = Dog(<span class="string">&#x27;willie&#x27;</span>, <span class="number">6</span>)</span><br></pre></td></tr></table></figure>
-<p><strong>Access properties</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog.name</span><br></pre></td></tr></table></figure>
-<p><strong>Call method</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog.sit()</span><br></pre></td></tr></table></figure>
-
-<p><strong>Specify default values ​​for attributes</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span>():</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize the attributes describing the car&quot;&quot;&quot;</span></span><br><span class="line">self.make = make</span><br><span class="line">self.model = model</span><br><span class="line">self.year = year</span><br><span class="line">self.odometer_reading = <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p><strong>Directly modify the value of the attribute</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_new_car.odometer_reading = <span class="number">23</span></span><br></pre></td></tr></table></figure>
-<p><strong>Increment the value of the attribute through the method</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">increment_odometer</span>(<span class="params">self, miles</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Increase the odometer reading by the specified amount&quot;&quot;&quot;</span></span><br><span class="line">self.odometer_reading += miles `insert code piece here`</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-Inheritance"><a href="#2-Inheritance" class="headerlink" title="2 Inheritance"></a>2 Inheritance</h3><p>When creating a subclass, the parent class must be included in the current file and be in front of the subclass.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ElectricCar</span>(<span class="params">Car</span>):</span> <span class="comment">#When defining a subclass, you must specify the name of the parent class in parentheses.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;The uniqueness of electric vehicles&quot;&quot;&quot;</span></span><br><span class="line">To</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span> <span class="comment">#Method __init__() accepts the information needed to create a Car instance</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize the properties of the parent class&quot;&quot;&quot;</span></span><br><span class="line">To</span><br><span class="line">super().__init__(make, model, year) <span class="comment">#super() at # is a special function that helps Python associate the parent class with the subclass.</span></span><br></pre></td></tr></table></figure>
-<p>If a property or method is available in any car and not unique to electric cars, it should be added to the Car class instead of the ElectricCar class. In this way, people who use the Car class will get the corresponding functions, while the ElectricCar class only contains code that handles the specific attributes and behavior of electric vehicles.</p>
-<p><strong>Rewrite the parent class</strong><br>As for the method of the parent class, as long as it does not conform to the behavior of the object simulated by the subclass, it can be rewritten. To this end, you can define a method in the subclass that has the same name as the superclass method to be overridden. In this way, Python will not consider the method of the parent class, but only focus on the corresponding method you defined in the subclass.</p>
-<p><strong>Big categories are split into small categories</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Battery</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;A simple attempt to simulate an electric car battery&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, battery_size=<span class="number">70</span></span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize battery properties&quot;&quot;&quot;</span></span><br><span class="line">self.battery_size = battery_size</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">describe_battery</span>(<span class="params">self</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Print a message describing battery capacity&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;This car has a &quot;</span>+ str(self.battery_size) + <span class="string">&quot;-kWh battery.&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ElectricCar</span>(<span class="params">Car</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;The uniqueness of electric vehicles&quot;&quot;&quot;</span></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot; Initialize the properties of the parent class, and then initialize the specific properties of electric vehicles &quot;&quot;&quot;</span></span><br><span class="line">super().__init__(make, model, year)</span><br><span class="line">To</span><br><span class="line">self.battery = Battery() <span class="comment">#Added a property called self.battery</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="3-Import-class"><a href="#3-Import-class" class="headerlink" title="3 Import class"></a>3 Import class</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> car <span class="keyword">import</span> Car <span class="comment">#import a single class</span></span><br><span class="line">my_new_car = Car(<span class="string">&#x27;audi&#x27;</span>,<span class="string">&#x27;a4&#x27;</span>, <span class="number">2016</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> car <span class="keyword">import</span> Car, ElectricCar <span class="comment">#import multiple</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> car <span class="comment">#import the entire module</span></span><br><span class="line">my_beetle = car.Car(<span class="string">&#x27;volkswagen&#x27;</span>,<span class="string">&#x27;beetle&#x27;</span>, <span class="number">2016</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="4-Standard-Library"><a href="#4-Standard-Library" class="headerlink" title="4 Standard Library"></a>4 Standard Library</h3><p>You can use any function and class in the standard library, for this you only need to include a simple import statement at the beginning of the program.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</span><br></pre></td></tr></table></figure>
-<p>Module <a target="_blank" rel="noopener" href="http://pymotw.com/">http://pymotw.com/</a></p>
-<h3 id="5-Coding-style"><a href="#5-Coding-style" class="headerlink" title="5 Coding style"></a>5 Coding style</h3><p>The class name should adopt the camel case nomenclature, that is, the first letter of each word in the class name should be capitalized without underscore. Both the instance name and the module name are in lower case, with underscores between words.<br>For each class, a docstring should be included immediately after the class definition.</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py6-function"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/11/py6-function/"
-    >Function</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/11/py6-function/" class="article-date">
-  <time datetime="2017-10-11T08:52:55.000Z" itemprop="datePublished">2017-10-11</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="Defining-functions"><a href="#Defining-functions" class="headerlink" title="Defining functions"></a>Defining functions</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">greet_user</span>():</span> <span class="comment">#Use the keyword def to tell Python that you want to define a function</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Show simple greetings&quot;&quot;&quot;</span> <span class="comment">#Comment of docstring</span></span><br><span class="line">print(<span class="string">&quot;Hello!&quot;</span>) <span class="comment">#The only line of code in the function body</span></span><br><span class="line"></span><br><span class="line">greet_user() <span class="comment">#Function call</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ef greet_user(username):</span><br><span class="line"><span class="string">&quot;&quot;&quot;Display a simple greeting &quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;Hello, &quot;</span>+ username.title() + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"></span><br><span class="line">greet_user(<span class="string">&#x27;jesse&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>When a function is defined, variables are formal parameters. When calling a function, the actual parameters are passed.<br>Can be called multiple times.<br>The order of the positional arguments is important.</p>
-<p><strong>Keyword Argument</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">describe_pet</span>(<span class="params">animal_type, pet_name</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Display pet information&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;\nI have a &quot;</span>+ animal_type + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;My &quot;</span>+ animal_type + <span class="string">&quot;&#x27;s name is&quot;</span> + pet_name.title() + <span class="string">&quot;.&quot;</span>)</span><br><span class="line"></span><br><span class="line">describe_pet(animal_type=<span class="string">&#x27;hamster&#x27;</span>, pet_name=<span class="string">&#x27;harry&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p><strong>Defaults</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">describe_pet</span>(<span class="params">pet_name, animal_type=<span class="string">&#x27;dog&#x27;</span></span>):</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="return-value"><a href="#return-value" class="headerlink" title="return value"></a>return value</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_formatted_name</span>(<span class="params">first_name, last_name, middle_name=<span class="string">&#x27;&#x27;</span></span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Return to a neat name&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">if</span> middle_name:</span><br><span class="line">full_name = first_name + <span class="string">&#x27;&#x27;</span> + middle_name + <span class="string">&#x27;&#x27;</span> + last_name</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">full_name = first_name + <span class="string">&#x27;&#x27;</span> + last_name</span><br><span class="line">    <span class="keyword">return</span> full_name.title()</span><br><span class="line"></span><br><span class="line">musician = get_formatted_name(<span class="string">&#x27;jimi&#x27;</span>,<span class="string">&#x27;hendrix&#x27;</span>)</span><br><span class="line">print(musician)</span><br><span class="line">musician = get_formatted_name(<span class="string">&#x27;john&#x27;</span>,<span class="string">&#x27;hooker&#x27;</span>,<span class="string">&#x27;lee&#x27;</span>)</span><br><span class="line">print(musician)</span><br></pre></td></tr></table></figure>
-<p><strong>Return to dictionary</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_person</span>(<span class="params">first_name, last_name</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Returns a dictionary containing information about a person&quot;&quot;&quot;</span></span><br><span class="line">person = &#123;<span class="string">&#x27;first&#x27;</span>: first_name,<span class="string">&#x27;last&#x27;</span>: last_name&#125;</span><br><span class="line"><span class="keyword">return</span> person</span><br></pre></td></tr></table></figure>
-
-<h3 id="Pass-list"><a href="#Pass-list" class="headerlink" title="Pass list"></a>Pass list</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">greet_users</span>(<span class="params">names</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Send a simple greeting to each user on the list&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names:</span><br><span class="line">msg = <span class="string">&quot;Hello, &quot;</span>+ name.title() + <span class="string">&quot;!&quot;</span> print(msg)</span><br><span class="line"></span><br><span class="line">usernames = [<span class="string">&#x27;hannah&#x27;</span>,<span class="string">&#x27;ty&#x27;</span>,<span class="string">&#x27;margot&#x27;</span>]</span><br><span class="line">greet_users(usernames)</span><br></pre></td></tr></table></figure>
-<p>When writing a function, if you find that it performs too many tasks, try to divide the code into two functions. Don’t forget, you can always call one function from another function, which helps to divide a complex task into a series of steps.</p>
-<h3 id="Pass-any-number-of-arguments"><a href="#Pass-any-number-of-arguments" class="headerlink" title="Pass any number of arguments"></a>Pass any number of arguments</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_pizza</span>(<span class="params">*toppings</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Print all ingredients ordered by customers&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;\nMaking a pizza with the following toppings:&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> topping <span class="keyword">in</span> toppings:</span><br><span class="line">print(<span class="string">&quot;- &quot;</span>+ topping)</span><br><span class="line">To</span><br><span class="line">make_pizza(<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">make_pizza(<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>)</span><br><span class="line"><span class="comment">#Asterisk tells Python to create an empty tuple called toppings and encapsulate all the received values ​​into this tuple</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_profile</span>(<span class="params">first, last, **user_info</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Create a dictionary that contains everything we know about the user&quot;&quot;&quot;</span></span><br><span class="line">profile = &#123;&#125;</span><br><span class="line">profile[<span class="string">&#x27;first_name&#x27;</span>] = first</span><br><span class="line">profile[<span class="string">&#x27;last_name&#x27;</span>] = last</span><br><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> user_info.items():</span><br><span class="line">profile[key] = value</span><br><span class="line">    <span class="keyword">return</span> profile</span><br><span class="line">user_profile = build_profile(<span class="string">&#x27;albert&#x27;</span>,<span class="string">&#x27;einstein&#x27;</span>,</span><br><span class="line">location=<span class="string">&#x27;princeton&#x27;</span>,</span><br><span class="line">field=<span class="string">&#x27;physics&#x27;</span>)</span><br><span class="line">print(user_profile)</span><br><span class="line"></span><br><span class="line">The two asterisks <span class="keyword">in</span> <span class="comment">#formal parameters** user_info tell Python to create an empty dictionary named user_info, and encapsulate all the received name-value pairs into this dictionary.</span></span><br></pre></td></tr></table></figure>
-<h3 id="Store-functions-in-modules"><a href="#Store-functions-in-modules" class="headerlink" title="Store functions in modules"></a>Store functions in modules</h3><p>Store the function in a separate file called a module, and then import the module into the main program. The import statement allows the code in the module to be used in the currently running program file.</p>
-<p><strong>Import the entire module</strong><br>To make the function importable, you must first create a module.<br>A module is a file with a .py extension and contains the code to be imported into the program.</p>
-<p>pizza.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_pizza</span>(<span class="params">size, *toppings</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Overview of the pizza to be made&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;\nMaking a &quot;</span>+ str(size) +</span><br><span class="line"><span class="string">&quot;-inch pizza with the following toppings:&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> topping <span class="keyword">in</span> toppings:</span><br><span class="line">      print(<span class="string">&quot;- &quot;</span>+ topping)</span><br></pre></td></tr></table></figure>
-<p>Create another file named making_pizzas.py in the directory where **pizza.py is located. This file imports the newly created module, and then call make_pizza() twice</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pizza</span><br><span class="line">pizza.make_pizza(<span class="number">16</span>,<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">    pizza.make_pizza(<span class="number">12</span>,<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p><strong>Import a specific function</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> module_name <span class="keyword">import</span> function_name</span><br><span class="line"><span class="keyword">from</span> module_name <span class="keyword">import</span> function_0, function_1, function_2</span><br></pre></td></tr></table></figure>
-<p><strong>Use as to assign an alias to the module</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pizza <span class="keyword">as</span> p</span><br><span class="line">p.make_pizza(<span class="number">16</span>,<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">p.make_pizza(<span class="number">12</span>,<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p><strong>Import all functions in the module</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pizza <span class="keyword">import</span> *</span><br><span class="line">make_pizza(<span class="number">16</span>,<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">make_pizza(<span class="number">12</span>,<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
+  <h2 id="1-CSV-file-format"><a href="#1-CSV-file-format" class="headerlink" title="1.CSV file format"></a>1.CSV file format</h2><p>To store data in a text file, the easiest way is to write the data as a series of comma-separated values ​​(CSV) to the file.<br>The reader processes the first line of data separated by commas in the file, and stores each item of data as an element in the list.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">highs = []</span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> reader:</span><br><span class="line">highs.append(row[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">or</span></span><br><span class="line"></span><br><span class="line">high = int(row[<span class="number">1</span>])</span><br><span class="line">highs.append(high)</span><br></pre></td></tr></table></figure>
+<h4 id="Module-datetime"><a href="#Module-datetime" class="headerlink" title="Module datetime"></a>Module datetime</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line">first_date = datetime.strptime(<span class="string">&#x27;2014-7-1&#x27;</span>,<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line">print(first_date)</span><br></pre></td></tr></table></figure>
+<p>The method strptime() accepts various arguments and decides how to interpret the date based on them.</p>
+<h4 id="Picture-coloring"><a href="#Picture-coloring" class="headerlink" title="Picture coloring"></a>Picture coloring</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(dates, lows, c=<span class="string">&#x27;blue&#x27;</span>, alpha=<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+<p>Alpha value 0 means completely transparent, 1 (default setting) means completely opaque. By setting alpha to 0.5, you can make the red and blue polylines look lighter.</p>
+<h4 id="check-for-errors"><a href="#check-for-errors" class="headerlink" title="check for errors"></a>check for errors</h4><p>Prevent empty data sets</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">current_date = datetime.strptime(row[<span class="number">0</span>], <span class="string">&quot;%Y-%m-%d&quot;</span>)</span><br><span class="line">high = int(row[<span class="number">1</span>])</span><br><span class="line">low = int(row[<span class="number">3</span>])</span><br><span class="line"><span class="keyword">except</span> ValueError:</span><br><span class="line">print(current_date,<span class="string">&#x27;missing data&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">dates.append(current_date)</span><br><span class="line">highs.append(high)</span><br><span class="line">lows.append(low)</span><br></pre></td></tr></table></figure>
 
 
-<h3 id="Function-Writing-Guide"><a href="#Function-Writing-Guide" class="headerlink" title="Function Writing Guide"></a>Function Writing Guide</h3><p>When specifying default values ​​for formal parameters, do not have spaces on either side of the equal sign. For keyword arguments in function calls, this convention should also be followed</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
+<h2 id="2-Making-a-world-population-map-JSON-format"><a href="#2-Making-a-world-population-map-JSON-format" class="headerlink" title="2. Making a world population map: JSON format"></a>2. Making a world population map: JSON format</h2><h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;Downloads/population_data.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f:</span><br><span class="line">    pop_data = json.load(f) <span class="comment">#list</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> pop_dict <span class="keyword">in</span> pop_data:</span><br><span class="line">    <span class="keyword">if</span> pop_dict[<span class="string">&#x27;Year&#x27;</span>] == <span class="string">&#x27;2010&#x27;</span>: <span class="comment">#Dictionary</span></span><br><span class="line">        country_name = pop_dict[<span class="string">&#x27;Country Name&#x27;</span>]</span><br><span class="line">        population = pop_dict[<span class="string">&#x27;Value&#x27;</span>]</span><br><span class="line">        print(country_name + <span class="string">&quot;: &quot;</span>+ population)</span><br></pre></td></tr></table></figure>
 
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
+<h4 id="Data-processing"><a href="#Data-processing" class="headerlink" title="Data processing"></a>Data processing</h4><p>Each key and value in population_data.json is a string. To process these demographic data, we need to represent people<br>The number of strings is converted to a numeric value, for this we use the function <strong>int()</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">population = int(pop_dict[<span class="string">&#x27;Value&#x27;</span>])</span><br><span class="line">print(country_name + <span class="string">&quot;: &quot;</span>+ str(population))</span><br></pre></td></tr></table></figure>
+<p>Python cannot directly convert the string ‘1127437398.85751’ containing a decimal point to an integer<br>To eliminate this error, we first convert the string to a floating point number, and then convert the floating point number to an integer</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">population = int(float(pop_dict[<span class="string">&#x27;Value&#x27;</span>]))</span><br></pre></td></tr></table></figure>
+<p>The map making tool in Pygal requires the data to be in a specific format:<br>Use country codes to represent countries and numbers to represent populations. When processing geopolitical data, several standardized country code sets are often used.<br>The country code used by Pygal is stored in the module i18n (abbreviation for internationalization)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.i18n <span class="keyword">import</span> COUNTRIES</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> country_code <span class="keyword">in</span> sorted(COUNTRIES.keys()):</span><br><span class="line">print(country_code, COUNTRIES[country_code])</span><br></pre></td></tr></table></figure>
 
-   
-   
-</article>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_country_code</span>(<span class="params">country_name</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Returns the two-letter country code used by Pygal according to the specified country&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> code, name <span class="keyword">in</span> COUNTRIES.items():</span><br><span class="line"><span class="keyword">if</span> name == country_name:</span><br><span class="line"><span class="keyword">return</span> code</span><br><span class="line"><span class="comment"># If the specified country is not found, return None</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
 
-    
-    <article
-  id="post-py5-input"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/10/py5-input/"
-    >Input and While Loop</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/10/py5-input/" class="article-date">
-  <time datetime="2017-10-10T19:52:55.000Z" itemprop="datePublished">2017-10-10</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="input"><a href="#input" class="headerlink" title="input"></a>input</h3><p>input() makes the program pause and wait for the user to input some text. After getting user input, Python stores it in a variable for your convenience.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">message = input(<span class="string">&quot;Tell me something, and I will repeat it back to you: &quot;</span>) print(message)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name = input(<span class="string">&quot;Please enter your name: &quot;</span>)</span><br><span class="line">print(<span class="string">&quot;Hello, &quot;</span>+ name + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p><strong>int()</strong><br>When using the function input(), Python interprets user input as a string. You can use the function <strong>int()</strong>, which tells Python to treat the input as a number.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">age = input(<span class="string">&quot;How old are you? &quot;</span>)</span><br><span class="line">How old are you? 21</span><br><span class="line">age = int(age)</span><br><span class="line">age &gt;= <span class="number">18</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-<p><strong>Modulus Operator (%)</strong><br>The modulus operator does not indicate how many times a number is another, but only indicates the remainder.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">number = input(<span class="string">&quot;Enter a number, and I&#x27;ll tell you if it&#x27;s even or odd: &quot;</span>)</span><br><span class="line">number = int(number)</span><br><span class="line"><span class="keyword">if</span> number% <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">print(<span class="string">&quot;\nThe number &quot;</span>+ str(number) +<span class="string">&quot; is even.&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;\nThe number &quot;</span>+ str(number) +<span class="string">&quot; is odd.&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="while-loop"><a href="#while-loop" class="headerlink" title="while loop"></a>while loop</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">current_number = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> current_number &lt;= <span class="number">5</span>:</span><br><span class="line">print(current_number)</span><br><span class="line">current_number += <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>Loop with exit</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">prompt = <span class="string">&quot;\nTell me something, and I will repeat it back to you:&quot;</span></span><br><span class="line">prompt += <span class="string">&quot;\nEnter&#x27;quit&#x27; to end the program. &quot;</span></span><br><span class="line"></span><br><span class="line">message = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">while</span> message !=<span class="string">&#x27;quit&#x27;</span>:</span><br><span class="line">message = input(prompt)</span><br><span class="line">print(message) <span class="comment">#User choice</span></span><br><span class="line"></span><br><span class="line">active = <span class="literal">True</span> <span class="comment">#Set a flag</span></span><br><span class="line"><span class="keyword">while</span> active:</span><br><span class="line">    message = input(prompt)</span><br><span class="line"><span class="keyword">if</span> message ==<span class="string">&#x27;quit&#x27;</span>: active = <span class="literal">False</span></span><br><span class="line"><span class="keyword">else</span>: print(message)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">city ​​= input(prompt)</span><br><span class="line"><span class="keyword">if</span> city ==<span class="string">&#x27;quit&#x27;</span>: <span class="keyword">break</span> <span class="comment">#Use break to exit</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;I&#x27;d love to go to &quot;</span>+ city.title() + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>The break statement can be used in any Python loop. For example, you can use the break statement to exit a for loop that traverses a list or dictionary.</p>
-<p><strong>Use continue</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">current_number = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> current_number &lt;<span class="number">10</span>:</span><br><span class="line">current_number += <span class="number">1</span></span><br><span class="line"><span class="keyword">if</span> current_number% <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line">print(current_number)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><strong>Avoid infinite loops</strong></p>
-<h3 id="Use-a-while-loop-to-process-lists-and-dictionaries"><a href="#Use-a-while-loop-to-process-lists-and-dictionaries" class="headerlink" title="Use a while loop to process lists and dictionaries"></a>Use a while loop to process lists and dictionaries</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># First, create a list of users to be verified</span></span><br><span class="line"><span class="comment"># And an empty list for storing authenticated users</span></span><br><span class="line">unconfirmed_users = [<span class="string">&#x27;alice&#x27;</span>,<span class="string">&#x27;brian&#x27;</span>,<span class="string">&#x27;candace&#x27;</span>]</span><br><span class="line">confirmed_users = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># Verify each user until there are no unverified users</span></span><br><span class="line"><span class="comment"># Move each verified list to the verified user list</span></span><br><span class="line"><span class="keyword">while</span> unconfirmed_users:</span><br><span class="line">current_user = unconfirmed_users.pop()</span><br><span class="line">print(<span class="string">&quot;Verifying user: &quot;</span>+ current_user.title())</span><br><span class="line">confirmed_users.append(current_user)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show all verified users</span></span><br><span class="line">print(<span class="string">&quot;\nThe following users have been confirmed:&quot;</span>) <span class="keyword">for</span> confirmed_user <span class="keyword">in</span> confirmed_users:</span><br><span class="line">print(confirmed_user.title())</span><br></pre></td></tr></table></figure>
-<p><strong>Delete all list elements that contain a specific value</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pets = [<span class="string">&#x27;dog&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>, <span class="string">&#x27;dog&#x27;</span>, <span class="string">&#x27;goldfish&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>, <span class="string">&#x27;rabbit&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>] </span><br><span class="line">print(pets)</span><br><span class="line"><span class="keyword">while</span> <span class="string">&#x27;cat&#x27;</span> <span class="keyword">in</span> pets: </span><br><span class="line">	pets.remove(<span class="string">&#x27;cat&#x27;</span>)</span><br><span class="line">print(pets)</span><br></pre></td></tr></table></figure>
-
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py4-dictionary"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/10/py4-dictionary/"
-    >Dictionary</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/10/py4-dictionary/" class="article-date">
-  <time datetime="2017-10-10T19:02:55.000Z" itemprop="datePublished">2017-10-10</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="Dictionary"><a href="#Dictionary" class="headerlink" title="Dictionary"></a>Dictionary</h3><p>Is a series of <strong>key-value pairs</strong>. Each key is associated with a value, and you can use the key to access the value associated with it.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alien = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>,<span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line">print(alien[<span class="string">&#x27;color&#x27;</span>])</span><br></pre></td></tr></table></figure>
-<p>A key-value pair is two related values. When you specify a key, Python will return the value associated with it.<br>The key and value are separated by a colon, and the key-value pair is separated by a comma.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">new_points = alien_0[<span class="string">&#x27;points&#x27;</span>]</span><br><span class="line">print(<span class="string">&quot;You just earned &quot;</span>+ str(new_points) +<span class="string">&quot; points!&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="Add-information"><a href="#Add-information" class="headerlink" title="Add information"></a>Add information</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alien_0[<span class="string">&#x27;x_position&#x27;</span>] = <span class="number">0</span></span><br><span class="line">alien_0[<span class="string">&#x27;y_position&#x27;</span>] = <span class="number">25</span></span><br></pre></td></tr></table></figure>
-<p>The order of the key-value pairs is different from the order of addition. Python does not care about the order in which key-value pairs are added, but only cares about the relationship between keys and values.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;&#125;</span><br><span class="line">alien_0[<span class="string">&#x27;color&#x27;</span>] =<span class="string">&#x27;green&#x27;</span></span><br><span class="line">alien_0[<span class="string">&#x27;points&#x27;</span>] = <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<p>When using a dictionary to store user-supplied data or writing code that can automatically generate a large number of key-value pairs, you usually need to define an empty dictionary first.</p>
-<h3 id="Modify-value"><a href="#Modify-value" class="headerlink" title="Modify value"></a>Modify value</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>&#125;</span><br><span class="line">print(<span class="string">&quot;The alien is &quot;</span>+ alien_0[<span class="string">&#x27;color&#x27;</span>] + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">alien_0[<span class="string">&#x27;color&#x27;</span>] =<span class="string">&#x27;yellow&#x27;</span> <span class="comment">#directly associated with the new</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;x_position&#x27;</span>: <span class="number">0</span>,<span class="string">&#x27;y_position&#x27;</span>: <span class="number">25</span>,<span class="string">&#x27;speed&#x27;</span>:<span class="string">&#x27;medium&#x27;</span>&#125; print(<span class="string">&quot;Original x-position: &quot;</span>+ str(alien_0[<span class="string">&#x27;x_position&#x27;</span>]))</span><br><span class="line"><span class="comment"># Move the alien to the right</span></span><br><span class="line"><span class="comment"># Determine how far to move the alien according to its current speed</span></span><br><span class="line"><span class="keyword">if</span> alien_0[<span class="string">&#x27;speed&#x27;</span>] ==<span class="string">&#x27;slow&#x27;</span>:</span><br><span class="line">x_increment = <span class="number">1</span></span><br><span class="line"><span class="keyword">elif</span> alien_0[<span class="string">&#x27;speed&#x27;</span>] ==<span class="string">&#x27;medium&#x27;</span>:</span><br><span class="line">x_increment = <span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line"><span class="comment"># This alien must be fast</span></span><br><span class="line">x_increment = <span class="number">3</span></span><br><span class="line"><span class="comment"># The new position is equal to the old position plus the increment</span></span><br><span class="line">alien_0[<span class="string">&#x27;x_position&#x27;</span>] = alien_0[<span class="string">&#x27;x_position&#x27;</span>] + x_increment</span><br></pre></td></tr></table></figure>
-<h3 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">del</span> alien_0[<span class="string">&#x27;points&#x27;</span>]</span><br></pre></td></tr></table></figure>
-<h3 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">favorite_languages ​​= &#123;</span><br><span class="line"><span class="string">&#x27;jen&#x27;</span>:<span class="string">&#x27;python&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;sarah&#x27;</span>:<span class="string">&#x27;c&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;edward&#x27;</span>:<span class="string">&#x27;ruby&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;phil&#x27;</span>:<span class="string">&#x27;python&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line">print(<span class="string">&quot;Sarah&#x27;s favorite language is &quot;</span>+</span><br><span class="line">favorite_languages[<span class="string">&#x27;sarah&#x27;</span>].title() +</span><br><span class="line"><span class="string">&quot;.&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="Traverse"><a href="#Traverse" class="headerlink" title="Traverse"></a>Traverse</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">user_0 = &#123;</span><br><span class="line"><span class="string">&#x27;username&#x27;</span>:<span class="string">&#x27;efermi&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;enrico&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;fermi&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> user_0.items():</span><br><span class="line">print(<span class="string">&quot;\nKey: &quot;</span>+ key)</span><br><span class="line">print(<span class="string">&quot;Value: &quot;</span>+ value)</span><br></pre></td></tr></table></figure>
-<p>Even when traversing the dictionary, the return order of key-value pairs is different from the storage order.</p>
-<p><strong>Traverse all key values</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> favorite_languages.keys():</span><br><span class="line">print(name.title())</span><br></pre></td></tr></table></figure>
-<p>When traversing the dictionary, all keys are traversed by default. Therefore, if you replace for name in favorite_languages.keys(): in the above code with for name in favorite_languages:, the output will not change.</p>
-<p><strong>Traverse all keys in order sort()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> sorted(favorite_languages.keys()):</span><br><span class="line">print(name.title() + <span class="string">&quot;, thank you for taking the poll.&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p><strong>Iterate over all values</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> favorite_languages.values():</span><br><span class="line">print(language.title())</span><br></pre></td></tr></table></figure>
-
-<p><strong>Make the value not repeat set()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> set(favorite_languages.values()):</span><br><span class="line">print(language.title())</span><br></pre></td></tr></table></figure>
-
-<h3 id="Nesting"><a href="#Nesting" class="headerlink" title="Nesting"></a>Nesting</h3><p>You can nest dictionaries in lists, nest lists in dictionaries, and even nest dictionaries in dictionaries</p>
-<p><strong>Dictionary List</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create an empty list for storing aliens aliens = []</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create 30 green aliens</span></span><br><span class="line"><span class="keyword">for</span> alien_number <span class="keyword">in</span> range(<span class="number">30</span>):</span><br><span class="line">new_alien = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>,<span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>,<span class="string">&#x27;speed&#x27;</span>:<span class="string">&#x27;slow&#x27;</span>&#125;</span><br><span class="line">aliens.append(new_alien)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show the first five aliens</span></span><br><span class="line"><span class="keyword">for</span> alien <span class="keyword">in</span> aliens[:<span class="number">5</span>]:</span><br><span class="line">print(alien)</span><br><span class="line">print(<span class="string">&quot;...&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show how many aliens have been created</span></span><br><span class="line">print(<span class="string">&quot;Total number of aliens: &quot;</span>+ str(len(aliens)))</span><br></pre></td></tr></table></figure>
-
-<p><strong>Store list in dictionary</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Store the information of the pizza ordered</span></span><br><span class="line">pizza = &#123;</span><br><span class="line"><span class="string">&#x27;crust&#x27;</span>:<span class="string">&#x27;thick&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;toppings&#x27;</span>: [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>],&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Overview of the pizza ordered</span></span><br><span class="line">print(<span class="string">&quot;You ordered a &quot;</span>+ pizza[<span class="string">&#x27;crust&#x27;</span>] + <span class="string">&quot;-crust pizza&quot;</span> +</span><br><span class="line"><span class="string">&quot;with the following toppings:&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> topping <span class="keyword">in</span> pizza[<span class="string">&#x27;toppings&#x27;</span>]:</span><br><span class="line">print(<span class="string">&quot;\t&quot;</span> + topping)</span><br></pre></td></tr></table></figure>
-<p>Whenever you need to associate a key with multiple values ​​in a dictionary, you can nest a list in the dictionary.</p>
-<p>Sometimes it takes two for loops</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">favorite_languages ​​= &#123;</span><br><span class="line"><span class="string">&#x27;jen&#x27;</span>: [<span class="string">&#x27;python&#x27;</span>,<span class="string">&#x27;ruby&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;sarah&#x27;</span>: [<span class="string">&#x27;c&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;edward&#x27;</span>: [<span class="string">&#x27;ruby&#x27;</span>,<span class="string">&#x27;go&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;phil&#x27;</span>: [<span class="string">&#x27;python&#x27;</span>,<span class="string">&#x27;haskell&#x27;</span>],&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> name, languages ​​<span class="keyword">in</span> favorite_languages.items():</span><br><span class="line">print(<span class="string">&quot;\n&quot;</span> + name.title() + <span class="string">&quot;&#x27;s favorite languages ​​are:&quot;</span>)</span><br><span class="line">To</span><br><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> languages:</span><br><span class="line">print(<span class="string">&quot;\t&quot;</span> + language.title())</span><br></pre></td></tr></table></figure>
-
-<p><strong>Dictionary stored in dictionary</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">users = &#123;</span><br><span class="line"><span class="string">&#x27;aeinstein&#x27;</span>: &#123;</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;albert&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;einstein&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;location&#x27;</span>:<span class="string">&#x27;princeton&#x27;</span>, &#125;,</span><br><span class="line"><span class="string">&#x27;mcurie&#x27;</span>: &#123;</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;marie&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;curie&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;location&#x27;</span>:<span class="string">&#x27;paris&#x27;</span>, &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> username, user_info <span class="keyword">in</span> users.items():</span><br><span class="line">print(<span class="string">&quot;\nUsername: &quot;</span>+ username)</span><br><span class="line">full_name = user_info[<span class="string">&#x27;first&#x27;</span>] + <span class="string">&quot;&quot;</span> + user_info[<span class="string">&#x27;last&#x27;</span>]</span><br><span class="line">location = user_info[<span class="string">&#x27;location&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&quot;\tFull name: &quot;</span>+ full_name.title())</span><br><span class="line">print(<span class="string">&quot;\tLocation: &quot;</span>+ location.title())</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py3-if"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/09/py3-if/"
-    >IF Conditional Statement</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/09/py3-if/" class="article-date">
-  <time datetime="2017-10-09T15:30:55.000Z" itemprop="datePublished">2017-10-09</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;audi&#x27;</span>,<span class="string">&#x27;bmw&#x27;</span>,<span class="string">&#x27;subaru&#x27;</span>,<span class="string">&#x27;toyota&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> car <span class="keyword">in</span> cars:</span><br><span class="line"><span class="keyword">if</span> car ==<span class="string">&#x27;bmw&#x27;</span>:</span><br><span class="line">print(car.upper())</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(car.title())</span><br></pre></td></tr></table></figure>
-<p><strong>Note the : after if and else</strong><br>When checking for equality in Python, <strong>distinguish between uppercase and lowercase</strong>. If the case is not important and you only want to check the value of the variable, you can convert the value of the variable to lowercase</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">car =<span class="string">&#x27;Audi&#x27;</span></span><br><span class="line">car.lower() ==<span class="string">&#x27;audi&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>Multiple conditions</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(age_0 &gt;= <span class="number">21</span>) <span class="keyword">or</span> (age_1 &gt;= <span class="number">21</span>)</span><br><span class="line">(age_0 &gt;= <span class="number">21</span>) <span class="keyword">and</span> (age_1 &gt;= <span class="number">21</span>) <span class="comment">#The brackets are to enhance readability</span></span><br></pre></td></tr></table></figure>
-<p>List</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">requested_toppings = [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;onions&#x27;</span>,<span class="string">&#x27;pineapple&#x27;</span>]</span><br><span class="line"><span class="string">&#x27;mushrooms&#x27;</span> (<span class="keyword">not</span>) <span class="keyword">in</span> requested_toppings <span class="comment">#Check if the value is in the list, you can add not</span></span><br><span class="line"><span class="literal">True</span></span><br></pre></td></tr></table></figure>
-
-<p>if-elif-else structure</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">12</span></span><br><span class="line"><span class="keyword">if</span> age &lt;<span class="number">4</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $0.&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">18</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $5.&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $10.&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">12</span></span><br><span class="line"><span class="keyword">if</span> age &lt;<span class="number">4</span>: price = <span class="number">0</span></span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">18</span>: price = <span class="number">5</span></span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">65</span>: price = <span class="number">10</span></span><br><span class="line"><span class="keyword">else</span>: price = <span class="number">5</span> <span class="comment">#Multiple elifs can be used</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="Processing-the-list"><a href="#Processing-the-list" class="headerlink" title="Processing the list"></a>Processing the list</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">requested_toppings = [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> requested_topping <span class="keyword">in</span> requested_toppings:</span><br><span class="line"><span class="keyword">if</span> requested_topping ==<span class="string">&#x27;green peppers&#x27;</span>:</span><br><span class="line">print(<span class="string">&quot;Sorry, we are out of green peppers right now.&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Adding &quot;</span>+ requested_topping + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\nFinished making your pizza!&quot;</span>)</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py2-lists"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/09/py2-lists/"
-    >Lists</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/09/py2-lists/" class="article-date">
-  <time datetime="2017-10-09T12:29:55.000Z" itemprop="datePublished">2017-10-09</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bicycles = [<span class="string">&#x27;trek&#x27;</span>, <span class="string">&#x27;cannondale&#x27;</span>, <span class="string">&#x27;redline&#x27;</span>, <span class="string">&#x27;specialized&#x27;</span>]</span><br><span class="line">print(bicycles[<span class="number">0</span>])</span><br><span class="line">print(bicycles[<span class="number">0</span>].title())</span><br></pre></td></tr></table></figure>
-<h3 id="1-Index"><a href="#1-Index" class="headerlink" title="1. Index"></a>1. Index</h3><p>By specifying the index as -1, Python returns the last list element. Index -2 returns the penultimate list element, index -3 returns the penultimate list element, and so on.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">essage = <span class="string">&quot;My first bicycle was a &quot;</span> + bicycles[<span class="number">0</span>].title() + <span class="string">&quot;.&quot;</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-Modify"><a href="#2-Modify" class="headerlink" title="2. Modify"></a>2. Modify</h3><p>Add elements to the end of the list</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>] </span><br><span class="line">print(motorcycles)</span><br><span class="line">motorcycles.append(<span class="string">&#x27;ducati&#x27;</span>) </span><br><span class="line">print(motorcycles)</span><br></pre></td></tr></table></figure>
-<p>To control the user, first create an empty list to store the values that the user will enter, and then append each new value provided by the user to the list.</p>
-<h3 id="3-Delete"><a href="#3-Delete" class="headerlink" title="3. Delete"></a>3. Delete</h3><p><strong>del delete element</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line"><span class="keyword">del</span> motorcycles[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-<p><strong>pop delete element</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>]</span><br><span class="line">print(motorcycles)</span><br><span class="line">popped_motorcycle = motorcycles.pop()  <span class="comment">#删除末尾元素</span></span><br><span class="line">first_owned = motorcycles.pop(<span class="number">0</span>)  <span class="comment">#删除任意位置元素</span></span><br></pre></td></tr></table></figure>
-<p>If you want to delete an element from the list and no longer use it in any way, use the del statement; if you want to continue using it after deleting the element, use the pop() method.</p>
-<p><strong>Remove elements based on value</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">motorcycles = [<span class="string">&#x27;honda&#x27;</span>, <span class="string">&#x27;yamaha&#x27;</span>, <span class="string">&#x27;suzuki&#x27;</span>, <span class="string">&#x27;ducati&#x27;</span>]</span><br><span class="line">print(motorcycles)</span><br><span class="line">motorcycles.remove(<span class="string">&#x27;ducati&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="4-Sorting"><a href="#4-Sorting" class="headerlink" title="4. Sorting"></a>4. Sorting</h3><p>sort() Permanently sort by the first letter (assuming all lowercase</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;bmw&#x27;</span>, <span class="string">&#x27;audi&#x27;</span>, <span class="string">&#x27;toyota&#x27;</span>, <span class="string">&#x27;subaru&#x27;</span>] </span><br><span class="line">cars.sort()</span><br><span class="line">cars.sort(reverse=<span class="literal">True</span>)    <span class="comment">#反向</span></span><br></pre></td></tr></table></figure>
-<p><strong>sorted()</strong> Temporary sorting<br><strong>reverse()</strong> reverse the order<br><strong>len()</strong> determines the length of the list<br>When an index error occurs but you cannot find a solution, try to print the list or its length. The list may be very different from what you think, especially if the program is dynamically processing it. By looking at the list or the number of elements it contains, it can help you find this logic error.</p>
-<h3 id="5-Traverse"><a href="#5-Traverse" class="headerlink" title="5. Traverse"></a>5. Traverse</h3><p>for loop</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">magicians = [<span class="string">&#x27;alice&#x27;</span>, <span class="string">&#x27;david&#x27;</span>, <span class="string">&#x27;carolina&#x27;</span>] </span><br><span class="line"><span class="keyword">for</span> magician <span class="keyword">in</span> magicians:</span><br><span class="line">	print(magician)</span><br></pre></td></tr></table></figure>
-<p>You can specify any name for the temporary variable used to store each value in the list.<br>Using singular and plural names can help you determine whether the code segment deals with a single list element or the entire list.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">magicians = [<span class="string">&#x27;alice&#x27;</span>, <span class="string">&#x27;david&#x27;</span>, <span class="string">&#x27;carolina&#x27;</span>] </span><br><span class="line"><span class="keyword">for</span> magician <span class="keyword">in</span> magicians:</span><br><span class="line">	print(magician.title() + <span class="string">&quot;, that was a great trick!&quot;</span>)</span><br><span class="line">	print(<span class="string">&quot;I can&#x27;t wait to see your next trick, &quot;</span> + magician.title() + <span class="string">&quot;.\n&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>After the for loop, the <strong>unindented code</strong> is executed only once, and not repeated.<br>To avoid accidental indentation errors, indent only the code that needs indentation.<br><strong>Note the : after for</strong></p>
-<h3 id="6-Numerical-value"><a href="#6-Numerical-value" class="headerlink" title="6. Numerical value"></a>6. Numerical value</h3><p><strong>range()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">print(value)</span><br></pre></td></tr></table></figure>
-<p>Output number 1 2 3 4</p>
-<p><strong>Convert the output number directly into a list list()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">numbers = list(range(<span class="number">1</span>,<span class="number">6</span>))</span><br><span class="line">print(numbers)</span><br><span class="line">even_numbers = list(range(<span class="number">2</span>,<span class="number">11</span>,<span class="number">2</span>)) <span class="comment">#specify step size</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>square.py</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">squares = []</span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">square = value**<span class="number">2</span></span><br><span class="line">squares.append(square)</span><br><span class="line">print(squares)</span><br></pre></td></tr></table></figure>
-<p>or</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">squares = []</span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">squares.append(value**<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<p>or</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">squares = [value**<span class="number">2</span> <span class="keyword">for</span> value <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">11</span>)]</span><br><span class="line">print(squares)</span><br></pre></td></tr></table></figure>
-
-<p><strong>min() max() sum() calculation</strong></p>
-<h3 id="7-Part-of-the-list"><a href="#7-Part-of-the-list" class="headerlink" title="7. Part of the list"></a>7. Part of the list</h3><p>slice</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">players = [<span class="string">&#x27;charles&#x27;</span>,<span class="string">&#x27;martina&#x27;</span>,<span class="string">&#x27;michael&#x27;</span>,<span class="string">&#x27;florence&#x27;</span>,<span class="string">&#x27;eli&#x27;</span>]</span><br><span class="line">print(players[<span class="number">0</span>:<span class="number">3</span>]) <span class="comment">#1 2 3 elements</span></span><br><span class="line">print(players[<span class="number">1</span>:<span class="number">4</span>]) <span class="comment">#2 3 4 elements</span></span><br><span class="line">print(players[:<span class="number">4</span>]) <span class="comment">#The first 4 elements</span></span><br><span class="line">print(players[<span class="number">2</span>:]) <span class="comment">#to the end</span></span><br><span class="line">print(players[<span class="number">-3</span>:]) <span class="comment">#last 3 elements</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> player <span class="keyword">in</span> players[:<span class="number">3</span>]:</span><br><span class="line">         print(player.title()) <span class="comment">#traversal</span></span><br><span class="line">         </span><br><span class="line">friend_foods = my_foods[:] <span class="comment">#copy</span></span><br></pre></td></tr></table></figure>
-<p>The difference between <strong>copy</strong> and <strong>assignment</strong>:<br>assign my_foods to friend_foods instead of storing a copy of my_foods in friend_foods. This syntax actually makes Python associate the new variable friend_foods to the list contained in my_foods, so both variables point to the same list. In view of this, when we add’cannoli’ to my_foods, it will also appear in friend_foods; also, although’ice cream’ seems to have only been added to friend_foods, it will also appear in these two lists.</p>
-<h3 id="8-Tuples"><a href="#8-Tuples" class="headerlink" title="8. Tuples"></a>8. Tuples</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dimensions = (<span class="number">200</span>, <span class="number">50</span>)</span><br><span class="line">print(dimensions[<span class="number">0</span>])</span><br><span class="line">print(dimensions[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> dimension <span class="keyword">in</span> dimensions:</span><br><span class="line">print(dimension) <span class="comment">#traversal</span></span><br></pre></td></tr></table></figure>
-<p>Attempts to modify tuples are prohibited, and it is legal to assign values ​​to tuple variables<br>Compared to lists, tuples are simpler data structures. If a set of values ​​that need to be stored does not change throughout the life of the program, use tuples.</p>
-<h3 id="9-Format"><a href="#9-Format" class="headerlink" title="9. Format"></a>9. Format</h3><p>PEP 8 recommends four spaces for each level of indentation<br>It is recommended that the line length of the comment does not exceed 72 characters<br><a target="_blank" rel="noopener" href="https://www.python.org/dev/peps/pep-0008/">Link</a></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py1-variables"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/08/py1-variables/"
-    >Vriabales and Data Types</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/08/py1-variables/" class="article-date">
-  <time datetime="2017-10-08T11:56:47.000Z" itemprop="datePublished">2017-10-08</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h4 id="Variable-Name"><a href="#Variable-Name" class="headerlink" title="Variable Name"></a>Variable Name</h4><p>Variable names can only contain letters, numbers and underscores. Cannot start with a number.<br>Variable names cannot contain spaces, but you can use underscores to separate words.  </p>
-<p>A traceback is a record that points out where the interpreter got stuck when trying to run the code.  </p>
-<h4 id="String"><a href="#String" class="headerlink" title="String"></a>String</h4><p>All quotation marks are strings, the quotation marks can be single quotation marks’’ or double quotation marks””<br><strong>title()</strong> displays each word in capital letters, that is, the first letter of each word is changed to capital.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&quot;ada lovelace&quot;</span> </span><br><span class="line">print(name.title())</span><br><span class="line">print(name.upper()) </span><br><span class="line">print(name.lower())</span><br></pre></td></tr></table></figure>
-<p>Use the plus sign (+) to combine strings.<br>Tab table \t<br>Newline \n<br>Remove all blank <strong>strip()</strong><br>Remove the leading blank <strong>lstrip()</strong><br>Remove the blank at the end <strong>rstrip()</strong>  </p>
-<h4 id="Number"><a href="#Number" class="headerlink" title="Number"></a>Number</h4><p>Python uses two multiplication signs to represent power operations<br>When using an integer in a string, you need to explicitly indicate that you want Python to use this integer as a string. To do this, call the function str(), which tells Python to represent non-string values as strings:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">23</span></span><br><span class="line">message = <span class="string">&quot;Happy &quot;</span> + str(age) + <span class="string">&quot;rd Birthday!&quot;</span></span><br><span class="line">print(message)</span><br></pre></td></tr></table></figure>
-<p>In Python 2, the result of integer division contains only the integer part, and the decimal part is deleted. To avoid this, make sure that at least one operand is a floating point number, so the result will also be a floating point number  </p>
-<h4 id="Comment"><a href="#Comment" class="headerlink" title="Comment"></a>Comment</h4><p>Comments are marked with a pound sign (#)</p>
- 
+<h4 id="Making-a-world-map"><a href="#Making-a-world-map" class="headerlink" title="Making a world map"></a>Making a world map</h4><p><img src="https://img-blog.csdnimg.cn/20191110053541496.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
+<h4 id="Set-up-the-map"><a href="#Set-up-the-map" class="headerlink" title="Set up the map"></a>Set up the map</h4><p>Add numbers</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wm.add(<span class="string">&#x27;North America&#x27;</span>, &#123;<span class="string">&#x27;ca&#x27;</span>: <span class="number">34126000</span>,<span class="string">&#x27;us&#x27;</span>: <span class="number">309349000</span>,<span class="string">&#x27;mx&#x27;</span>: <span class="number">113423000</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>Add color</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> RotateStyle</span><br><span class="line">wm_style = RotateStyle(<span class="string">&#x27;#336699&#x27;</span>)</span><br><span class="line">wm = pygal.Worldmap(style=wm_style)</span><br></pre></td></tr></table></figure>
+<p>Pygal will choose the default base color. To set the color, you can use RotateStyle, and use LightColorizedStyle as the basic style.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle, RotateStyle</span><br></pre></td></tr></table></figure> 
       <!-- reward -->
       
     </div>
@@ -728,7 +877,7 @@
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">last page</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">last page</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">next page</a>
   </nav>
   
 </section>

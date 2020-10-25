@@ -114,6 +114,588 @@
     
     
     <article
+  id="post-paper_201018_BNM"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/18/paper_201018_BNM/"
+    >Batch Nuclear-norm Maximization</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/18/paper_201018_BNM/" class="article-date">
+  <time datetime="2020-10-18T18:50:55.000Z" itemprop="datePublished">2020-10-18</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Batch Nuclear-norm Maximization，BNM<br>In transfer learning tasks, there have always been such problems:<br>Since the target domain has no label, it often leads to more confusing data near the interface.<br>Cui Shuhao, a graduate student of the Institute of Computing Technology of the Chinese Academy of Sciences, proposed a new solution: Batch Nuclear-norm Maximization (BNM).</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1y8v1fobj312o0aagpk.jpg"></p>
+<p>In typical under-label scenarios (such as semi-supervised learning, etc.), BNM can effectively improve the learning effect.<br>Moreover, a large number of experiments show that the performance of BNM is better than some of the current mainstream methods, and when used in combination, the effect is also very good.<br>This paper has been accepted as CVPR 2020 Oral.</p>
+<h2 id="Core"><a href="#Core" class="headerlink" title="Core"></a>Core</h2><p>Main idea:<br>The discrimination and diversity of category prediction also point to the kernel norm of the batch response matrix, so that the batch kernel norm can be maximized to improve the performance of the target domain in the migration problem.<br>You can try to optimize the discrimination and mobility by analyzing the batch matrix A composed of batch category responses.</p>
+<h3 id="Discriminative"><a href="#Discriminative" class="headerlink" title="Discriminative"></a>Discriminative</h3><p>The so-called discriminativeness refers to whether the process of predicting the category is firm. For example, the response to the second type of question:</p>
+<ol>
+<li>[0.9,0.1] is highly discriminative</li>
+<li>[0.6,0.4] is less discriminative.<br>Common methods use minimizing entropy to obtain higher discriminativeness. We find that the F-norm of matrix A and entropy have the opposite monotonicity, so that the discriminativeness can be improved by maximizing the F-norm of A.<h3 id="Diversity"><a href="#Diversity" class="headerlink" title="Diversity"></a>Diversity</h3>Diversity can be approximately expressed as the number of categories predicted in the batch matrix, that is, the greater the number of predicted categories, the greater the response diversity.<br>Consider the linear correlation of the responses of different categories. If two responses belong to different categories, the responses will be quite different. Linearly irrelevant, if they belong to the same category, they will be approximately linearly related:</li>
+<li>[0.9,0.1] has nothing to do with [0.1,0.9] linearly</li>
+<li>[0.9,0.1] is approximately linearly related to [0.8,0.2].<br>Then the number of predicted categories is the largest number of linearly independent vectors in the matrix, that is, the rank of the matrix.</li>
+</ol>
+<h3 id="BNM"><a href="#BNM" class="headerlink" title="BNM"></a>BNM</h3><p>The kernel norm is the sum of the singular values ​​of the matrix. There are two conclusions in mathematics:</p>
+<ol>
+<li>The limit between nuclear norm and F norm</li>
+<li>The kernel norm is the convex approximation of the matrix rank<br>Therefore, the discriminability and diversity of category prediction also point to the kernel norm of the matrix, and we can maximize the matrix kernel norm (BNM) to improve the performance of prediction.</li>
+</ol>
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><p>In the commonly used frameworks Pytorch and Tensorflow, BNM can be implemented with one line of code.<br>Pytorch:</p>
+<pre><code>L_BNM = -torch.norm(A, &#39;nuc&#39;) </code></pre>
+<p>TensorFlow：</p>
+<pre><code>L_BNM = -tf. reduce_sum(tf.svd(A, compute_uv=False))</code></pre>
+<h2 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h2><p>We apply BNM to three under-labeled scenarios: semi-supervised learning, domain adaptation, and open domain object recognition.<br>Experiments show that the existing methods can be improved in semi-supervised learning; BNM constraints are significantly better than EntMin in domain adaptation, and a single BNM constraint can achieve performance similar to existing methods, as shown in the following figure:</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1yc54571j30u00c640l.jpg"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/2020/" rel="tag">2020</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/transfer/" rel="tag">transfer</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-paper_201011"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/11/paper_201011/"
+    >A Meta-learning Causal Structure</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/11/paper_201011/" class="article-date">
+  <time datetime="2020-10-11T18:50:55.000Z" itemprop="datePublished">2020-10-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Propose a meta-learning causal structure based on the speed of the learner adapting to the new distribution</p>
+<p>Yoshua Bengio et al. proposed a meta-learning causal structure based on the speed at which the learner adapts to new distributions caused by interventions, agent actions, and other non-stationarity-induced sparse distribution changes. This research proves that under this assumption, the correct choice of causal structure will make the learner adapt to the modified distribution more quickly, because after the learned knowledge is properly modularized, the distribution changes will be concentrated in one or more mechanisms . This leads to sparse expected gradients and a small number of effective degrees of freedom that need to be relearned when adapting to such changes. Therefore, this study takes the speed of adapting to the modified distribution as the goal of meta-learning, showing that this can be used to determine the causal relationship between two observed variables.</p>
+<p>The distribution change does not require corresponding standard intervention, and the learner does not have direct knowledge about the intervention. The study proved that the causal structure can be parameterized by continuous variables and learned in an end-to-end format. The researchers also explored how to use these ideas to learn encoders to map low-level observed variables and unobserved causal variables that lead to faster out-of-distribution adaptations, and then learn a representation space that satisfies independent mechanisms and actions and instability The resulting hypothesis of small sparse changes within the mechanism.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1yfa63bij30u00a7dgf.jpg"></p>
+<h1 id="The-generalization-problem-of-machine-learning-methods"><a href="#The-generalization-problem-of-machine-learning-methods" class="headerlink" title="The generalization problem of machine learning methods"></a>The generalization problem of machine learning methods</h1><p>Current machine learning methods have weak generalization effects on data outside the training distribution, and generalization is inevitable in practice. Therefore, it is not enough to achieve excellent generalization results on the test set from the same distribution as the training data. We also hope that the content learned on one data set can achieve good generalization on other related distributions. These distributions may contain concepts that the learner has seen, and the changes usually result from the actions of the agent. Generally speaking, we hope that the previously learned knowledge can form a solid foundation, so that the learner can quickly adapt to the new correlation distribution, that is, to obtain excellent transfer results. The learner may still need to learn some new concepts, but since most other related concepts (and their composition) have been captured by the learner, the learning on the transfer distribution will be very rapid.</p>
+<p>In the absence of assumptions, it is impossible to achieve successful migration on unrelated distributions. This research assumes that when knowledge is represented in an appropriate modular way, the distribution changes are sparse, and only one or a few modules change. This is especially true when the distribution change is caused by the actions of one or more agents (such as interventions discussed in the causality literature), that is, the causal variable is limited to a certain value. Generally, it is difficult for an agent to affect multiple underlying causal variables at the same time. Although the study does not involve much agent learning, it uses the agent learning environment to help discover these variables and their causal relationships.</p>
+<p>To stimulate the need for causal structure inference, you need to consider implementing interventions in real or imagined. To plan appropriately in a way that considers intervention, you need to imagine the change in the joint distribution of variables caused by the intervention, even if you have never seen such a change before. This is beyond the scope of good transfer learning and requires causal learning and causal reasoning. Therefore, just learning the joint distribution of the observed variables is not enough. You should also fully study the underlying high-level variables and their causal relationships with appropriate inferences about intervention effects. For example, A=Raining causes B=Open Umbrella (not vice versa). Changing the marginal probability of Raining (for example, due to changes in weather) will not change the correlation mechanism between A and B (P(B|A)), but it will affect P(B). Conversely, the agent’s intervention on B (Open umbrella) will not affect A (Raining). This asymmetry is usually not seen in the training pair (A, B) unless the distribution changes, such as a change in the distribution caused by intervention.</p>
+<p>This is the motivation of the research, that is, the learner learns based on a set of distributions brought about by the intervention that is not necessarily known, not only can capture the joint distribution, but also discover some underlying causal structures.</p>
+<h1 id="New-ideas-from-Yoshua-Bengio-and-others"><a href="#New-ideas-from-Yoshua-Bengio-and-others" class="headerlink" title="New ideas from Yoshua Bengio and others"></a>New ideas from Yoshua Bengio and others</h1><p>Machine learning methods usually make use of some form of data distribution assumption (there is no free lunch theorem that tells us not to have confidence in generalization). This research not only considers the hypothesis of data distribution, but also considers the change of the distribution (for example, due to some actions of the agent, the training distribution changes to the migration distribution). The research relies on the assumption that when knowledge about the distribution is properly represented, the change in the distribution is small. This is due to the underlying assumption (but it is difficult to directly verify this assumption): due to a generalized form of intervention that causes the distribution to change, only one or a few truth-value mechanisms have changed.</p>
+<p>How can this assumption be used? The research carried out theoretical and experimental verification and found that if you have the correct knowledge representation, a well-trained model on the training distribution can quickly adapt to the migration distribution. This is due to the hypothesis of the study: the truth-value data generation process is an integral part of the independent mechanism. When the training distribution becomes the migration distribution, only a few truth-value mechanisms and parameters need to be changed. Therefore, the model that captures the corresponding knowledge decomposition requires only a few updates and examples to adapt to the migration distribution. The following will show that the expected gradient on the unchanged parameters is close to 0 (provided that the model is well trained on the training distribution), so the effective search space will be greatly reduced in the process of adapting to the migration distribution, thereby achieving rapid adaptation .</p>
+<p>Therefore, based on the hypothesis that “the correct knowledge representation space brings about small distribution changes”, the researchers defined a meta-learning goal that measures the speed of adaptation, thereby optimizing the way of representing, decomposing and structuring knowledge. This is the core idea of ​​the research. Note that the signal obtained when there is more instability (that is, a lot of changes in the distribution) will be stronger, just as more meta-examples in meta-learning will lead to better results.</p>
+<p>In this way, the researcher converts what is usually considered troublesome in the field of machine learning (unsteady state, uncontrolled intervention, etc.) into a training signal, thereby finding an appropriate way to decompose knowledge into matching small Change the components and mechanisms of this hypothesis. Therefore, researchers finally optimize the rapid migration and robustness of distribution changes in an end-to-end manner. If the data is really generated based on the components of an independent causal mechanism, there is a knowledge decomposition that mimics the structure. If in each time step, the real-world agent can only change one or a small number of high-level variables (or the related mechanisms that generate these high-level variables), then the research’s hypothesis about small changes (represented by correct knowledge) is verified. In addition, in addition to achieving rapid migration, the study may be able to restore the approximation of true causality to independent mechanisms (to the extent that observations and interventions can reveal these mechanisms).</p>
+<h1 id="cause-and-effect-diagram"><a href="#cause-and-effect-diagram" class="headerlink" title="cause and effect diagram"></a>cause and effect diagram</h1><p>Learn the cause and effect diagram with two discrete variables</p>
+<p>Assuming that A and B are discrete variables that can take N possible values, consider using the following formulas (A → B model and B → A model) to estimate their joint distribution:<br>$$<br>\begin{array}{l}<br>P_{A \rightarrow B}(A, B)=P_{A \rightarrow B}(A) P_{A \rightarrow B}(B \mid A) \<br>P_{B \rightarrow A}(A, B)=P_{B \rightarrow A}(B) P_{B \rightarrow A}(A \mid B)<br>\end{array}<br>$$</p>
+<p><strong>Experiments on adaptation to transfer distribution</strong></p>
+<p>The researchers conducted multiple experiments to compare the learning curve of the correct causal model and the incorrect model on the migration distribution. The adaptation of only a small number of gradient steps on the data from different but relevant migration distributions is essential to obtain the signal usable by the meta-learning algorithm. In order to demonstrate the effect of adaptation and promote the use of a small amount of data from the migration distribution, the researchers experimented with the model on discrete random variables, which can take N = 10 possible values.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1yh1mbaij30u00ggwfx.jpg"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/meta/" rel="tag">meta</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-paper_201004"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/04/paper_201004/"
+    >Evolving Normalization-Activation Layers</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/04/paper_201004/" class="article-date">
+  <time datetime="2020-10-04T18:50:55.000Z" itemprop="datePublished">2020-10-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2004.02967">Evolving Normalization-Activation Layers</a></p>
+<p>Batch normalization and activation functions are important components of deep neural networks, and their positions often coincide. In the past neural network design, the two were usually designed separately. Recently, Google Brain and DeepMind researchers have jointly proposed a new scheme: <strong>unify the two into a computational graph, and start structural evolution from low-level primitives. Researchers use layer search algorithm to find a new set of normalization-activation layer EvoNorms.</strong> Some of these layers are independent of batch statistics.</p>
+<p>Experiments have proved that EvoNorms is not only effective on multiple image classification models including ResNets, MobileNets and EfficientNets, but it can also be well migrated to Mask R-CNN model (for instance segmentation) and BigGAN (for image synthesis) . In many cases, the performance of EvoNorms is significantly better than the layers based on BatchNorm and GroupNorm.</p>
+<h2 id="Search-space"><a href="#Search-space" class="headerlink" title="Search space"></a>Search space</h2><p>The researchers represented each normalization-activation layer as a computational graph, that is, converting the input tensor to the output tensor of the same shape (see Figure 1). Each intermediate node represents a unary or binary operation (see Table 1). These operations are designed to preserve the dimensions of the input tensor to ensure that the shapes of the nodes in the calculation graph are compatible with each other. The calculation graph has 4 initial nodes: input tensor, constant zero tensor, and two trainable vectors v_0 and v_1 along the channel dimension initialized to 0 and 1.<br><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1ynrgcm7j30qu0c40tr.jpg"><br><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1yni6sx3j30pg0ykq5c.jpg"></p>
+<p>Random graphs can be generated in sequence. Starting from the initial node, the researcher randomly samples primitive operations and randomly samples its input nodes according to the arity of the operation to generate new nodes.</p>
+<h2 id="Layer-search-method"><a href="#Layer-search-method" class="headerlink" title="Layer search method"></a>Layer search method</h2><p>The search method used in this study contains the following important parts:</p>
+<p>Pair each layer with multiple architectures, and train the model in a lightweight agent task to evaluate the performance of each layer.<br>The evolutionary algorithm is used to optimize the multi-objective boundary, and the efficient rejection mechanism is used to enhance it to filter out unnecessary layers.</p>
+<p>Figure 3 below shows the overall workflow of the layer search method:<br><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1ynrgcm7j30qu0c40tr.jpg"></p>
+<h3 id="Layer-evaluation"><a href="#Layer-evaluation" class="headerlink" title="Layer evaluation"></a>Layer evaluation</h3><p>Useful layers like BatchNorm-ReLU can have good results in a variety of network architectures. However, as you can see from Figure 4, those layers that perform well in a given architecture may not perform well after migrating to other architectures. In order to significantly improve its generalization performance, the researchers constructed layer search as a multi-objective optimization problem, where each candidate layer is evaluated on K (K&gt; 1) different anchor point architectures to obtain multiple fits value.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1youkct8j30t20dogmu.jpg"></p>
+<h3 id="Agent-task-and-anchor-point-architecture"><a href="#Agent-task-and-anchor-point-architecture" class="headerlink" title="Agent task and anchor point architecture"></a>Agent task and anchor point architecture</h3><p>The researchers defined the agent task as an image classification task on the CIFAR-10 data set, and considered three representative network architectures on ImageNet, and adjusted them accordingly to the settings in the article. These architectures include: Pre-activation ResNet50 with a channel multiplier of 0.25×; MobileNetV2 with a channel multiplier of 0.5×; and EfficientNet-B0 with a channel multiplier of 0.5×.</p>
+<p>In order to deal with the problem of image resolution lower than ImageNet in CIFAR-10, the first two convolution steps used to reduce the space of the above network architecture are modified to 1. The researchers referred to these adjusted versions as ResNet50-CIFAR, MobileNetV2-CIFAR and EfficientNet-CIFAR.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1ypa2scvj30ra0h8aaz.jpg"></p>
+<h3 id="evolution"><a href="#evolution" class="headerlink" title="evolution"></a>evolution</h3><p>The evolutionary algorithm used in this study is a variant of the tournament selection algorithm. In each step, a tournament is constructed based on a random subset of all layers, and the winner can generate a mutant evolutionary version, which is evaluated and added to the candidate layer. Therefore, as this process continues to be repeated, the overall quality of the candidate layer has improved. The researchers also regularize the evolution by keeping the sliding window of the nearest part of the selected layer.</p>
+<p>Selection criteria. The selection criteria for tournament winners are not unique, as each tier has multiple points. Two options are shown below:</p>
+<p>Average: The layer with the highest average accuracy wins (B in Figure 6);<br>Pareto: The random layer located on the Pareto boundary wins (A, B, and C in Figure 6 all win).</p>
+<p>mutation. The researcher completes the calculation graph mutation of the winning layer through the following three steps:</p>
+<p>Randomly select intermediate nodes uniformly;<br>Replace the current operation with the new operation in Table 1 randomly and evenly;<br>The new successor of the node is selected uniformly at random.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1ypotj9sj30ki09st8r.jpg"></p>
+<h3 id="Veto-mechanism"><a href="#Veto-mechanism" class="headerlink" title="Veto mechanism"></a>Veto mechanism</h3><p>quality. The researcher chooses to discard the layer whose verification accuracy is less than 20% after 100 training steps in any three anchor architectures. Since most of the candidate layers cannot obtain meaningful learning dynamics (see Figure 2), this simple mechanism can ensure that computing resources are concentrated on a small number of potential candidate layers for complete training.</p>
+<p>stability. In addition to quality, the researchers also chose to discard layers with numerical instability. The basic principle is: Adversarially adjust the convolution weight θ in the direction of maximizing the network gradient norm, so as to perform stress test on the candidate layer.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/batch-normalization/" rel="tag">batch normalization</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-paper_200927"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/27/paper_200927/"
+    >Learning with Noisy Label</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/27/paper_200927/" class="article-date">
+  <time datetime="2020-09-27T18:50:55.000Z" itemprop="datePublished">2020-09-27</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Learning with Noisy Label</p>
+<h1 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h1><p>Deep learning relies on a large amount of high-quality annotation data-both time and labor costs are high. How to use semi-(weak) supervised learning and unsupervised learning to achieve results equivalent to the level of supervised learning is a very popular research direction.</p>
+<p>Learning with noisy label:</p>
+<ol>
+<li><p>There is a certain amount of labeled data. - It is easy to get through search engines, public data sets, etc.</p>
+</li>
+<li><p>The quality of the labeling data is not high, and there are high or low labeling errors.</p>
+</li>
+</ol>
+<p>Will not cover unsupervised learning.</p>
+<p>Compared with unsupervised learning, learning with noisy label is closer to the landing of deep learning in the industry. The typical status is as follows:</p>
+<ol>
+<li><p>In the initial stage, there is a certain amount of data with unknown quality.</p>
+</li>
+<li><p>Generally, there will be continuous manual investment to continuously improve the quality of the label. The form of manual input may be paid crowdsourcing, or it may be through user feedback.</p>
+</li>
+<li><p>The attention paid to certain labels and certain errors is higher than others and requires targeted optimization.</p>
+</li>
+</ol>
+<h1 id="Core"><a href="#Core" class="headerlink" title="Core"></a>Core</h1><p>Regardless of the method, it is answering a question: how to distinguish between <strong>clean label</strong> and <strong>noisy label</strong>.</p>
+<ol>
+<li><p>Directly use probability theory models to identify, such as models based on EM algorithms, confidence learning models, etc.</p>
+</li>
+<li><p>Roughly select the loss predicted by the model and iterate repeatedly.</p>
+</li>
+<li><p>Implicitly, the model itself is more tolerant of noise. The core idea is to change to weighted sum loss, the weight of noisy is low, and the weight of clean is high. The question is how to find weight.</p>
+</li>
+</ol>
+<h1 id="Theoretical-Foundation"><a href="#Theoretical-Foundation" class="headerlink" title="Theoretical Foundation"></a>Theoretical Foundation</h1><h2 id="Paper【1】"><a href="#Paper【1】" class="headerlink" title="Paper【1】"></a>Paper【1】</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1611.03530">Understanding deep learning requires rethinking generalization</a></p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1ruu3wiyj30lm07ywez.jpg"></p>
+<p>This is the work of the Google brain Samy Bengio group. The viewpoints put forward and proved by experiments: Deep neural networks easily fit random labels. This view is almost a must for noisy label related articles after 2017.</p>
+<p>Before this article, the introduction was all about crowdsourcing &amp; mistakes are inevitable, and the SOTA model performed poorly. After this article, the theoretical focus is to solve the overfitting caused by noisy label.</p>
+<p>The article also raises a very meaningful question:</p>
+<p>The number of parameters of the neural network is greater than the amount of training data. Some models of generalization error are good and some models are poor. What is the difference?</p>
+<p>Deep neural networks easily fit random labels</p>
+<h3 id="Experimental-program"><a href="#Experimental-program" class="headerlink" title="Experimental program:"></a>Experimental program:</h3><p>Using real data, the label is changed to randomly generated.</p>
+<p>model uses the standard model without any modification.</p>
+<p>Training effect: training error = 0, test error is the same as the result of random selection.</p>
+<h3 id="Explanation-of-the-results"><a href="#Explanation-of-the-results" class="headerlink" title="Explanation of the results:"></a>Explanation of the results:</h3><p>Because the test label is also completely randomly generated, it cannot be predicted. The test error is as expected.</p>
+<p>training error = 0, there are many model parameters, and the ability to remember all dataset points.</p>
+<p>Random data causes the generalization error of the model to increase significantly.</p>
+<h3 id="Comparative-Test"><a href="#Comparative-Test" class="headerlink" title="Comparative Test:"></a>Comparative Test:</h3><p>Based on the original real data set, the label is unchanged, the image pixel is changed to all random, and it can still be 0 training error</p>
+<p>Using random + raw data mixed test, the random ratio increases, and the generalization error rate increases. It means that in the case of random data confusion, it still has the ability to learn some real features.</p>
+<p>Regularization can reduce testing error, but has no direct effect on generalization error.</p>
+<p>Remember the smallest model of all training data.</p>
+<p>two-layer ReLU network with p=2n+d parameters can express any labeling of any sample of size n in d dimension.</p>
+<p>The 2-layer model can memorize all training data.</p>
+<p>explicit regularizers:</p>
+<ul>
+<li>dropout</li>
+<li>weight decay</li>
+</ul>
+<p>regularization is required to ensure small generalization error</p>
+<h2 id="Paper【2】"><a href="#Paper【2】" class="headerlink" title="Paper【2】"></a>Paper【2】</h2><p><a target="_blank" rel="noopener" href="https://www.stat.berkeley.edu/~jordan/638.pdf">Convexity, Classification, and Risk Bounds</a></p>
+<p>most loss functions are not completely robust to label noise</p>
+<h1 id="Based-on-the-probability-model-estimate-noisy-label"><a href="#Based-on-the-probability-model-estimate-noisy-label" class="headerlink" title="Based on the probability model (estimate noisy label)"></a>Based on the probability model (estimate noisy label)</h1><p>Including EM-based model, belief learning, etc.</p>
+<p>The basic mathematical model is:</p>
+<ol>
+<li><p>Noise is related to label. Lions are easily classified as cats, but not as ships.</p>
+</li>
+<li><p>Find the joint probability distribution matrix and transition matrix between noisy label and true label.</p>
+</li>
+<li><p>Use the probability matrix to identify clean label or noise label, and correct the data set.</p>
+</li>
+</ol>
+<h2 id="Paper-1"><a href="#Paper-1" class="headerlink" title="Paper[1]"></a>Paper[1]</h2><p><a target="_blank" rel="noopener" href="https://openreview.net/references/pdf?id=Sk5qglwSl">Training deep neural-networks using a noise adaptation layer</a></p>
+<p>Refer to the communication channel model and use the EM algorithm. A bit like the HMM model in NLP.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1rz644doj30se0m40t4.jpg"></p>
+<h3 id="Modeling-ideas"><a href="#Modeling-ideas" class="headerlink" title="Modeling ideas:"></a>Modeling ideas:</h3><ul>
+<li>The correct unknown label can be viewed as a hidden random variable</li>
+<li>Model the noise processes by a communication channel with unknown parameters.</li>
+</ul>
+<p>Use EM algorithm to find network and correct label. This idea has good articles published in 2012 and 2016.</p>
+<p>The typical process is as follows:</p>
+<ul>
+<li>E-step, estimate the true label</li>
+<li>M-step, retrain the network</li>
+</ul>
+<p>The disadvantage is that each time the label is predicted, the model must be retrained. The idea of improvement is to complete 2 steps end-to-end with a neural network.</p>
+<p>In 2014, Sukhbaatar &amp; Fergus proposed to add a constrained linear layer at the end to connect the correct label and noisy label. It is feasible in some scenarios with strong assumptions.</p>
+<p>The contribution of this paper is to replace the linear layer added by Sukhbaatar with a softmax layer, which improves the universality of the model.</p>
+<h3 id="Author’s-view"><a href="#Author’s-view" class="headerlink" title="Author’s view:"></a>Author’s view:</h3><p>The modified model can be extended to the case where the noise is dependent on both the correct label and the input features.<br>It is suitable for data sets with unknown noisy distribution.</p>
+<h2 id="Paper【2】-1"><a href="#Paper【2】-1" class="headerlink" title="Paper【2】"></a>Paper【2】</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1911.00068">Confident Learning: Estimating Uncertainty in Dataset Labels</a><br>The algorithm principle of the cleanlab library:<br>cleanlab code: <a target="_blank" rel="noopener" href="https://github.com/cgnorthcutt/cleanlab">https://github.com/cgnorthcutt/cleanlab</a><br>Assume that noise is only related to true label and independent of feature.</p>
+<h3 id="Core-idea"><a href="#Core-idea" class="headerlink" title="Core idea:"></a>Core idea:</h3><ol>
+<li>Through prune, count, rank 3 steps, joint probabilities (true and predicted labels) can be calculated efficiently</li>
+<li>Identify label error according to joint probabilities.</li>
+</ol>
+<p>The theoretical basis is Angluin’s 1988 CNP theory.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1s1l5owzj30lw0e7mxy.jpg"></p>
+<h3 id="Contribution"><a href="#Contribution" class="headerlink" title="Contribution:"></a>Contribution:</h3><p>we prove CL exactly estimates the joint distribution of noisy and true labels with exact identification of label errors under realistic sufficient conditions.<br>The resulting CL procedure is a model-agnostic family of theory and algorithms for characterizing, finding, and learning with label errors. It uses predicted probabilities and noisy labels to count examples in the unnormalized confident joint, estimate the joint distribution, and prune noisy data, producing clean data as output.</p>
+<h1 id="Iterative-learning"><a href="#Iterative-learning" class="headerlink" title="Iterative learning"></a>Iterative learning</h1><p>Contains curriculum learning, semi-supervised learning, co-training, self-training. There are too many models of this kind.</p>
+<h2 id="Core-idea-1"><a href="#Core-idea-1" class="headerlink" title="Core idea:"></a>Core idea:</h2><ol>
+<li>First train a model with large/all data.</li>
+<li>According to the loss and other parameters, select the label that is probably true.</li>
+<li>Use true label to restart or continue training model.</li>
+<li>Repeat steps 2-3.</li>
+</ol>
+<p>the <strong>difference</strong> lies in:</p>
+<ol>
+<li>Curriculum learning divides the dataset into N groups at a time, from easy to difficult training. In other large methods, only the simplest group is selected each time.</li>
+<li>When repeating training, can the learning goal be more complicated (comprehensive)? Incorporate the parameters learned in the previous round into the learning goal of the new model.</li>
+</ol>
+<h2 id="Paper【1】-1"><a href="#Paper【1】-1" class="headerlink" title="Paper【1】"></a>Paper【1】</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1712.05055">MentorNet: Learning Data-Driven Curriculum for Very Deep Neural Networks on Corrupted Labels</a><br>code: <a target="_blank" rel="noopener" href="https://github.com/google/mentornet">https://github.com/google/mentornet</a></p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1s3ccnprj30qm0bqmxw.jpg"></p>
+<p><strong>Curriculum learning</strong>, learn from the human learning model. In the order of easy first and then complicated, the learning effect is better and the learning speed is faster. Imagine throwing a random addition and calculus task within 100 to a pupil.</p>
+<p>The difficulty lies in how to choose a curriculum?</p>
+<p>It can be traced back to Bengio’s introduction of curriculum learning in 2009. Use a predefined fixed curriculum.</p>
+<p>The main contributions of this article:</p>
+<ul>
+<li>Automatically learn data-driven courses. MentorNet learns a data-driven curriculum to supervise the base deep CNN, naely StudentNet.</li>
+<li>Based on StudentNet’s feedback, update Curriculum.</li>
+</ul>
+<p>The paper also gives a more rigorous mathematical model of Curriculum Learning, which is a good reference.<br>Brief summary: in the objective function, there are 3 parameters w, v, lambda.</p>
+<p>Among them,</p>
+<ul>
+<li>w is the weight to be learned by general CNN.</li>
+<li>Lambda is a hyperparameter, indicating the difficulty of learning.</li>
+<li>v is the weight introduced by curriculum learning, v_i &lt;lambda, which means the i-th data “easy”, participate in this training.</li>
+</ul>
+<p>It can be seen that lambda and v together define the “course”.</p>
+<p>The learning process is: fix v, w in turn, and optimize another parameter.</p>
+<p>As the learning progresses, gradually increase the lambda and introduce more and more learning data.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/noisy-label/" rel="tag">noisy label</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-paper_200920_MoCo"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/20/paper_200920_MoCo/"
+    >the Second Edition of Momentum Comparison (MoCo)</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/20/paper_200920_MoCo/" class="article-date">
+  <time datetime="2020-09-20T18:50:55.000Z" itemprop="datePublished">2020-09-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Unsupervised training method of the second edition of momentum comparison (MoCo)</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yuxdzo7j30rm07p74g.jpg"></p>
+<p>Contrastive unsupervised learning has recently made encouraging progress, such as momentum comparison (MoCo) and SimCLR. In this article, we verify their effectiveness by implementing two design improvements of SimCLR in the MoCo framework. Through a simple modification of MoCo—that is, using an MLP projection head and more data enhancement—we established a stronger benchmark than SimCLR, and does not require a lot of training. We hope this will make the most advanced unsupervised learning research more accessible. The code will be made public.</p>
+<p>Recent studies on unsupervised representation learning from images [16,13,8,17,1,9,15,6,12,2] all focus on a central concept, namely contrast learning [5]. The results are very promising: For example, momentum comparison (MoCo) [6] shows that in multiple detection and segmentation tasks, unsupervised pre-training can surpass its image supervision, while SimCLR [2] further reduces unsupervised and The pre-training before supervision indicates the performance gap between the linear classifiers.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ywcnbrmj31460qkabf.jpg"></p>
+<p>This article describes the establishment of a stronger and more feasible baseline within the MoCo framework. We report two design improvements used in SimCLR, namely an MLP projection head and stronger data enhancement, which are orthogonal to MoCo and SimCLR frameworks. When used with MoCo, they will bring better image classification. And target detection migration learning results. In addition, the MoCo framework can handle a large number of negative samples without the need for a large number of training batches (Figure 1). Compared with the large 4k∼8k batch of SimCLR that requires TPU support, our “MoCo v2” baseline can run on a typical 8-GPU machine and achieve better results than SimCLR. We hope that these improved baselines can provide references for future unsupervised learning research.</p>
+<h1 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h1><p>Contrastive learning and its latest progress can be seen as training an encoder for dictionary lookup tasks.</p>
+<p>Suppose there is a coded query q and a set of coded samples {k0, k1, k2, …}, which are the keys of the dictionary. There is a key (k+) in the dictionary that matches q. The contrast loss is a function whose value is very low when q is similar to its positive key k+ and different from all other keys (the negative key of q). Researchers use the similarity measure of dot product, which is a form of contrast loss function called InfoNCE. This article uses this function:<br>$$<br>\mathcal{L}<em>{q}=-\log \frac{\exp \left(q \cdot k</em>{+} / \tau\right)}{\sum_{i=0}^{K} \exp \left(q \cdot k_{i} / \tau\right)}<br>$$<br>This contrast loss function serves as an unsupervised objective function for training the encoder network that characterizes queries and keys. In general, the query representation is q = f_q(x^q), where f_q is an encoder network, and x^q is the query sample.</p>
+<h1 id="Improved-Design"><a href="#Improved-Design" class="headerlink" title="Improved Design"></a>Improved Design</h1><p>SimCLR[2] improves the end-to-end variant of instance recognition in three aspects: (i) larger batch processing (4k or 8k) that can provide more negative samples; (ii) the output fc projection head [ 16] Replaced with MLP header; (3) Data expansion capability is enhanced.</p>
+<p>In the MoCo framework, a large number of negative samples are readily available; the instantiation methods of MLP header and data expansion and contrast learning are orthogonal. Next, we study these improvements in MoCo.</p>
+<h1 id="Experimental-setup"><a href="#Experimental-setup" class="headerlink" title="Experimental setup"></a>Experimental setup</h1><p>Unsupervised learning is performed on the 1.28M ImageNet[3] training set. (i) ImageNet linear classification: freeze the features and train a supervised linear classifier; we report 1 crop (224×224), which ranks first in verification accuracy. (ii) Migrating to VOC target detection [4]: Faster R-CNN detector [14] (c4-backbone) on the VOC 07+12 training set for all entries (including supervision and MoCo v1 baseline) End fine-tuning, we make 24k iterative fine-tuning of VOC, which is higher than the 18k in [6]. And use the COCO standard [10] for evaluation on the VOC 07 test set. We use the same hyperparameters (unless otherwise noted) and code base as MoCo [6]. All results use standard size ResNet-50 [7].</p>
+<p>MLP header After [2], we replaced the fc header in MoCo with a 2-layer MLP header (hidden layer 2048-d, using ReLU). Note that this only affects the unsupervised training phase; this MLP header is not used in the linear classification or migration phase. [2] After that, we look for the best τ for the accuracy of ImageNet linear classification:</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yyll6idj30hp0303yf.jpg"></p>
+<p>Using the default τ = 0.07[16,6], the trained MLP head is improved from 60.6% to 62.9%; switching to the optimal value of MLP (0.2), the accuracy is improved to 66.2%. Table 1(a) shows its detection results: Compared with the big leap on ImageNet, the detection gain is smaller.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yz83zo5j30i70acgmc.jpg"></p>
+<p>Data enhancement We extend the original enhancement in [6] by adding blur enhancement in [2] (we found that the stronger color distortion in [2] has diminishing gain in our higher baseline). A separate addition (ie (no MLP)) increased the MoCo baseline on ImageNet by 2.8% to 63.4%, as shown in Table 1(b). Interestingly, its detection accuracy is higher than that of using MLP alone, Table 1 (b) and (a), although the linear classification accuracy is much lower (63.4% vs. 66.2%). This shows that the linear classification accuracy and the migration performance in detection are not monotonously related. For MLP, the additional enhancement will be the ImageNet The accuracy is improved to 67.3%, see Table 1(c).</p>
+<p>Comparison with SimCLR Table 2 compares SimCLR [2] with our result MoCo v2. For fair comparison, we also studied a cosine (half-period) learning rate scheduling adopted by SimCLR [11]. Table 1 (d, e). MoCo v2 uses 200 epochs and 256 batch sizes for pre-training, and achieves 67.5% accuracy on ImageNet, which is 5.6% higher than SimCLR’s accuracy under the same epoch and batch size, and 66.6% higher than SimCLR’s large batch results. . Through 800-epoch pre-training, MoCo v2 reached 71.1%, surpassing SimCLR’s 69.3%, reaching 1000 epochs.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yzlfqmcj30la0j2gn7.jpg"></p>
+<h1 id="Computing-costs"><a href="#Computing-costs" class="headerlink" title="Computing costs"></a>Computing costs</h1><p>In Table 3, we report the realized memory and time costs. The end-to-end case reflects the cost of SimCLR in the GPU (instead of the TPUs in [2]). Even on high-end 8-GPU machines, 4k batch sizes are difficult to handle. Moreover, with the same batch size of 256, the end-to-end variant is still more expensive in memory and time, because it propagates backwards to the q and k encoders, while MoCo only propagates backwards to the q encoders .</p>
+<p>Table 2 and Table 3 show that in order to obtain good accuracy, a large training batch is not required. The improvement we researched only requires a few lines of code changes to MoCo v1, and we will make the code public for future research.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-paper_200913"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/13/paper_200913/"
+    >A Neural Probabilistic Language Model</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/13/paper_200913/" class="article-date">
+  <time datetime="2020-09-13T18:50:55.000Z" itemprop="datePublished">2020-09-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>A Neural Probabilistic Language Model</p>
+<p>An old but significant paper, A Neural Probabilistic Language Model. The author is Professor Yoshua Bengio from the University of Montreal, one of the founders of deep learning technology.</p>
+<p>This article first used neural networks to solve language model problems in 2003. Although it did not receive much attention at the time, it laid a solid foundation for deep learning to solve language model problems and even many other nlp problems. Later generations stood on the shoulders of Yoshua Bengio and made more achievements. Including Word2Vec author Tomas Mikolov proposed RNNLM and later Word2Vec on the basis of NNLM. The article also earlier proposed that word represents a low-rank vector instead of one-hot. As a by-product of a language model, word embedding played a key role in the subsequent research, providing researchers with a broader idea.</p>
+<p>The biggest contribution of this paper is to construct a language model with a multilayer perceptron (MLP), as shown in the figure below:<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjw2a07b2lj30rg0ipaav.jpg"></p>
+<p>The model has three layers. The first layer is a mapping layer, which maps n words to the corresponding word embeddings. In fact, this layer is the input layer of MLP; the second layer is the hidden layer, and the activation function uses tanh; the third layer is The output layer, because it is a language model, needs to predict the next word based on the first n words, so it is a multi-classifier, using softmax. The largest amount of calculation in the entire model is concentrated on the last layer, because in general, the vocabulary is large, and the conditional probability of each word needs to be calculated, which is the calculation bottleneck of the entire model.</p>
+<p>Here, it should be noted that a word embedding matrix needs to be initialized in advance, and each row represents a word vector. The word vector is also a training parameter, which is updated in each training. It can be seen here that the word vector is an adjunct of the language model, because the language model itself is to estimate how much a given sentence is like a human word, but later studies have found that the language model has become a very good tool .</p>
+<p>Softmax is a very inefficient processing method. It needs to calculate the probability of each word first, and also calculate the exponent. The exponent is approximated by a series in the computer. The calculation complexity is very high, and finally the normalization is performed. deal with. Since then, many studies have been optimized for this problem, such as hierarchical softmax, such as softmax tree.</p>
+<p>Of course, the effect of NNLM does not seem to be much at present, but it has very important significance for subsequent related research. The Future Work in the article mentioned that using RNN instead of MLP as a model may achieve better results, which was verified in the doctoral thesis of Tomas Mikolov later, which was later RNNLM.</p>
+<p>So we have caught up with a good era, and we can stand on the shoulders of giants and see a farther future.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-paper_200906_matchnetwork"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/06/paper_200906_matchnetwork/"
+    >Matching Networks for One Shot Learning</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/06/paper_200906_matchnetwork/" class="article-date">
+  <time datetime="2020-09-06T18:50:55.000Z" itemprop="datePublished">2020-09-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1606.04080">Matching Networks for One Shot Learning</a></p>
+<p><em>This article accounts for my first exposure to a new field in learning.</em></p>
+<p>Something about “one-shot” learning, that is, learning from one (or very few) sample instead of the large data sets. After all, a child can know what a giraffe is through a picture, but the machine needs a lot of samples!</p>
+<p>Matching Networks for One Shot Learning This paper is a paper from Google DeepMind, which is mainly to solve: learn classification based on small samples (or other tasks), and this trained model does not need to be adjusted, and can also be used Categorize the categories that have not appeared in the training process (there may be some twists here, and I will explain in detail later in conjunction with the symbol definition. In fact, I personally feel that this task also has a feeling of “transfer learning”).</p>
+<h1 id="Idea"><a href="#Idea" class="headerlink" title="Idea:"></a>Idea:</h1><p>Train an end-to-end classifier similar to nearest neighbor. The reason why it is similar is because although the overall idea is very similar, for NN, the sample is what the input is, but here you need to learn a sample from the sample The representations, encode them.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjw20pn1gqj30fj0ar74m.jpg"></p>
+<h1 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h1><p>Training process: Given a support set $S=\left{\left(x_{i}, y_{i}\right)\right}<em>{i=1}^{k}$ with k samples, classify the test samples $\hat{x}$ (classification, because the category of $\hat{x}$ is the same as one or several sample categories in S), The category is $C</em>{S}(\hat{x})$.</p>
+<p>Definition $S \rightarrow C_{S}(\hat{x})$ this mapping is $P(\hat{y} \mid \hat{x}, S)$, where the parameters of P are learned through neural networks, and the mapping method is the last model we learned.</p>
+<p>Therefore, in the testing process: Given a new support set $S^{\prime}$, we can use the model learned before to obtain their possible label $\hat{x}$ for each test sample $\hat{y}$.</p>
+<p>For example, given a picture of a Siamese cat and a picture of Corgi as S during training, a new husky picture model can be classified as a dog; in the test, a picture of Xiong Er and A picture of Bugs Bunny and another picture of Winnie the Pooh and ask the machine which category the new picture belongs to, and the machine will tell you that this is a bear (it’s the same category as that bear)</p>
+<h1 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm:"></a>Algorithm:</h1><p>Given a test sample $\hat{x}$, the process of calculating $\hat{y}$ is very similar to Nearest Neighbors:<br>$$<br>\hat{y}=\sum_{i=1}^{k} a\left(\hat{x}, x_{i}\right) y_{i}<br>$$<br>Here a is similar to the kernel function in the attention model, which is used to measure the matching degree between $\hat{x}$ and training sample $x_i$, and then the calculation of the test sample label through $y_i$ is similar to weighted summation:<br>$$<br>a\left(\hat{x}, x_{i}\right)=e^{c\left(f(\hat{x}), g\left(x_{i}\right)\right)} / \sum_{j=1}^{k} e^{c\left(f(\hat{x}), g\left(x_{j}\right)\right)}<br>$$<br>Here, the formula f defines how to encode the test sample into a vector, and the formula g defines how to encode the training sample. From c(), the cos distance is used to calculate the matching degree between the two, and then they are normalized by a softmax.</p>
+<h1 id="Encode-the-training-set-function-g"><a href="#Encode-the-training-set-function-g" class="headerlink" title="Encode the training set (function g)"></a>Encode the training set (function g)</h1><p>The structure of g is a two-way LSTM. The input sequence of this two-way LSTM is each sample $\left(x_{0}, x_{1}, x_{2} \ldots\right)$ in S. $g^{\prime}\left(x_{i}\right)$ is an encoding that first inputs $x_i$ to a neural network (such as VGG, Inception model).</p>
+<p>The definition is based on the support set S, and the coding of the sample $x_i$ is:<br>$$<br>g\left(x_{i}, S\right)=\overrightarrow{h_{i}}+\overline{h_{i}}+g^{\prime}\left(x_{i}\right)<br>$$<br>where<br>$$<br>\begin{aligned}<br>\vec{h}<em>{i}, \vec{c}</em>{i} &amp;=\operatorname{LSTM}\left(g^{\prime}\left(x_{i}\right), \vec{h}<em>{i-1}, \vec{c}</em>{i-1}\right) \<br>\stackrel{\leftarrow}{h}<em>{i}, \bar{c}</em>{i} &amp;=\operatorname{LSTM}\left(g^{\prime}\left(x_{i}\right), \bar{h}<em>{i+1}, \bar{c}</em>{i+1}\right)<br>\end{aligned}<br>$$</p>
+<p>$h_i$ and $c_i$ are both the output of LSTM. If you don’t know much about it, you can take a look at the LSTM algorithm. In addition, the original text did not mention how to sort the unordered reference set samples, but refer to another article of the author: Order Matters: Sequence to Sequence for Sets. It is found that the original unordered support set sample sets are sorted here .</p>
+<p>Some people may wonder why LSTM is used. Models like LSTM and RNN have to remember something, but the categories of these samples are different, so what do you want to remember? My understanding is that the samples of each category are input into the LSTM as a sequence, so that the model looks at all the samples to automatically select the appropriate features to measure. For example, if our goal is to recognize faces, then we need to construct a distance function. To strengthen the appropriate features (such as hair color, face shape, etc.); and if our goal is to recognize posture, then we need to build a distance function that captures the similarity of posture. Here we need to refer to Metric Learning.</p>
+<h1 id="Encode-the-test-set-function-f"><a href="#Encode-the-test-set-function-f" class="headerlink" title="Encode the test set (function f)"></a>Encode the test set (function f)</h1><p>f is an iterative LSTM with K steps (note that k here is k steps, and k above is k samples), and all training samples ($g\left(x_{i}\right)$) are considered in the process of encoding the test set, and finally f The encoding result of is the hidden state output by the last LSTM.<br>$$<br>\begin{aligned} f(\hat{x}, S) &amp;=\operatorname{attLSTM}\left(f^{\prime}(\hat{x}), g(S), K\right) \ \hat{h}<em>{k}, c</em>{k} &amp;=\operatorname{LSTM}\left(f^{\prime}(\hat{x}),\left[h_{k-1}, r_{k-1}\right], c_{k-1}\right) \ h_{k} &amp;=\hat{h}<em>{k}+f^{\prime}(\hat{x}) \ r</em>{k-1} &amp;=\sum_{i=1}^{|S|} a\left(h_{k-1}, g\left(x_{i}\right)\right) g\left(x_{i}\right) \ a\left(h_{k-1}, g\left(x_{i}\right)\right) &amp;=\operatorname{softmax}\left(h_{k-1}^{T} g\left(x_{i}\right)\right) \end{aligned}<br>$$</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/one-shot/" rel="tag">one shot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
   id="post-shallow_GCN"
   class="article article-type-post"
   itemscope
@@ -168,6 +750,115 @@
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCN/" rel="tag">GCN</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-paper_200830_GAN"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/30/paper_200830_GAN/"
+    >Review on GAN</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/08/30/paper_200830_GAN/" class="article-date">
+  <time datetime="2020-08-30T18:50:55.000Z" itemprop="datePublished">2020-08-30</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>The most comprehensive review of GAN in history 2020 edition: algorithms, theories and applications.<br><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2001.06937.pdf">A Review on Generative Adversarial Networks: Algorithms, Theory, and Applications</a></p>
+<p><em>Since I had a project on GAN, I explored deeply about various GAN.</em></p>
+<p>In recent years, Generative Adversarial Networks (GAN) has been a hot research topic. Since 2014, researchers have conducted extensive research on GAN and proposed a large number of algorithms. However, there are few comprehensive studies to explain the connections between different GAN variants and the way they evolved. In this article, we try to review a variety of GAN methods from the perspectives of algorithms, theory, and applications. First, we introduced in detail the research motivation, mathematical representation and architecture of most GAN algorithms. In addition, GAN has been combined with other machine learning algorithms in some specific applications, such as semi-supervised learning, transfer learning and reinforcement learning. This article compares the similarities and differences of these GAN methods. Secondly, we studied the theoretical issues related to GAN. Third, we explained the typical applications of GAN in image processing and computer vision, natural language processing, music, speech and audio, medicine, and data science. Finally, we pointed out some future open research issues for GAN.</p>
+<h1 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h1><p>In this section, we first introduce the most primitive GAN. Then, introduce its representative variants, training and evaluation methods, and task-driven GAN.</p>
+<h2 id="Generative-confrontation-network"><a href="#Generative-confrontation-network" class="headerlink" title="Generative confrontation network"></a>Generative confrontation network</h2><p>When the models are all neural networks, the GAN architecture is very intuitive to implement. In order to learn the distribution p_g of the generator on the data x, first define a prior distribution p_z(z)[3] about the input noise variable, where z is the noise variable. Next, GAN represents the mapping from noise space to data space G(z, θ_g), where G is a differentiable function represented by a neural network with a parameter θ_g. In addition to G, another neural network D(x, θ_d) is also defined by the parameter θ_d, and the output of D(x) is a scalar. D(x) represents the probability that x comes from the real data instead of from the generator G. We train the discriminator D to maximize the probability of providing the correct label for the training data and the fake samples generated by the generator G. At the same time, we train G to minimize log(1-D(G(z))).</p>
+<h3 id="Objective-function"><a href="#Objective-function" class="headerlink" title="Objective function"></a>Objective function</h3><p>GAN can use a variety of different objective functions.</p>
+<h4 id="The-most-primitive-minimax-game"><a href="#The-most-primitive-minimax-game" class="headerlink" title="The most primitive minimax game"></a>The most primitive minimax game</h4><p>The objective function of GAN [3] is<br>$$<br>\begin{array}{l}<br>\min <em>{G} \max <em>{D} V(D, G)=E</em>{x \sim p</em>{\text {data}}(x)}[\log D(x)] \<br>\quad+E_{z \sim p_{z}(z)}[\log (1-D(G(z)))]<br>\end{array}<br>$$<br>Where D(x) is the cross entropy between $[1, 0]^{T}$ and $[D(x), 1-D(x)]^T$. Similarly, log(1-D(G(z))) is the cross entropy between $[0, 1]^T$ and $[D(G(z)), 1-D(G(z))]^T$. For a fixed G, the optimal discriminator D is given in [3]:<br>$$<br>D_{G}^{<em>}(x)=\frac{p_{\text {data}}(x)}{p_{\text {data}}(x)+p_{g}(x)}<br>$$<br>The mini-max game in the formula can be reformulated as:<br>$$<br>\begin{array}{l}<br>C(G)=\max <em>{D} V(D, G) \<br>=E</em>{x \sim p_{\text {data}}}\left[\log D_{G}^{</em>}(x)\right] \<br>\quad+E_{z \sim p_{z}}\left[\log \left(1-D_{G}^{<em>}(G(z))\right)\right] \<br>=E_{x \sim p_{\text {data}}}\left[\log D_{G}^{</em>}(x)\right]+E_{x \sim p_{g}}\left[\log \left(1-D_{G}^{*}(x)\right)\right] \<br>=E_{x \sim p_{\text {data}}}\left[\log \frac{p_{\text {data}}(x)}{\frac{1}{2}\left(p_{\text {data}}(x)+p_{g}(x)\right)}\right] \<br>\quad+E_{x \sim p_{g}}\left[\frac{p_{g}(x)}{\frac{1}{2}\left(p_{\text {data}}(x)+p_{g}(x)\right)}\right]-2 \log 2<br>\end{array}<br>$$<br>The KL divergence and JS divergence between two probability distributions p(x) and q(x) are defined as follows:<br>$$<br>K L(p | q)=\int p(x) \log \frac{p(x)}{q(x)} d x<br>$$<br>$$<br>J S(p | q)=\frac{1}{2} K L\left(p | \frac{p+q}{2}\right)+\frac{1}{2} K L\left(q | \frac{p+q}{2}\right)<br>$$<br>$$<br>\begin{array}{l}<br>C(G)=K L\left(p_{\text {data}} | \frac{p_{\text {data}}+p_{g}}{2}\right)+K L\left(p_{g} | \frac{p_{\text {data}}+p_{g}}{2}\right)-2 \log 2 \<br>=2 J S\left(p_{\text {data}} | p_{g}\right)-2 \log 2<br>\end{array}<br>$$<br>Therefore, the objective function of GAN and KL divergence are related to JS divergence.</p>
+<h4 id="Unsaturated-game"><a href="#Unsaturated-game" class="headerlink" title="Unsaturated game"></a>Unsaturated game</h4><p>In fact, formula may not provide a large enough gradient for G to learn well. Generally speaking, G has poor performance in the early stages of the learning process, and the generated samples are significantly different from the training data. Therefore, D can reject the samples generated by G with high confidence. In this case, log(1-D(G(z))) is saturated. We can train G to maximize log(D(G(z))) instead of minimizing log(1-D(G(z))). The loss of the generator becomes<br>$$<br>\begin{array}{l}<br>J^{(G)}=E_{z \sim p_{z}(z)}[-\log (D(G(z)))] \<br>=E_{x \sim p_{g}}[-\log (D(x))]<br>\end{array}<br>$$<br>This new objective function can make D and G reach the same fixed point during the training process, but provides a much larger gradient in the early stage of learning. Unsaturated games are heuristic, not theory-driven. However, there are other problems in the unsaturated game, such as the unstable numerical gradient used to train G. Under the optimal D<em><em>G, there are<br>$$<br>\begin{array}{l}<br>E</em>{x \sim p_{g}}\left[-\log \left(D_{G}^{</em>}(x)\right)\right]+E_{x \sim p_{g}}\left[\log \left(1-D_{G}^{<em>}(x)\right)\right] \<br>=E_{x \sim p_{g}}\left[\log \frac{\left(1-D_{G}^{</em>}(x)\right)}{D_{G}^{<em>}(x)}\right]=E_{x \sim p_{g}}\left[\log \frac{p_{g}(x)}{p_{\text {data}}(x)}\right] \<br>=K L\left(p_{g} | p_{\text {data}}\right)<br>\end{array}<br>$$<br>Therefore E_(x~p_g)[-log(D</em><em>G(x))] is equivalent to<br>$$<br>\begin{array}{l}<br>E</em>{x \sim p_{g}}\left[-\log \left(D_{G}^{<em>}(x)\right)\right] \<br>=K L\left(p_{g} | p_{\text {data}}\right)-E_{x \sim p_{g}}\left[\log \left(1-D_{G}^{</em>}(x)\right)\right]<br>\end{array}<br>$$<br>$$<br>\begin{array}{l}<br>E_{x \sim p_{\text {data}}}\left[\log D_{G}^{<em>}(x)\right]+E_{x \sim p_{g}}\left[\log \left(1-D_{G}^{</em>}(x)\right)\right] \<br>=2 J S\left(p_{\text {data}} | p_{g}\right)-2 \log 2<br>\end{array}<br>$$<br>Therefore E_(x~p_g)[log^(1-D<em><em>G(x))] is equivalent to<br>$$<br>\begin{array}{l}<br>E</em>{x \sim p_{g}}\left[\log \left(1-D_{G}^{</em>}(x)\right)\right] \<br>=2 J S\left(p_{\text {data}} | p_{g}\right)-2 \log 2-E_{x \sim p_{\text {data}}}\left[\log D_{G}^{<em>}(x)\right]<br>\end{array}<br>$$<br>Finally we get<br>$$<br>\begin{array}{l}<br>E_{x \sim p_{g}}\left[-\log \left(D_{G}^{</em>}(x)\right)\right] \<br>=K L\left(p_{g} | p_{\text {data}}\right)-2 J S\left(p_{\text {data}} | p_{g}\right)+ \<br>E_{x \sim p_{\text {data}}}\left[\log D_{G}^{*}(x)\right]+2 \log 2<br>\end{array}<br>$$<br>It can be seen from the above formula that the optimization of the alternative G loss function in the unsaturated game is contradictory, because the first goal is to make the difference between the generated distribution and the actual distribution as small as possible, and because of the existence of the negative sign The second goal is to make the difference between these two distributions as large as possible. This will bring unstable numerical gradients for training G. In addition, KL divergence is an asymmetric measure, which can be reflected in the following two examples<br>$$<br>\begin{aligned}<br>&amp;\text { If } p_{\text {data}}(x) \rightarrow 0 \text { and } p_{g}(x) \rightarrow 1, \text { we have }\<br>&amp;K L\left(p_{g} | p_{d a t a}\right) \rightarrow+\infty\<br>&amp;\text { If } p_{\text {data}}(x) \rightarrow 1 \text { and } p_{g}(x) \rightarrow 0, \text { we have }\<br>&amp;K L\left(p_{g} | p_{d a t a}\right) \rightarrow 0<br>\end{aligned}<br>$$<br>The penalties for the two errors of G are completely different. The first error is that G produces unreal samples, and the corresponding penalty is large. The second type of error is that G fails to produce real samples, and the penalty is small. The first type of error is that the generated samples are inaccurate, and the second type of error is that the generated samples are not diverse enough. Based on this principle, G tends to generate repeated but safe samples, rather than risk generating different but unsafe samples, which will lead to the problem of mode collapse.</p>
+<h4 id="Maximum-likelihood-game"><a href="#Maximum-likelihood-game" class="headerlink" title="Maximum likelihood game"></a>Maximum likelihood game</h4><p>In GAN, there are many ways to approximate first equation. Assuming that the discriminator is optimal, we want to minimize<br>$$<br>\begin{array}{l}<br>J^{(G)}=E_{z \sim p_{z}(z)}\left[-\exp \left(\sigma^{-1}(D(G(z)))\right)\right] \<br>=E_{z \sim p_{z}(z)}[-D(G(z)) /(1-D(G(z)))]<br>\end{array}<br>$$<br>There are other possible methods to approach the maximum likelihood in the GAN framework [17]. Figure 1 shows the comparison between the original zero-sum game, the unsaturated game, and the maximum likelihood game.<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjw1nv4taaj30g00k2762.jpg"><br>From Figure 1, three observations can be obtained.</p>
+<p>First, when the sample may come from the generator, that is, at the left end of the graph, both the maximum likelihood game and the original minimax game are affected by gradient dispersion, while heuristic unsaturated games do not have this problem.</p>
+<p>Second, there is a problem with the maximum likelihood game, that is, almost all gradients come from the right end of the curve, which means that only a small part of the samples in each minibatch dominate the calculation of the gradient. This shows that the method of reducing sample variance may be an important research direction to improve the performance of GAN based on maximum likelihood game.</p>
+<p>Third, the sample variance of the heuristic-based unsaturated game is low, which may be the possible reason for its more successful application in practical applications.</p>
+<p>M.Kahng et al. [124] proposed GAN Lab, which provides an interactive visualization tool for non-professionals to learn GAN and do experiments. Bau et al. [125] proposed an analysis framework to visualize and understand GAN.</p>
+<h2 id="Representative-GAN-variants"><a href="#Representative-GAN-variants" class="headerlink" title="Representative GAN variants"></a>Representative GAN variants</h2><p>There are many papers related to GAN [126]-[131], such as CSGAN [132] and LOGAN [133]. In this section, we will introduce some representative GAN variants.</p>
+<ol>
+<li>InfoGAN</li>
+<li>ConditionalGANs(cGANs)</li>
+<li>CycleGAN</li>
+<li>f-GAN</li>
+<li>IntegralProbabilityMetrics(IPMs) </li>
+<li>LossSensitiveGAN(LS-GAN)</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjw1p5v1ezj30g0048jre.jpg"></p>
+<h2 id="GAN-training"><a href="#GAN-training" class="headerlink" title="GAN training"></a>GAN training</h2><p>Although there are unique solutions in theory, for many reasons [29], [32], [179], GAN training is difficult and often unstable. One of the difficulties comes from the fact that the optimal weight of GAN corresponds to the saddle point of the loss function, not the minimum point.</p>
+<p>There are many papers on GAN training. Yadav et al. [180] used prediction methods to make GAN training more stable. [181] By using independent learning rates, two time scale update rules (TTUR) are proposed for the discriminator and generator to ensure that the model can converge to a stable local Nash equilibrium. Arjovsky [179] conducted a theoretical study to fully understand the training dynamics of GAN, analyzed why GAN is difficult to train, studied and strictly proved the saturation and instability of the loss function when training GAN, and proposed a solution A practical and theoretical direction for this kind of problems, and new tools are introduced to study them. Liang et al. [182] believe that the training of GAN is a continuous learning problem [183].</p>
+<p>One way to improve GAN training is to evaluate the empirical “symptoms” that may occur during training. These symptoms include: the generator collapses to the extent that it can only generate extremely similar samples for different inputs [29]; the discriminator loss quickly converges to zero [179], and it cannot provide gradient updates for the generator; making the generator and discriminator be the same It is difficult for the model to converge [32].</p>
+<h2 id="GAN-evaluation-index"><a href="#GAN-evaluation-index" class="headerlink" title="GAN evaluation index"></a>GAN evaluation index</h2><p>In this section, we explain some evaluation indicators used in GAN [215], [216]:</p>
+<ol>
+<li>InceptionScore(IS)</li>
+<li>Modescore(MS)</li>
+<li>FrechetInceptionDistance(FID)</li>
+<li>Multi-scalestructuralsimilarity(MS-SSIM)</li>
+</ol>
+<p>How to choose a good evaluation index for GAN is still a difficult problem [225]. Xu et al. [219] proposed an empirical study on GAN evaluation indicators. Karol Kurach [224] conducted a large-scale research on regularization and normalization in GAN. There are other comparative studies on GAN, such as [226]. References [227] proposes several metrics as meta-metrics to guide researchers in choosing quantitative evaluation indicators. Appropriate evaluation indicators should distinguish real samples from generated fake samples, verify mode drop or mode collapse, and detect overfitting. Hope there will be a better way to evaluate the quality of GAN models in the future.</p>
+<h2 id="Task-driven-GAN"><a href="#Task-driven-GAN" class="headerlink" title="Task-driven GAN"></a>Task-driven GAN</h2><p>This article focuses on the GAN model. At present, there is a large amount of literature on closely related fields involving specific tasks.</p>
+<ol>
+<li>Semi-supervised learning</li>
+<li>Transfer learning</li>
+<li>Reinforcement learning</li>
+<li>Multimodal learning</li>
+</ol>
+<p>GAN has been used in the field of feature learning, such as feature selection [277], hashing [278]-[285] and metric learning [286]. MisGAN [287] can learn from incomplete data through GAN. Evolutionary GAN (Evolutionary GAN) was proposed in [288]. Ponce et al. [289] combined GAN and genetic algorithm to evolve images for visual neurons. GAN is also used in other machine learning tasks [290], such as active learning [291], [292], online learning [293], ensemble learning [294], zero-sample learning [295], [296] and multi-task learning [297].</p>
+<h1 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h1><h2 id="Maximum-likelihood-estimation-MLE"><a href="#Maximum-likelihood-estimation-MLE" class="headerlink" title="Maximum likelihood estimation (MLE)"></a>Maximum likelihood estimation (MLE)</h2><p>Not all generative models use MLE. Some generative models do not use MLE, but can be modified to use MLE (GANs fall into this category). It can be simply proved that minimizing the KL divergence (KLD) between p_data(x) and p_g(x) is equivalent to maximizing the log likelihood when the number of samples m increases:<br>$$<br>\begin{array}{l}<br>\theta^{*}=\underset{\theta}{\arg \min } K L D\left(p_{\text {data}} | p_{g}\right) \<br>=\underset{\theta}{\arg \min }-\int p_{\text {data}}(x) \log \frac{p_{g}(x)}{p_{\text {data}}(x)} d x \<br>=\arg \min \int p_{\text {data}}(x) \log p_{\text {data}}(x) d x \<br>\quad-\int p_{\text {data}}(x) \log p_{g}(x) d x \<br>=\arg \max <em>{\theta} \log p</em>{\text {data}}(x) \log <em>{g}(x) d x \<br>=\arg \max _{\theta} \lim _{m \rightarrow \infty} \frac{1}{m} \sum</em>{i=1}^{m} \log p_{g}\left(x_{i}\right)<br>\end{array}<br>$$</p>
+<p>In order to ensure symbol consistency, the model probability distribution p_θ(x) is replaced with p_g(x). For more information on MLE and other statistical estimators, see Chapter 5 of [298].</p>
+<h2 id="Model-collapse"><a href="#Model-collapse" class="headerlink" title="Model collapse"></a>Model collapse</h2><p>GANs are difficult to train, and in [26], [29] it has been observed that they are often affected by mode collapse [299], [300], where the generator learns to generate samples based on only a few data distribution patterns, and ignores Many other patterns (even if there are samples from missing patterns in the entire training data). In the worst case, the generator only generates a single sample (completely collapsed) [179], [301].</p>
+<p>In this section, we first introduce two views on the collapse of the GAN model: the divergence view and the algorithm view. Then, we will introduce methods for solving model collapse by proposing new objective functions or new architectures, including objective function-based methods and architecture-based methods.</p>
+<h2 id="Other-theoretical-issues"><a href="#Other-theoretical-issues" class="headerlink" title="Other theoretical issues"></a>Other theoretical issues</h2><p>Other theoretical issues include:</p>
+<ol>
+<li>Has GAN really learned the distribution?</li>
+<li>Divergence/distance</li>
+<li>Inverse mapping</li>
+<li>Mathematical point of view (such as optimization)</li>
+<li>Memory</li>
+</ol>
+<h1 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h1><p>As mentioned earlier, GAN is a powerful generative model that can generate realistic samples from a random vector z. We neither need to know the explicit true data distribution or make any other mathematical assumptions. These advantages make GAN can be widely used in many fields, such as image processing and computer vision, sequence data and so on.</p>
+<h2 id="Image-processing-and-computer-vision"><a href="#Image-processing-and-computer-vision" class="headerlink" title="Image processing and computer vision"></a>Image processing and computer vision</h2><p>The most successful applications of GAN are in image processing and computer vision, such as image super-resolution, image generation and manipulation, and video processing.</p>
+<p>Super resolution<br>Image composition and manipulation<br>Texture synthesis<br>Target Detection<br>Video application</p>
+<h2 id="Sequence-data"><a href="#Sequence-data" class="headerlink" title="Sequence data"></a>Sequence data</h2><p>GAN has also made certain achievements in sequence data such as natural language, music, speech, audio [376], [377], time sequence [378]–[381], etc.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li></ul>
 
     </footer>
   </div>
@@ -255,577 +946,13 @@
 </article>
 
     
-    <article
-  id="post-shallow_bot2"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/08/20/shallow_bot2/"
-    >Think about Bot 2</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/08/20/shallow_bot2/" class="article-date">
-  <time datetime="2020-08-20T15:50:55.000Z" itemprop="datePublished">2020-08-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><h3 id="2-user-modeling"><a href="#2-user-modeling" class="headerlink" title="2. user modeling"></a>2. user modeling</h3><p>Article [6] addresses the problem of inconsistent responses in multiple rounds of dialogue. Taking user identity (such as background information, user portrait, age, and other information) into the model, a personalized seq2seq model is constructed for different users. , And the same user generates different styles of responses for different requests.</p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yjoq0wbj30k708fmxn.jpg"></p>
-<p>The model of [6] is called Speaker Model, which is a typical seq2seq model. The difference is that a speaker embedding is added to the decoding part, which is similar to word embedding, except that the user is modeled here. Because the user’s information cannot be modeled explicitly, an embedding method is used to obtain the speaker vector through training. The figure on the left below is the representation of the speaker vector on a two-dimensional plane. Users with similar background information It will be very close, which is the same as the word vector.</p>
-<h3 id="3-reinforcement-learning-model"><a href="#3-reinforcement-learning-model" class="headerlink" title="3. reinforcement learning model"></a>3. reinforcement learning model</h3><p>Using reinforcement learning to solve human-computer dialogue problems has a long history, but with the hype of AlphaGo, deepmind has brought reinforcement learning back to the stage and combined with deep learning to solve some more difficult problems.</p>
-<p>Reinforcement learning uses long term reward as the objective function, which will enable the model to predict higher quality responses after training. The article [7] proposed a model framework with the following capabilities:</p>
-<ol>
-<li><p>Integrate the reward function defined by the developer to achieve the goal.</p>
-</li>
-<li><p>After generating a response, you can quantitatively describe the impact of this response on subsequent stages.</p>
-</li>
-</ol>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yke1oz3j30oh0bnwfc.jpg"></p>
-<p>Two bots are in a conversation. Initially, an input message is given, and then bot1 generates 5 candidate responses based on the input, and then proceeds sequentially, because each input generates 5 responses. As the turn increases, the response will increase exponentially , Here in each round of dialogue, select 5 as the response of the current round through sample.</p>
-<p>Train a good seq2seq on a large data set as the initial value, and use reinforcement learning to improve the model’s ability to implement a custom reward function to achieve the desired effect.</p>
-<p>The model in article [7] can generate more rounds of dialogue without falling into an infinite loop prematurely, and the generated dialogue diversity is very good.</p>
-<h3 id="4-task-oriented-seq2seq-model"><a href="#4-task-oriented-seq2seq-model" class="headerlink" title="4. task-oriented seq2seq model"></a>4. task-oriented seq2seq model</h3><p>Most of the existing task-oriented bots use rule-based, template-based or example-based or a combination of them, and data driven solutions are very rare. Articles [8] and [9] try to use deep learning techniques on individual parts of the bot, and give practical solutions.</p>
-<p>Article [8] first introduces a well-known scene, how an experienced customer service brings a new customer service, divided into four stages:</p>
-<ol>
-<li><p>Tell the new customer service what “controls” are available, such as: how to find customer information, how to determine customer identity, etc.</p>
-</li>
-<li><p>The new customer service imitates and learns from the good examples made by the old customer service.</p>
-</li>
-<li><p>The new customer service began to try to serve the customer, and the old customer service corrected his mistakes in time.</p>
-</li>
-<li><p>The old customer service will let go, and the new customer service will serve customers alone, keep learning and accumulate experience.</p>
-</li>
-</ol>
-<p>The model framework of [8] is designed according to the above process:</p>
-<ol>
-<li><p>The developer provides a series of alternative actions, including response templates and some API functions, to be called by the bot.</p>
-</li>
-<li><p>Experts provide a series of example dialogues and use RNN to learn.</p>
-</li>
-<li><p>A simulated user randomly generates a query, a bot responds, and an expert corrects it.</p>
-</li>
-<li><p>Bot goes online for service, talks with real customers, and improves bot service quality through feedback.<br><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yl8y707j30t809j3yu.jpg"></p>
-</li>
-</ol>
-<p>When training, a part of high-quality data is used for supervised learning SL, and reinforcement learning RL is used to optimize the model to obtain higher quality results.</p>
-<p>The article [9] balances the advantages and disadvantages of two popular schemes, and proposes a set of reference value and practical seq2seq solutions.</p>
-<h3 id="6-Knowledge-Sources-based-model"><a href="#6-Knowledge-Sources-based-model" class="headerlink" title="6. Knowledge Sources based model"></a>6. Knowledge Sources based model</h3><p>Pure seq2seq can solve many problems, but for specific tasks, adding a related knowledge source on the basis of seq2seq will make the effect much better. The knowledge here can be unstructured text sources, such as the ubuntu manpages in article [10], or structured business data, such as the database in article [9], or it can be a source data and business data The extracted knowledge graph.</p>
-<p>The author of the article [10] defines the bot task as next utterance classification, which is a bit like a question answering task. Given a context and a response candidate list as candidate answers, select the correct response from the candidate list through the context. The contribution of this article lies in the introduction of task-related external professional knowledge base on the basis of context, and this knowledge base is unstructured.</p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ym1poayj30gz078glx.jpg"></p>
-<p>The model is composed of three rnn encoders, one rnn to encode context, one rnn to encode response, and one rnn to encode knowledge, and then make predictions together to select the most suitable response. The model is called a knowledge encoder. Because the data set is related to ubuntu technical support, ubuntu manpages is used for external resources.</p>
-<h3 id="7-context-sensitive-model"><a href="#7-context-sensitive-model" class="headerlink" title="7. context sensitive model"></a>7. context sensitive model</h3><p>The model in article [11] is relatively simple, but the issues considered are of great significance. The modeling of history information is of great help to bots in solving practical engineering applications, and directly determines whether your bot can work. The author expresses the history context with a bag of words model instead of the rnn we often use, and then passes the context and user query through a simple FNN to get an output.</p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ymlc3o5j305j0acweh.jpg"></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-shallow_bot1"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/08/13/shallow_bot1/"
-    >Think about Bot 1</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/08/13/shallow_bot1/" class="article-date">
-  <time datetime="2020-08-13T15:50:55.000Z" itemprop="datePublished">2020-08-13</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><em>Thinking during the internship in HCI group</em></p>
-<p>Chatbot is a word or an application that has been very popular recently. Not only are the major news media hyping up the concept of bots, but major giants have also invested huge resources in research and development.  I have to say that an embarrassing fact is that it is really difficult to find a really useful bot on the market. According to the field involved, bots are divided into open-domain and task-oriented bots. The open domain has a lot to do, and it’s more like a platform that can do anything. No matter what kind of needs you raise, it can solve it. It means true AI, while task-oriented bots focus on doing a good job. Things, booking air tickets, order meals, get passports, etc.</p>
-<p>When it comes to open-domain bots, the ones that everyone comes into contact with the most are entertainment bots that have very nonsensical answers. The bot companies that use deep learning to solve bot technology are all of this type. They can’t solve any practical problems. They can just talk to everyone. And many times the answer is that they are not right, which is very ridiculous.</p>
-<p>Let’s talk about task-oriented bots. The most popular one on the market is customer service robots, whether it’s a bank or an e-commerce company. If you don’t want to answer the user’s questions repeatedly, just use a customer service bot to respond and develop a specific task. The bot requires a lot of work and a lot of maintenance in the later period. Because too many hand crafted features are used, the horizontal scalability of the entire bot framework is relatively poor. </p>
-<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>Bot is a comprehensive problem involving the following three main issues:</p>
-<h3 id="1-Response-generation-selection"><a href="#1-Response-generation-selection" class="headerlink" title="1. Response generation (selection)"></a>1. Response generation (selection)</h3><p>The dialog generation is the last step, the output part. In a brief summary, there are four solutions:</p>
-<p>Solution 1 generates dialogue directly based on context. There are a lot of recent papers in this regard, especially after the seq2seq+attention framework has swept many tasks of NLP, the benchmark generated by dialogue has been refreshed by various models again and again. The problem of dialogue generation is defined as a generative model based on a certain condition. Typically, predict words based on context. When it comes to sentence generation, the evaluation problem will be a more difficult problem.</p>
-<p>Solution 2 Of course, some papers do not define dialogue generation as a language model problem, but a next utterance selection problem, a multiple choice problem, given a context, given a utterance candidate list, select one from the list As a response, of course, this type of problem is much less difficult and very easy to evaluate, but it takes more effort to prepare the data set, and it is not easy to learn from in practical applications.</p>
-<p>Solution 3 rule-based or template-based, the final form of response is actually filled with a template, most of the things are given, only some specific values ​​need to be filled. This type of solution is very suitable for task-oriented bots, but too many manual features and templates make it difficult to port to other tasks.</p>
-<p>Solution 4 query-based or example-based, the response comes from a database called a knowledge base, which contains a large number of rich examples, according to the user’s query, find the closest example, and return the corresponding response as Output. This type of solution is very suitable for entertainment and funny bots. The core technology is to find more data to enrich and clean the knowledge base. But after all, respnose is taken from others, which may be funny, but most of them will be wrong.</p>
-<h3 id="2-dialog-state-tracking-DST"><a href="#2-dialog-state-tracking-DST" class="headerlink" title="2. dialog state tracking (DST)"></a>2. dialog state tracking (DST)</h3><p>Some papers call DST the belief trackers. This component is actually the core of the bot. Its function is to understand or capture user intention or goal. Only when you really know what the user needs can you make the correct action or response. For this part, there will be a Dialog State Tracking Challenge competition. Generally speaking, a range of state is given, and the context is used to predict which state the user belongs to, what kind of needs they have, and whether they need to query the weather or train tickets.</p>
-<h3 id="3-User-modeling"><a href="#3-User-modeling" class="headerlink" title="3. User modeling"></a>3. User modeling</h3><p>The bot is oriented to specific businesses and deals with real users. If it is just a simple FAQ bot, it may not be necessary to answer a few common questions, but if it is other more complex and detailed businesses, it needs to be provided to users. Modeling, the same problem, the response that the bot gives to each person must be different, the reason is very simple. User modeling needs to involve not only simple basic user information and some explicit feedback information of the user, but more importantly the history conversations of the user, these implicit feedback information. It’s like before the recommendation system went viral, everyone was selling things fairly, but some smart people started to analyze user behavior, not only those likes, but also the “clues” left by users inadvertently. In this way, we know what users are potentially interested in, which is what the recommendation system is doing later. Modeling the user is to make a personalized bot, and each response generated has the distinctive characteristics of the user.</p>
-<h2 id="Corpus"><a href="#Corpus" class="headerlink" title="Corpus"></a>Corpus</h2><p>Large-scale corpora are used to train open-domain bot dialogue generation models, and data sources are generally from social networking sites. For task-oriented bots, the size of customer data is generally very small. This is one of the main reasons why it is difficult to directly apply data driven solutions to task-oriented bots.</p>
-<p>The survey of bot training corpus is given in [1].</p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yfyvum5j30l208hgmg.jpg"></p>
-<p>The picture comes from the article [13]. There are indeed many English corpora. The corpus of Sina Weibo was released by Huawei’s Noah’s Ark Lab [12]. If bot data is generated from twitter or Weibo, the effect of “conversational in nature” is not as good as the data generated from chat rooms such as ubuntu chat logs, which is more suitable for training response generation models, because it is more natural and pollution-free. The article [5] also uses a large Chinese corpus, with data from Baidu Tieba.</p>
-<h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><p>There are too many papers studying bots. This is a very active research field, and there are many subdivisions. Next, we will introduce some models according to the research questions targeted.</p>
-<h3 id="1-seq2seq-generative-model"><a href="#1-seq2seq-generative-model" class="headerlink" title="1. seq2seq generative model"></a>1. seq2seq generative model</h3><p>The most popular solution now is seq2seq+attention, the encoder feeds the user query feed in, outputs a vector representation to represent the entire query, and then serves as the condition of the decoder, and the decoder is essentially a language model that generates the response step by step, [2 ] Adopting this kind of scheme, Google used a large number of parameters to train such a model and got a good bot.</p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ygs7tbtj30gt04eaa0.jpg"></p>
-<p>There is a problem with typical seq2seq, that is, it is easy to generate some “huh” responses, that is, some very safe, grammatical but meaningless responses, such as “I don’t know!”. The reason is that traditional seq2seq uses MLE (Maximum Likelihood Estimate) as the objective function in the decoding process, that is, to generate the most grammatical words, not the most useful words. These safe sentences appear in large numbers in the training corpus. After the model learns, It is inevitable that such a response is always generated, and the article [3] draws on some experience in speech recognition, and uses MMI (Maximum Mutual Information) as the objective function when decoding, which improves the diversity of the response.</p>
-<p>The article [4] believes that the fundamental reason for the low quality of human speech generated by language models like RNNLM is that the random feature or noise hidden in utterance is not handled properly, thus generating next token (short term goal) and future tokens (long term goal) have a mediocre effect.</p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yhyje8pj30lq0bnwfn.jpg"></p>
-<p>When generating each utterance, four parts are needed, encoder RNN, context RNN, latent variable, decoder RNN, which are input and output in sequence. The latent variable here is a bit similar to the LSI in the IR. Latent shows that we can’t tell what they are, but it may represent a topic or sentiment, a representation of dimensionality reduction.</p>
-<p>The article [5] proposed a method called content introducing to generate short text response.</p>
-<p>Step 1 After a given query, predict a keyword as the topic of the response. This topic part of speech is a noun. The keyword here cannot capture complex semantics and grammar, but only predicts a PMI (Pointwise Mutual) based on each word in the query. Information) The highest noun is used as the keyword.</p>
-<p>The model of step 2 [5] is called Sequence To Backward and Forward Sequences. First, a backward step is performed. Given a query, express it with an encoder to get a context. In the decoder part, first give the keyword as the first word, and then perform decoding. The generated part is equivalent to the part in front of the keyword; the next step is forward step, which is also a typical seq2seq. The query is expressed as a context with an encoder, and then given the words generated by the backward and the keyword as the first half of the decoder, continue decoding Generate the second half. The entire process is briefly described as follows:</p>
-<p>step 1 query + keyword =&gt; backward sequence</p>
-<p>step 2 query + keyword + backward sequence(reverse) =&gt; forward sequence</p>
-<p>step 3 response = backward (reverse) sequence + keyword + forward sequence</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-sketch_killing_commendatore"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2018/06/23/sketch_killing_commendatore/"
-    >Reading Killing Commerndatore</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2018/06/23/sketch_killing_commendatore/" class="article-date">
-  <time datetime="2018-06-23T15:50:55.000Z" itemprop="datePublished">2018-06-23</time>
-</a>  
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="KILLING-COMMENDATORE"><a href="#KILLING-COMMENDATORE" class="headerlink" title="KILLING COMMENDATORE"></a>KILLING COMMENDATORE</h2><p><strong>People and countries must learn to coexist with the painful past</strong></p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnnkqlm0j30m80vj40e.jpg"></p>
-<p>This time, Murakami is still following the “lost–exploration–discovery–lost again” approach, shaping the loneliness, alienation and predicament in contemporary life, but something is different.</p>
-<p>If one’s life is selfish, most people’s life is just an irreversible and only experience with no special meaning. It is true that we, as an individual, cannot trace history, but Murakami has been asking about the past rationally.</p>
-<p>Many people say that this book is a masterpiece of Murakami. The Murakami style of this book is very clear. He is very good at controlling multiple main lines, and alternating representativeness and concreteness, independent and interrelated. The Murakami world is the expression of each other. </p>
-<p>Murakami seems to be a person who <strong>strives to stop time</strong>. He has a paranoid time concept and living habits, without the fetters of children. He maximizes his time on very few things, so his spiritual world is huge and small. No exception is that “Knight” is also a Murakami-style protagonist. </p>
-<blockquote>
-<p>He has a little money but is not a rich man, so there are few fetters,<br>a high degree of freedom, and his own unique hobbies and make people<br>feel that Unique personality or skills, people who have a relatively<br>fixed partner or a relatively fixed feeling of a partner, seem to be<br>relatively calm about everything, but actually have no sense of<br>restraint.</p>
-</blockquote>
-<p>This kind of protagonist has a very chic life, so he is almost connected with “strange things”. But this book is different from the previous one in that it is a “circle”. He basically explained all the stories clearly, although there are still places that are not the truth (such as who’s child Muro and Marie Kee are). </p>
-<p>The title of the book is not only a famous painting by the artist in the book, but also an important main line concept in the book. The leader of the knight is a metaphor for long-faced people and onlookers. Girl Donna Anna. The climax of the book occurs when the protagonist assassinates the knight leader (idea) to save the girl under the instruction of the knight leader (idea), and leads to the long-faced man who has been observed and recorded, and passes the long-faced man and the faceless man through the river of existence , And with the help of the bystander Donna, return to the original point, and the protagonist is reborn.</p>
-<p>The “I” in the book used to think that the assassination of the knight leader was a failed assassination activity when he was young. The painter joined an organization when he was studying in Vienna. Because he could not stand violent politics, he tried to assassinate someone in exchange for a short period of peaceful time. But unfortunately the plan failed. Except for the painter’s life-long silence, the entire organization survived, and the painter’s girlfriend (the protagonist thought it was Donna’s role) was unable to escape.<br>The soul of the painter’s life is also a shame of silence in his life.<br>Does the painter paint this painting as a record of himself, and the metaphor of “long-faced man” who is timid and dare not say anything?<br>The faceless people need special items as a salary to save people. Is it because the painter can’t help himself to survive without expression and emotion, but at the same time there is no development of right and wrong, so the painter does not know what the face of those people. Is it kind or ugly, that’s why it’s called a faceless person who is alive but has no face?<br>The author of the last double-layer metaphor “white Subaru man” that claimed “I know everything you do” thought it might be a crime in his own body, so if there was a big problem in Vienna back then, now, “I” is going through the comic In the dark, is it the inner demon who almost swallows oneself?</p>
-<p>Murakami finally summed up all possible brain holes with a “circle”. Although the past has passed, it seems that life has returned and developed, but the memory remains the same, the destiny is a ring, and the unresolved ones will always be found in stillness. This is something no one can avoid. </p>
-<p>That painting is over, and the assassination of “I” is also over, but it leaves two doubts about where will be placed objectively with the growth of Keiwa Shima, history Even if you forget, the reality is still there. Perhaps this is what Murakami said before, “between the rock and the egg, I will always choose the side of the egg.” </p>
-<p>Human feelings cannot be forgotten.</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/read/" rel="tag">read</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-sketch_reading_interestingly"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2018/03/01/sketch_reading_interestingly/"
-    >Reading with Interest</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2018/03/01/sketch_reading_interestingly/" class="article-date">
-  <time datetime="2018-03-01T16:50:55.000Z" itemprop="datePublished">2018-03-01</time>
-</a>  
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p>Watching Japanese dramas always makes me feel touched, and I felt that way when I watched “Kono Etsuko” this week. Kono Etsuko is indeed a lovely person, full of energy, and moving towards her ideals. Even if she has to detour halfway, she can walk seriously step by step on the road that she doesn’t want to go. </p>
-<p>She originally wanted to be an editor of a fashion magazine, but she has not been enrolled for eight years. In the eighth year, she finally entered the publishing house where the magazine was located, but was sent to the proofreading department. There was no sense of achievement, and she was responsible for picking out the verbal errors and inconsistent parts for various publications. But she still carefully did her own job.<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnijb9paj30hs0a1wer.jpg"></p>
-<p>Once a literary editor asked her why she only wanted to be a fashion magazine editor, but still willing to complete all proofreading work vigorously? She said that in fact, every proofreading job is helpful to becoming an editor in the future. For example, there was once a book proofreading about snake breeding. After careful proofreading, you can remember many types of snakes. Then as a fashion magazine editor in the future, when you need snake skin products, she can ask others what kind of snakes they need. </p>
-<p>She is not that great and cannot accomplish many things at the same time. However, she always takes what she is doing seriously. It is because of her serious attitude that she is truly recognized by colleagues in the proofreading department. </p>
-<hr>
-<p>I have always been a person with a lot of mood swings, and I get depressed very easily. It’s hard to concentrate on completing tasks every time I’m feeling down, so I need to find something that can heal me. When I watched anime since I was young, I also liked watching Healing Xiang anime the most, but recently I have no patience to watch slow-paced anime. So every time I can find a cure for my TV series, I am very happy. Following the plot, I was naturally attracted, substituted in, and smiled warmly when the protagonist was cared for, and my mood soon brightened. This is probably a feeling of “the world has its own true feelings”. </p>
-<p>If you can be protected, you are not afraid of injury.</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqni4c4evj30zk0jzwfx.jpg"></p>
-<p>Reading is of course a way for me to heal myself, but at the beginning of this week I always couldn’t read books. I always want to read some more in-depth, more professional books, in order to increase the posture, but I can’t read it anymore, and I look for a lot of Japanese TV dramas because of some self-destructiveness. But I saw the plot in “Kono Etsuko”: The hero is a very literary writer, but the book he wrote is quite boring. People around him said that, in fact, a good book (at least for publishers) should first be a book that others will unconsciously lament “interesting” after reading it.</p>
-<p><strong>I kind of like this expression. I want to write because I have been moved and comforted by other people’s words, so I also want to write words that can touch and comfort others.</strong></p>
-<p>Later this week, I read some reasoning, science fiction, and Wang Xiaobo’s “Black Iron Age”. I have to say that Wang Xiaobo is indeed a very interesting person.</p>
-<p>There is a very special story in “Dark Iron Age”, “East Palace West Palace”, which is about male homosexuality. This story has been included in the book three times, as a novel, a movie script and a stage script respectively, which shows that its value is still quite high. Recently, the topic of homosexuality has been raging. In fact, many writers or public figures like Wang Xiaobo have shown their understanding and tolerance of homosexuality. Today, a department of People’s Daily also published an article on understanding homosexuality. I remember that Shi Tiesheng also wrote similar words, love is the same, everyone may have an object of love, but some people happen to be male, and some are female. Therefore, first there is love and the object of love, and secondly, the gender of the object is judged.</p>
-<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnhrsb8zj30hs0a0gm6.jpg"></p>
-<p>I also real some physiological psychology relevant literature. For men, there is evidence that there are subtle differences between heterosexual and homosexual physiology, and this difference is often innate. Plus, sexual orientation is not an all-or-nothing thing, so this difference means that some men naturally like women more and some men naturally like men more. There is nothing wrong with blame. It cannot be said that this group is wrong just because the relative number is small.</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/read/" rel="tag">read</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py12-API"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/13/py12-API/"
-    >API</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/13/py12-API/" class="article-date">
-  <time datetime="2017-10-13T15:50:55.000Z" itemprop="datePublished">2017-10-13</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="1-Use-WebAPI"><a href="#1-Use-WebAPI" class="headerlink" title="1. Use WebAPI"></a>1. Use WebAPI</h2><h4 id="Processing-API-response"><a href="#Processing-API-response" class="headerlink" title="Processing API response"></a>Processing API response</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="comment"># Execute API call and store response</span></span><br><span class="line">url =<span class="string">&#x27;https://api.github.com/search/repositories?q=language:python&amp;sort=stars&#x27;</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line">print(<span class="string">&quot;Status code:&quot;</span>, r.status_code)</span><br><span class="line"><span class="comment"># Store the API response in a variable</span></span><br><span class="line">response_dict = r.json()</span><br><span class="line"><span class="comment"># process result </span></span><br><span class="line">print(response_dict.keys())</span><br></pre></td></tr></table></figure>
-<p>The attribute named status_code, which lets us know whether the request was successful (status code 200 means the request was successful)<br>This API returns information in JSON format, so we use the method json() to convert this information into a Python dictionary. We store the converted dictionary in response_dict.</p>
-<h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">repo_dicts = response_dict[<span class="string">&#x27;items&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;Name:&#x27;</span>, repo_dict[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Owner:&#x27;</span>, repo_dict[<span class="string">&#x27;owner&#x27;</span>][<span class="string">&#x27;login&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Stars:&#x27;</span>, repo_dict[<span class="string">&#x27;stargazers_count&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Repository:&#x27;</span>, repo_dict[<span class="string">&#x27;html_url&#x27;</span>])</span><br></pre></td></tr></table></figure>
-
-<h4 id="Rate"><a href="#Rate" class="headerlink" title="Rate"></a>Rate</h4><p>Most APIs have rate limits, that is, there is a limit on the number of requests you can execute within a certain period of time.<br><a target="_blank" rel="noopener" href="https://api.github.com/rate_limit">https://api.github.com/rate_limit</a></p>
-<h2 id="2-Use-Pygal-to-visualize-the-warehouse"><a href="#2-Use-Pygal-to-visualize-the-warehouse" class="headerlink" title="2. Use Pygal to visualize the warehouse"></a>2. Use Pygal to visualize the warehouse</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pygal</span><br><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle <span class="keyword">as</span> LCS, LightenStyle <span class="keyword">as</span> LS</span><br><span class="line"></span><br><span class="line">my_style = LS(<span class="string">&#x27;#333366&#x27;</span>, base_style=LCS)</span><br><span class="line">chart = pygal.Bar(style=my_style, x_label_rotation=<span class="number">45</span>, show_legend=<span class="literal">False</span>)</span><br><span class="line">chart.title =<span class="string">&#x27;Most-Starred Python Projects on GitHub&#x27;</span></span><br><span class="line">chart.x_labels = names</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py11-download"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/13/py11-download/"
-    >Download Data</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/13/py11-download/" class="article-date">
-  <time datetime="2017-10-13T10:50:55.000Z" itemprop="datePublished">2017-10-13</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="1-CSV-file-format"><a href="#1-CSV-file-format" class="headerlink" title="1.CSV file format"></a>1.CSV file format</h2><p>To store data in a text file, the easiest way is to write the data as a series of comma-separated values ​​(CSV) to the file.<br>The reader processes the first line of data separated by commas in the file, and stores each item of data as an element in the list.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">highs = []</span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> reader:</span><br><span class="line">highs.append(row[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">or</span></span><br><span class="line"></span><br><span class="line">high = int(row[<span class="number">1</span>])</span><br><span class="line">highs.append(high)</span><br></pre></td></tr></table></figure>
-<h4 id="Module-datetime"><a href="#Module-datetime" class="headerlink" title="Module datetime"></a>Module datetime</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line">first_date = datetime.strptime(<span class="string">&#x27;2014-7-1&#x27;</span>,<span class="string">&#x27;%Y-%m-%d&#x27;</span>)</span><br><span class="line">print(first_date)</span><br></pre></td></tr></table></figure>
-<p>The method strptime() accepts various arguments and decides how to interpret the date based on them.</p>
-<h4 id="Picture-coloring"><a href="#Picture-coloring" class="headerlink" title="Picture coloring"></a>Picture coloring</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(dates, lows, c=<span class="string">&#x27;blue&#x27;</span>, alpha=<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
-<p>Alpha value 0 means completely transparent, 1 (default setting) means completely opaque. By setting alpha to 0.5, you can make the red and blue polylines look lighter.</p>
-<h4 id="check-for-errors"><a href="#check-for-errors" class="headerlink" title="check for errors"></a>check for errors</h4><p>Prevent empty data sets</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">current_date = datetime.strptime(row[<span class="number">0</span>], <span class="string">&quot;%Y-%m-%d&quot;</span>)</span><br><span class="line">high = int(row[<span class="number">1</span>])</span><br><span class="line">low = int(row[<span class="number">3</span>])</span><br><span class="line"><span class="keyword">except</span> ValueError:</span><br><span class="line">print(current_date,<span class="string">&#x27;missing data&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">dates.append(current_date)</span><br><span class="line">highs.append(high)</span><br><span class="line">lows.append(low)</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="2-Making-a-world-population-map-JSON-format"><a href="#2-Making-a-world-population-map-JSON-format" class="headerlink" title="2. Making a world population map: JSON format"></a>2. Making a world population map: JSON format</h2><h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;Downloads/population_data.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f:</span><br><span class="line">    pop_data = json.load(f) <span class="comment">#list</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> pop_dict <span class="keyword">in</span> pop_data:</span><br><span class="line">    <span class="keyword">if</span> pop_dict[<span class="string">&#x27;Year&#x27;</span>] == <span class="string">&#x27;2010&#x27;</span>: <span class="comment">#Dictionary</span></span><br><span class="line">        country_name = pop_dict[<span class="string">&#x27;Country Name&#x27;</span>]</span><br><span class="line">        population = pop_dict[<span class="string">&#x27;Value&#x27;</span>]</span><br><span class="line">        print(country_name + <span class="string">&quot;: &quot;</span>+ population)</span><br></pre></td></tr></table></figure>
-
-<h4 id="Data-processing"><a href="#Data-processing" class="headerlink" title="Data processing"></a>Data processing</h4><p>Each key and value in population_data.json is a string. To process these demographic data, we need to represent people<br>The number of strings is converted to a numeric value, for this we use the function <strong>int()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">population = int(pop_dict[<span class="string">&#x27;Value&#x27;</span>])</span><br><span class="line">print(country_name + <span class="string">&quot;: &quot;</span>+ str(population))</span><br></pre></td></tr></table></figure>
-<p>Python cannot directly convert the string ‘1127437398.85751’ containing a decimal point to an integer<br>To eliminate this error, we first convert the string to a floating point number, and then convert the floating point number to an integer</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">population = int(float(pop_dict[<span class="string">&#x27;Value&#x27;</span>]))</span><br></pre></td></tr></table></figure>
-<p>The map making tool in Pygal requires the data to be in a specific format:<br>Use country codes to represent countries and numbers to represent populations. When processing geopolitical data, several standardized country code sets are often used.<br>The country code used by Pygal is stored in the module i18n (abbreviation for internationalization)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.i18n <span class="keyword">import</span> COUNTRIES</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> country_code <span class="keyword">in</span> sorted(COUNTRIES.keys()):</span><br><span class="line">print(country_code, COUNTRIES[country_code])</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_country_code</span>(<span class="params">country_name</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Returns the two-letter country code used by Pygal according to the specified country&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> code, name <span class="keyword">in</span> COUNTRIES.items():</span><br><span class="line"><span class="keyword">if</span> name == country_name:</span><br><span class="line"><span class="keyword">return</span> code</span><br><span class="line"><span class="comment"># If the specified country is not found, return None</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="Making-a-world-map"><a href="#Making-a-world-map" class="headerlink" title="Making a world map"></a>Making a world map</h4><p><img src="https://img-blog.csdnimg.cn/20191110053541496.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
-<h4 id="Set-up-the-map"><a href="#Set-up-the-map" class="headerlink" title="Set up the map"></a>Set up the map</h4><p>Add numbers</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wm.add(<span class="string">&#x27;North America&#x27;</span>, &#123;<span class="string">&#x27;ca&#x27;</span>: <span class="number">34126000</span>,<span class="string">&#x27;us&#x27;</span>: <span class="number">309349000</span>,<span class="string">&#x27;mx&#x27;</span>: <span class="number">113423000</span>&#125;)</span><br></pre></td></tr></table></figure>
-<p>Add color</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> RotateStyle</span><br><span class="line">wm_style = RotateStyle(<span class="string">&#x27;#336699&#x27;</span>)</span><br><span class="line">wm = pygal.Worldmap(style=wm_style)</span><br></pre></td></tr></table></figure>
-<p>Pygal will choose the default base color. To set the color, you can use RotateStyle, and use LightColorizedStyle as the basic style.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle, RotateStyle</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py10-data"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/12/py10-data/"
-    >Generated Data</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/12/py10-data/" class="article-date">
-  <time datetime="2017-10-12T10:50:55.000Z" itemprop="datePublished">2017-10-12</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="1-Draw-a-simple-line-chart"><a href="#1-Draw-a-simple-line-chart" class="headerlink" title="1. Draw a simple line chart"></a>1. Draw a simple line chart</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">squares = [<span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">16</span>, <span class="number">25</span>]</span><br><span class="line">plt.plot(squares, linewidth=<span class="number">5</span>) <span class="comment">#The thickness of the drawn line</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Set icon title, axis label</span></span><br><span class="line">plt.title(<span class="string">&quot;Square Numbers&quot;</span>, fontsize=<span class="number">24</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;Value&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;Square of Value&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Scale mark size</span></span><br><span class="line">plt.tick_params(axis=<span class="string">&#x27;both&#x27;</span>, labelsize=<span class="number">14</span>) <span class="comment">#Set the style of scale</span></span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/20191108042648749.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
-<h4 id="1-1-Correction-graphics"><a href="#1-1-Correction-graphics" class="headerlink" title="1.1 Correction graphics"></a>1.1 Correction graphics</h4><p>When you provide a series of numbers to plot(), it assumes that the x coordinate value of the first data point is 0, but our first<br>The x value corresponding to the point is 1</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">input_values ​​= [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line">squares = [<span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">16</span>, <span class="number">25</span>]</span><br><span class="line">plt.plot(input_values, squares, linewidth=<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
-
-<h4 id="1-2-Scatter-chart"><a href="#1-2-Scatter-chart" class="headerlink" title="1.2 Scatter chart"></a>1.2 Scatter chart</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">x_values ​​= list(range(<span class="number">1</span>,<span class="number">1001</span>))</span><br><span class="line">y_values ​​= [x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> x_values]</span><br><span class="line"></span><br><span class="line">plt.scatter(x_values, y_values, s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line">plt.title(<span class="string">&quot;Square Numbers&quot;</span>, fontsize=<span class="number">24</span>)</span><br><span class="line">plt.xlabel(<span class="string">&quot;Value&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line">plt.ylabel(<span class="string">&quot;Square of Value&quot;</span>, fontsize=<span class="number">14</span>)</span><br><span class="line"></span><br><span class="line">plt.tick_params(axis=<span class="string">&#x27;both&#x27;</span>, which=<span class="string">&#x27;major&#x27;</span>, labelsize=<span class="number">14</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>,<span class="number">1100</span>,<span class="number">0</span>,<span class="number">1100000</span>]) <span class="comment">#Coordinate axis range</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/20191108043804540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Delete data outline</span></span><br><span class="line">plt.scatter(x_values, y_values, edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Custom color</span></span><br><span class="line">plt.scatter(x_values, y_values, c=<span class="string">&#x27;red&#x27;</span>, edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">40</span>)</span><br><span class="line">plt.scatter(x_values, y_values, c=(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.8</span>), edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Color mapping</span></span><br><span class="line">plt.scatter(x_values, y_values, c=y_values, cmap=plt.cm.Blues, edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">40</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Save</span></span><br><span class="line">plt.savefig(<span class="string">&#x27;squares_plot.png&#x27;</span>, bbox_inches=<span class="string">&#x27;tight&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-Random-walk"><a href="#2-Random-walk" class="headerlink" title="2. Random walk"></a>2. Random walk</h3><h4 id="2-1-Create-RandomWalk-class"><a href="#2-1-Create-RandomWalk-class" class="headerlink" title="2.1 Create RandomWalk() class"></a>2.1 Create RandomWalk() class</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> len(self.x_values) &lt;self.num_points:</span><br><span class="line">    x_direction = choice([<span class="number">1</span>,<span class="number">-1</span>])</span><br><span class="line">    x_distance = choice([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">    x_step = x_direction * x_distance</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20191108180626828.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
-<h4 id="2-2-Set-the-style-of-random-walk-graph"><a href="#2-2-Set-the-style-of-random-walk-graph" class="headerlink" title="2.2 Set the style of random walk graph"></a>2.2 Set the style of random walk graph</h4><p>Use color mapping to point out the order of the points in the stroll, and delete the black outline of each point to make their colors more obvious<br><img src="https://img-blog.csdnimg.cn/20191108181605699.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1NjM4Mw==,size_16,color_FFFFFF,t_70"></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lly1122334/article/details/88535217">Refer to the use of cmap</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">#Window size</span></span><br><span class="line">    plt.figure(figsize=(<span class="number">10</span>,<span class="number">6</span>))</span><br><span class="line">    </span><br><span class="line"><span class="comment">#range() generates a list of numbers, which contains the same number of numbers as the number of points in the walk</span></span><br><span class="line">    point_numbers = list(range(rw.num_points))</span><br><span class="line">    <span class="comment">#Coloring</span></span><br><span class="line">    plt.scatter(rw.x_values, rw.y_values, c=point_numbers, cmap=<span class="string">&#x27;Blues&#x27;</span>, edgecolor=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#Highlight the starting point and ending point</span></span><br><span class="line">    plt.scatter(<span class="number">0</span>, <span class="number">0</span>, c=<span class="string">&#x27;green&#x27;</span>, edgecolors=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">100</span>)</span><br><span class="line">    plt.scatter(rw.x_values[<span class="number">-1</span>], rw.y_values[<span class="number">-1</span>], c=<span class="string">&#x27;red&#x27;</span>, edgecolors=<span class="string">&#x27;none&#x27;</span>, s=<span class="number">100</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">    <span class="comment">#Hide axis</span></span><br><span class="line">    plt.axes().get_xaxis().set_visible(<span class="literal">False</span>)</span><br><span class="line">    plt.axes().get_yaxis().set_visible(<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-Use-Pygal-to-simulate-dice-rolls"><a href="#3-Use-Pygal-to-simulate-dice-rolls" class="headerlink" title="3. Use Pygal to simulate dice rolls"></a>3. Use Pygal to simulate dice rolls</h3><h4 id="3-1-Create-Die-class"><a href="#3-1-Create-Die-class" class="headerlink" title="3.1 Create Die class"></a>3.1 Create Die class</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> randint(<span class="number">1</span>, self.num_sides)</span><br></pre></td></tr></table></figure>
-<p>dice</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> roll_num <span class="keyword">in</span> range(<span class="number">100</span>):</span><br><span class="line">result = die.roll()</span><br><span class="line">results.append(result)</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py9-spaceships"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/12/py9-spaceships/"
-    >Armed Spaceship</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/12/py9-spaceships/" class="article-date">
-  <time datetime="2017-10-12T10:50:55.000Z" itemprop="datePublished">2017-10-12</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h5 id="1-Create-Pygame-window-and-respond-to-user-input"><a href="#1-Create-Pygame-window-and-respond-to-user-input" class="headerlink" title="1. Create Pygame window and respond to user input"></a>1. Create Pygame window and respond to user input</h5><p>alien_invasion.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> pygame</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_game</span>():</span></span><br><span class="line"><span class="comment">#Initialize the game and create a screen object</span></span><br><span class="line">pygame.init()</span><br><span class="line">screen = pygame.display.set.mode((<span class="number">1200</span>,<span class="number">800</span>))</span><br><span class="line">pygame.dispaly.set_caption(<span class="string">&quot;Alien Invasion&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Start the main loop of the game</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line"></span><br><span class="line"><span class="comment">#Monitor keyboard and mouse events</span></span><br><span class="line"><span class="keyword">for</span> event <span class="keyword">in</span> pygame.event.get():</span><br><span class="line"><span class="keyword">if</span> event.type == pygame.QUIT:</span><br><span class="line">sys.exit()</span><br><span class="line"></span><br><span class="line"><span class="comment">#Make the recently drawn screen visible</span></span><br><span class="line">pygame.dispaly.flip()</span><br><span class="line"></span><br><span class="line">run_game()</span><br></pre></td></tr></table></figure>
-
-<h5 id="2-Create-a-settings-class-to-include-settings-for-the-game"><a href="#2-Create-a-settings-class-to-include-settings-for-the-game" class="headerlink" title="2. Create a settings class to include settings for the game"></a>2. Create a settings class to include settings for the game</h5><h5 id="3-Add-pictures"><a href="#3-Add-pictures" class="headerlink" title="3. Add pictures"></a>3. Add pictures</h5><p>The best is the bmp diagram<br>In Pygame, the origin (0,0) is located at the upper left corner of the screen. When moving to the lower right, the coordinate value will increase. On a 1200×800 screen, the origin is at the upper left corner, and the coordinates of the lower right corner are (1200, 800).</p>
-<h5 id="4-Refactoring-module-game-functions"><a href="#4-Refactoring-module-game-functions" class="headerlink" title="4. Refactoring: module game_functions"></a>4. Refactoring: module game_functions</h5><p>Start by writing the code as simple as possible, and refactor as the project becomes more and more complex.</p>
-<h5 id="5-Driving-the-spaceship"><a href="#5-Driving-the-spaceship" class="headerlink" title="5. Driving the spaceship"></a>5. Driving the spaceship</h5><p><strong>Corresponding button</strong><br>Whenever the user presses a key, an event will be registered in Pygame. Events are obtained through the method pygame.event.get(), so in the function check_events(), we need to specify which types of events to check. Each key press is registered as a KEYDOWN event.</p>
-<p><strong>Continuous movement</strong><br>We will let the game detect the pygame.KEYUP event so that we can know this when the player releases the right arrow key; then, we will combine the KEYDOWN and KEYUP events with a flag named moving_right to achieve continuous movement.</p>
-<p><strong>Move left and right</strong></p>
-<p><strong>Adjust the speed of the spacecraft</strong><br>You can add the property ship_speed_factor to the Settings class to control the speed of the spacecraft<br>By specifying the speed setting as a small value, you can control the speed of the spacecraft in more detail when speeding up the game later. However, attributes such as centerx of rect can only store integer values, so we need to make some modifications to the Ship class</p>
-<p><strong>Limit the scope of movement of the spacecraft</strong><br><strong>Refactoring check_events()</strong></p>
-<h5 id="6-Simple-summary"><a href="#6-Simple-summary" class="headerlink" title="6. Simple summary"></a>6. Simple summary</h5><p><strong>alien_invasion.py</strong><br> The main file alien_invasion.py creates a series of objects used throughout the game: the settings stored in ai_settings, the main display surface stored in the screen, and a spaceship instance. The file alien_invasion.py also contains the main loop of the game, which is a while loop that calls check_events(), ship.update(), and update_screen().<br>To play the game “Alien Invasion”, just run the file alien_invasion.py. The codes contained in other files (settings.py, game_functions.py, ship.py) are directly or indirectly imported into this file.</p>
-<p><strong>settings.py</strong><br> The file settings.py contains the Settings class. This class only contains the method <strong>init</strong>(), which initializes the properties that control the appearance of the game and the speed of the spacecraft.</p>
-<p><strong>game_functions.py</strong><br> The file game_functions.py contains a series of functions, most of the work of the game is done by them. The function check_events() detects related events, such as key-down and release, and uses auxiliary functions check_keydown_events() and check_keyup_events() to handle these events. For now, these functions manage the movement of the spacecraft. The module game_functions also contains the function update_screen(), which is used to redraw the screen every time the main loop is executed.</p>
-<p><strong>ship.py</strong><br> The file ship.py contains the Ship class, which contains the method <strong>init</strong>(), the update() method for managing the position of the spaceship, and the method blitme() for drawing the spaceship on the screen. Indicates that the image of the spacecraft is stored in the file ship.bmp under the folder images</p>
-<h5 id="7-Shooting"><a href="#7-Shooting" class="headerlink" title="7. Shooting"></a>7. Shooting</h5><p><strong>Add Bullet Settings</strong><br>First, update settings.py to store the required values ​​for the new class Bullet at the end of its method <strong>init</strong>()</p>
-<p><strong>Create Bullet class</strong></p>
-<p><strong>Store bullets in groups</strong><br>After defining the Bullet class and the necessary settings, you can write code to shoot a bullet every time the player presses the space bar. First, we will create a group in alien_invasion.py to store all valid bullets so that we can manage all the bullets that are fired.</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">next page</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">next page</a>
   </nav>
   
 </section>

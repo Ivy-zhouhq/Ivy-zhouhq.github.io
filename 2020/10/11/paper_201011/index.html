@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    A Meta-learning Causal Structure |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-paper_201011"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  A Meta-learning Causal Structure
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/11/paper_201011/" class="article-date">
+  <time datetime="2020-10-11T18:50:55.000Z" itemprop="datePublished">2020-10-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/paper-reading/">paper reading</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Propose a meta-learning causal structure based on the speed of the learner adapting to the new distribution</p>
+<p>Yoshua Bengio et al. proposed a meta-learning causal structure based on the speed at which the learner adapts to new distributions caused by interventions, agent actions, and other non-stationarity-induced sparse distribution changes. This research proves that under this assumption, the correct choice of causal structure will make the learner adapt to the modified distribution more quickly, because after the learned knowledge is properly modularized, the distribution changes will be concentrated in one or more mechanisms . This leads to sparse expected gradients and a small number of effective degrees of freedom that need to be relearned when adapting to such changes. Therefore, this study takes the speed of adapting to the modified distribution as the goal of meta-learning, showing that this can be used to determine the causal relationship between two observed variables.</p>
+<p>The distribution change does not require corresponding standard intervention, and the learner does not have direct knowledge about the intervention. The study proved that the causal structure can be parameterized by continuous variables and learned in an end-to-end format. The researchers also explored how to use these ideas to learn encoders to map low-level observed variables and unobserved causal variables that lead to faster out-of-distribution adaptations, and then learn a representation space that satisfies independent mechanisms and actions and instability The resulting hypothesis of small sparse changes within the mechanism.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1yfa63bij30u00a7dgf.jpg"></p>
+<h1 id="The-generalization-problem-of-machine-learning-methods"><a href="#The-generalization-problem-of-machine-learning-methods" class="headerlink" title="The generalization problem of machine learning methods"></a>The generalization problem of machine learning methods</h1><p>Current machine learning methods have weak generalization effects on data outside the training distribution, and generalization is inevitable in practice. Therefore, it is not enough to achieve excellent generalization results on the test set from the same distribution as the training data. We also hope that the content learned on one data set can achieve good generalization on other related distributions. These distributions may contain concepts that the learner has seen, and the changes usually result from the actions of the agent. Generally speaking, we hope that the previously learned knowledge can form a solid foundation, so that the learner can quickly adapt to the new correlation distribution, that is, to obtain excellent transfer results. The learner may still need to learn some new concepts, but since most other related concepts (and their composition) have been captured by the learner, the learning on the transfer distribution will be very rapid.</p>
+<p>In the absence of assumptions, it is impossible to achieve successful migration on unrelated distributions. This research assumes that when knowledge is represented in an appropriate modular way, the distribution changes are sparse, and only one or a few modules change. This is especially true when the distribution change is caused by the actions of one or more agents (such as interventions discussed in the causality literature), that is, the causal variable is limited to a certain value. Generally, it is difficult for an agent to affect multiple underlying causal variables at the same time. Although the study does not involve much agent learning, it uses the agent learning environment to help discover these variables and their causal relationships.</p>
+<p>To stimulate the need for causal structure inference, you need to consider implementing interventions in real or imagined. To plan appropriately in a way that considers intervention, you need to imagine the change in the joint distribution of variables caused by the intervention, even if you have never seen such a change before. This is beyond the scope of good transfer learning and requires causal learning and causal reasoning. Therefore, just learning the joint distribution of the observed variables is not enough. You should also fully study the underlying high-level variables and their causal relationships with appropriate inferences about intervention effects. For example, A=Raining causes B=Open Umbrella (not vice versa). Changing the marginal probability of Raining (for example, due to changes in weather) will not change the correlation mechanism between A and B (P(B|A)), but it will affect P(B). Conversely, the agent’s intervention on B (Open umbrella) will not affect A (Raining). This asymmetry is usually not seen in the training pair (A, B) unless the distribution changes, such as a change in the distribution caused by intervention.</p>
+<p>This is the motivation of the research, that is, the learner learns based on a set of distributions brought about by the intervention that is not necessarily known, not only can capture the joint distribution, but also discover some underlying causal structures.</p>
+<h1 id="New-ideas-from-Yoshua-Bengio-and-others"><a href="#New-ideas-from-Yoshua-Bengio-and-others" class="headerlink" title="New ideas from Yoshua Bengio and others"></a>New ideas from Yoshua Bengio and others</h1><p>Machine learning methods usually make use of some form of data distribution assumption (there is no free lunch theorem that tells us not to have confidence in generalization). This research not only considers the hypothesis of data distribution, but also considers the change of the distribution (for example, due to some actions of the agent, the training distribution changes to the migration distribution). The research relies on the assumption that when knowledge about the distribution is properly represented, the change in the distribution is small. This is due to the underlying assumption (but it is difficult to directly verify this assumption): due to a generalized form of intervention that causes the distribution to change, only one or a few truth-value mechanisms have changed.</p>
+<p>How can this assumption be used? The research carried out theoretical and experimental verification and found that if you have the correct knowledge representation, a well-trained model on the training distribution can quickly adapt to the migration distribution. This is due to the hypothesis of the study: the truth-value data generation process is an integral part of the independent mechanism. When the training distribution becomes the migration distribution, only a few truth-value mechanisms and parameters need to be changed. Therefore, the model that captures the corresponding knowledge decomposition requires only a few updates and examples to adapt to the migration distribution. The following will show that the expected gradient on the unchanged parameters is close to 0 (provided that the model is well trained on the training distribution), so the effective search space will be greatly reduced in the process of adapting to the migration distribution, thereby achieving rapid adaptation .</p>
+<p>Therefore, based on the hypothesis that “the correct knowledge representation space brings about small distribution changes”, the researchers defined a meta-learning goal that measures the speed of adaptation, thereby optimizing the way of representing, decomposing and structuring knowledge. This is the core idea of ​​the research. Note that the signal obtained when there is more instability (that is, a lot of changes in the distribution) will be stronger, just as more meta-examples in meta-learning will lead to better results.</p>
+<p>In this way, the researcher converts what is usually considered troublesome in the field of machine learning (unsteady state, uncontrolled intervention, etc.) into a training signal, thereby finding an appropriate way to decompose knowledge into matching small Change the components and mechanisms of this hypothesis. Therefore, researchers finally optimize the rapid migration and robustness of distribution changes in an end-to-end manner. If the data is really generated based on the components of an independent causal mechanism, there is a knowledge decomposition that mimics the structure. If in each time step, the real-world agent can only change one or a small number of high-level variables (or the related mechanisms that generate these high-level variables), then the research’s hypothesis about small changes (represented by correct knowledge) is verified. In addition, in addition to achieving rapid migration, the study may be able to restore the approximation of true causality to independent mechanisms (to the extent that observations and interventions can reveal these mechanisms).</p>
+<h1 id="cause-and-effect-diagram"><a href="#cause-and-effect-diagram" class="headerlink" title="cause and effect diagram"></a>cause and effect diagram</h1><p>Learn the cause and effect diagram with two discrete variables</p>
+<p>Assuming that A and B are discrete variables that can take N possible values, consider using the following formulas (A → B model and B → A model) to estimate their joint distribution:<br>$$<br>\begin{array}{l}<br>P_{A \rightarrow B}(A, B)=P_{A \rightarrow B}(A) P_{A \rightarrow B}(B \mid A) \<br>P_{B \rightarrow A}(A, B)=P_{B \rightarrow A}(B) P_{B \rightarrow A}(A \mid B)<br>\end{array}<br>$$</p>
+<p><strong>Experiments on adaptation to transfer distribution</strong></p>
+<p>The researchers conducted multiple experiments to compare the learning curve of the correct causal model and the incorrect model on the migration distribution. The adaptation of only a small number of gradient steps on the data from different but relevant migration distributions is essential to obtain the signal usable by the meta-learning algorithm. In order to demonstrate the effect of adaptation and promote the use of a small amount of data from the migration distribution, the researchers experimented with the model on discrete random variables, which can take N = 10 possible values.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk1yh1mbaij30u00ggwfx.jpg"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/10/11/paper_201011/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/meta/" rel="tag">meta</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/10/18/paper_201018_BNM/" class="article-nav-link">
+        <strong class="article-nav-caption">last article</strong>
+        <div class="article-nav-title">
+          
+            Batch Nuclear-norm Maximization
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/10/04/paper_201004/" class="article-nav-link">
+        <strong class="article-nav-caption">next article</strong>
+        <div class="article-nav-title">Evolving Normalization-Activation Layers</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2020
+        <i class="ri-heart-fill heart_icon"></i> Hanqi ZHOU
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hanqi ZHOU"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">Home</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">Blog</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/life">Life</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">About Me</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
