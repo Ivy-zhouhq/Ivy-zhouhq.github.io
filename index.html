@@ -114,6 +114,70 @@
     
     
     <article
+  id="post-shallow_GCN"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/01/shallow_GCN/"
+    >First Encounter with GCN</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/01/shallow_GCN/" class="article-date">
+  <time datetime="2020-09-01T15:50:55.000Z" itemprop="datePublished">2020-09-01</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Intorduction"><a href="#Intorduction" class="headerlink" title="Intorduction"></a>Intorduction</h2><p>Graph Convolutional Network(GCN), has been very popular in the past two years and has made a lot of progress.</p>
+<p>Recently, Professor Maosong Sun’s group of Tsinghua University published the paper Graph Neural Networks: A Review of Methods and Applications on arXiv. The author gave a detailed and comprehensive overview of the existing GNN models. GCN is an important branch of GNN.</p>
+<h2 id="What-is-Convolution"><a href="#What-is-Convolution" class="headerlink" title="What is Convolution?"></a>What is Convolution?</h2><p>The mathematical definition of Convolution is:<br>$$<br>(f * g)(t)=\int_{\mathbb{R}} f(x) g(t-x) d x<br>$$<br>Generally called g is the filter or kernel acting on f<br>The one-dimensional convolution diagram is as follows:<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqrco4cr7g30d004376b.gif"></p>
+<p>The common CNN two-dimensional convolution diagram is as follows:<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqrd8bnvkg30az0chq6a.gif"></p>
+<p>The concept of convolution in an image is very straightforward, because the arrangement order of pixels has a clear up, down, left, and right positional relationship.</p>
+<p><strong>How to do convolution in the abstract graph?</strong></p>
+<h2 id="Fourier-Transform"><a href="#Fourier-Transform" class="headerlink" title="Fourier Transform"></a>Fourier Transform</h2><p>In order to solve the problem of convolution calculation on graph, we give the second equipment-Fourier transform.</p>
+<p>First of all, according to the convolution theorem, the convolution formula can also be written as:<br>$$<br>f * g=\mathcal{F}^{-1}{\mathcal{F}{f} \cdot \mathcal{F}{g}}<br>$$<br>In this way, we only need to define the fourier transformation on the graph to define the convolution transformation on the graph.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqrfjkvkag30b408c786.gif"></p>
+<p>Okay, let’s first look at the definition of Fourier transform:<br>$$<br>\mathcal{F}{f}(v)=\int_{\mathbb{R}} f(x) e^{-2 \pi i x \cdot v} d x<br>$$<br>The Inverse Fourier transform is:<br>$$<br>\mathcal{F}^{-1}{f}(x)=\int_{\mathbb{R}} f(v) e^{2 \pi i x \cdot v} d v<br>$$</p>
+<p>According to the definition of Fourier transform and its inverse transform, let’s prove the <strong>convolution theorem</strong>.<br>$$<br>\begin{aligned}<br>h(z) &amp;=\int_{\mathbb{R}} f(x) g(z-x) d x \<br>\mathcal{F}{f * g}(v) &amp;=\mathcal{F}{h}(v) \<br>&amp;=\int_{\mathbb{R}} h(z) e^{-2 \pi i z \cdot v} d z \<br>&amp;=\int_{\mathbb{R}} \int_{\mathbb{R}} f(x) g(z-x) e^{-2 \pi i z \cdot v} d x d z \<br>&amp;=\int_{\mathbb{R}} f(x)\left(\int_{\mathbb{R}} g(z-x) e^{-2 \pi i z \cdot v} d z\right) d x<br>\end{aligned}<br>$$<br>where $y=z-x ; d y=d z$<br>$$<br>\begin{aligned}<br>\mathcal{F}{f * g}(v) &amp;=\int_{\mathbb{R}} f(x)\left(\int_{\mathbb{R}} g(y) e^{-2 \pi i(y+x) \cdot v} d y\right) d x \<br>&amp;=\int_{\mathbb{R}} f(x) e^{-2 \pi i x \cdot v}\left(\int_{\mathbb{R}} g(y) e^{-2 \pi i y \cdot v} d y\right) d x \<br>&amp;=\int_{\mathbb{R}} f(x) e^{-2 \pi i x \cdot v} d x \int_{\mathbb{R}} g(y) e^{-2 \pi i y \cdot v} d y \<br>&amp;=\mathcal{F}{f}(v) \cdot \mathcal{F}{g}(v)<br>\end{aligned}<br>$$<br>Finally, act $\mathcal{F}^{-1}$ on both sides of the equation at the same time to get</p>
+<h2 id="Laplacian-Operator"><a href="#Laplacian-Operator" class="headerlink" title="Laplacian Operator"></a>Laplacian Operator</h2><p>After a wave of unrest, another unfamiliar concept came.<br>Don’t worry, this is the last piece of equipment before the <em>Novice Village</em>.<br>The first derivative is defined as:<br>$$<br>f^{\prime}(x)=\lim <em>{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}<br>$$<br>The laplacian operator is simply the second derivative:<br>$$<br>\Delta f(x)=\lim <em>{h \rightarrow 0} \frac{f(x+h)-2 f(x)+f(x-h)}{h^{2}}<br>$$<br>On the graph, we can define the first derivative as:<br>$$<br>f</em>{* g}^{\prime}(x)=f(x)-f(y)<br>$$<br>Where y is the neighbor node of x<br>Then the corresponding Laplacian operator can be defined as:<br>$$<br>\Delta</em>{* g} f^{\prime}(x)=\Sigma_{y \sim x} f(x)-f(y)<br>$$<br>Define $D$ to be the degree matrix of $N \times N$<br>$$<br>D(i, j)=\left{\begin{array}{ll}<br>d_{i} &amp; \text { if } i=j \<br>0 &amp; \text { otherwise }<br>\end{array}\right.<br>$$<br>Defice $A$ to be the adjacency matrix of  $N \times N$<br>$$<br>A(i, j)=\left{\begin{array}{ll}<br>1 &amp; \text { if } x_{i} \sim x_{j} \<br>0 &amp; \text { otherwise }<br>\end{array}\right.<br>$$<br>Then the Laplacian operator on the graph can be written as<br>$$<br>L=D-A<br>$$<br>After standardization $L=I_{N}-D^{-\frac{1}{2}} A D^{-\frac{1}{2}}$</p>
+<h2 id="Derive-Graph-Convolution"><a href="#Derive-Graph-Convolution" class="headerlink" title="Derive Graph Convolution"></a>Derive Graph Convolution</h2><p>Now that we have obtained all the equipment of Novice Village, we will start to derive the GCN formula below. Remember the convolution theorem we mentioned earlier?<br>$$<br>f * g=\mathcal{F}^{-1}{\mathcal{F}{f} \cdot \mathcal{F}{g}}<br>$$<br>Then the convolution formula of the graph can be expressed as:<br>$$<br>g * x=U\left(U^{T} g \cdot U^{T} x\right)<br>$$<br>As the filter function of graph convolution, we hope to have good locality. Just like the filter in the CNN model, it only affects pixels near one pixel. Then we can define as a function of laplacian matrix<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gju5ppjvdlg30fk0bon4f.gif"><br>Applying the laplacian matrix once is equivalent to spreading neighbor nodes on the graph once. Further we can regard $U^{T} g$ as a function of the laplacian eigenvalue of $g_{\theta}(\Lambda)$.<br>Rewriting the above graph convolution formula, we can get the formula (3) of the paper <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1609.02907.pdf">SEMI-SUPERVISED CLASSIFICATION WITH GRAPH CONVOLUTIONAL NETWORKS</a><br>$$<br>g_{\theta} * x=U g_{\theta} U^{T} x=U g_{\theta^{\prime}}(\Lambda) U^{T} x<br>$$<br>It can be seen that the complexity of this convolution calculation is very high, involving finding the eigenvector of the laplacian matrix and a large number of matrix calculations. Below we consider approximating the filter function, the goal is to save the solution of the feature vector<br>$$<br>g_{\theta^{\prime}}(\Lambda) \approx \sum_{k=0}^{K} \theta_{k}^{\prime} T_{k}(\tilde{\Lambda})<br>$$<br>Where $T_{k}$ is the Chebyshev polynomial. Here, simple $g_{\theta}(\Lambda)$ can be simply regarded as a polynomial of $(\Lambda)$.<br>Because $U \Lambda^{k} U^{T}=\left(U \Lambda U^{T}\right)^{k}=L^{k}$, so the filter function above can be written as a function of L<br>$$<br>g_{\theta^{\prime}}(\Lambda) \approx \sum_{k=0}^{K} \theta_{k}^{\prime} T_{k}(\tilde{L})<br>$$<br>Set K=1 and the convolution formula can be simplified to<br>$$<br>\begin{aligned}<br>g_{\theta^{\prime}} * x &amp; \approx \theta\left(I_{N}+L\right) x \<br>&amp;=\theta\left(I_{N}+D^{-\frac{1}{2}} A D^{-\frac{1}{2}}\right) x<br>\end{aligned}<br>$$<br>Assume that $\tilde{A}=A+I_{N}, \quad \tilde{D}<em>{i i}=\sum</em>{j} \tilde{A}<em>{i j}$,<br>$$<br>g</em>{\theta^{\prime}} * x=\theta\left(\tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}}\right) x<br>$$<br>Then coupled with the activation layer, we can get the final GCN formula:<br>$$<br>H^{(l+1)}=\sigma\left(\tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}} H^{(l)} W^{(l)}\right)<br>$$</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCN/" rel="tag">GCN</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
   id="post-shallow_bot3"
   class="article article-type-post"
   itemscope
@@ -369,6 +433,129 @@
 
     
     <article
+  id="post-sketch_killing_commendatore"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/06/23/sketch_killing_commendatore/"
+    >Reading Killing Commerndatore</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/06/23/sketch_killing_commendatore/" class="article-date">
+  <time datetime="2018-06-23T15:50:55.000Z" itemprop="datePublished">2018-06-23</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="KILLING-COMMENDATORE"><a href="#KILLING-COMMENDATORE" class="headerlink" title="KILLING COMMENDATORE"></a>KILLING COMMENDATORE</h2><p><strong>People and countries must learn to coexist with the painful past</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnnkqlm0j30m80vj40e.jpg"></p>
+<p>This time, Murakami is still following the “lost–exploration–discovery–lost again” approach, shaping the loneliness, alienation and predicament in contemporary life, but something is different.</p>
+<p>If one’s life is selfish, most people’s life is just an irreversible and only experience with no special meaning. It is true that we, as an individual, cannot trace history, but Murakami has been asking about the past rationally.</p>
+<p>Many people say that this book is a masterpiece of Murakami. The Murakami style of this book is very clear. He is very good at controlling multiple main lines, and alternating representativeness and concreteness, independent and interrelated. The Murakami world is the expression of each other. </p>
+<p>Murakami seems to be a person who <strong>strives to stop time</strong>. He has a paranoid time concept and living habits, without the fetters of children. He maximizes his time on very few things, so his spiritual world is huge and small. No exception is that “Knight” is also a Murakami-style protagonist. </p>
+<blockquote>
+<p>He has a little money but is not a rich man, so there are few fetters,<br>a high degree of freedom, and his own unique hobbies and make people<br>feel that Unique personality or skills, people who have a relatively<br>fixed partner or a relatively fixed feeling of a partner, seem to be<br>relatively calm about everything, but actually have no sense of<br>restraint.</p>
+</blockquote>
+<p>This kind of protagonist has a very chic life, so he is almost connected with “strange things”. But this book is different from the previous one in that it is a “circle”. He basically explained all the stories clearly, although there are still places that are not the truth (such as who’s child Muro and Marie Kee are). </p>
+<p>The title of the book is not only a famous painting by the artist in the book, but also an important main line concept in the book. The leader of the knight is a metaphor for long-faced people and onlookers. Girl Donna Anna. The climax of the book occurs when the protagonist assassinates the knight leader (idea) to save the girl under the instruction of the knight leader (idea), and leads to the long-faced man who has been observed and recorded, and passes the long-faced man and the faceless man through the river of existence , And with the help of the bystander Donna, return to the original point, and the protagonist is reborn.</p>
+<p>The “I” in the book used to think that the assassination of the knight leader was a failed assassination activity when he was young. The painter joined an organization when he was studying in Vienna. Because he could not stand violent politics, he tried to assassinate someone in exchange for a short period of peaceful time. But unfortunately the plan failed. Except for the painter’s life-long silence, the entire organization survived, and the painter’s girlfriend (the protagonist thought it was Donna’s role) was unable to escape.<br>The soul of the painter’s life is also a shame of silence in his life.<br>Does the painter paint this painting as a record of himself, and the metaphor of “long-faced man” who is timid and dare not say anything?<br>The faceless people need special items as a salary to save people. Is it because the painter can’t help himself to survive without expression and emotion, but at the same time there is no development of right and wrong, so the painter does not know what the face of those people. Is it kind or ugly, that’s why it’s called a faceless person who is alive but has no face?<br>The author of the last double-layer metaphor “white Subaru man” that claimed “I know everything you do” thought it might be a crime in his own body, so if there was a big problem in Vienna back then, now, “I” is going through the comic In the dark, is it the inner demon who almost swallows oneself?</p>
+<p>Murakami finally summed up all possible brain holes with a “circle”. Although the past has passed, it seems that life has returned and developed, but the memory remains the same, the destiny is a ring, and the unresolved ones will always be found in stillness. This is something no one can avoid. </p>
+<p>That painting is over, and the assassination of “I” is also over, but it leaves two doubts about where will be placed objectively with the growth of Keiwa Shima, history Even if you forget, the reality is still there. Perhaps this is what Murakami said before, “between the rock and the egg, I will always choose the side of the egg.” </p>
+<p>Human feelings cannot be forgotten.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/read/" rel="tag">read</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-sketch_reading_interestingly"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/03/01/sketch_reading_interestingly/"
+    >Reading with Interest</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/03/01/sketch_reading_interestingly/" class="article-date">
+  <time datetime="2018-03-01T16:50:55.000Z" itemprop="datePublished">2018-03-01</time>
+</a>  
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>Watching Japanese dramas always makes me feel touched, and I felt that way when I watched “Kono Etsuko” this week. Kono Etsuko is indeed a lovely person, full of energy, and moving towards her ideals. Even if she has to detour halfway, she can walk seriously step by step on the road that she doesn’t want to go. </p>
+<p>She originally wanted to be an editor of a fashion magazine, but she has not been enrolled for eight years. In the eighth year, she finally entered the publishing house where the magazine was located, but was sent to the proofreading department. There was no sense of achievement, and she was responsible for picking out the verbal errors and inconsistent parts for various publications. But she still carefully did her own job.<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnijb9paj30hs0a1wer.jpg"></p>
+<p>Once a literary editor asked her why she only wanted to be a fashion magazine editor, but still willing to complete all proofreading work vigorously? She said that in fact, every proofreading job is helpful to becoming an editor in the future. For example, there was once a book proofreading about snake breeding. After careful proofreading, you can remember many types of snakes. Then as a fashion magazine editor in the future, when you need snake skin products, she can ask others what kind of snakes they need. </p>
+<p>She is not that great and cannot accomplish many things at the same time. However, she always takes what she is doing seriously. It is because of her serious attitude that she is truly recognized by colleagues in the proofreading department. </p>
+<hr>
+<p>I have always been a person with a lot of mood swings, and I get depressed very easily. It’s hard to concentrate on completing tasks every time I’m feeling down, so I need to find something that can heal me. When I watched anime since I was young, I also liked watching Healing Xiang anime the most, but recently I have no patience to watch slow-paced anime. So every time I can find a cure for my TV series, I am very happy. Following the plot, I was naturally attracted, substituted in, and smiled warmly when the protagonist was cared for, and my mood soon brightened. This is probably a feeling of “the world has its own true feelings”. </p>
+<p>If you can be protected, you are not afraid of injury.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqni4c4evj30zk0jzwfx.jpg"></p>
+<p>Reading is of course a way for me to heal myself, but at the beginning of this week I always couldn’t read books. I always want to read some more in-depth, more professional books, in order to increase the posture, but I can’t read it anymore, and I look for a lot of Japanese TV dramas because of some self-destructiveness. But I saw the plot in “Kono Etsuko”: The hero is a very literary writer, but the book he wrote is quite boring. People around him said that, in fact, a good book (at least for publishers) should first be a book that others will unconsciously lament “interesting” after reading it.</p>
+<p><strong>I kind of like this expression. I want to write because I have been moved and comforted by other people’s words, so I also want to write words that can touch and comfort others.</strong></p>
+<p>Later this week, I read some reasoning, science fiction, and Wang Xiaobo’s “Black Iron Age”. I have to say that Wang Xiaobo is indeed a very interesting person.</p>
+<p>There is a very special story in “Dark Iron Age”, “East Palace West Palace”, which is about male homosexuality. This story has been included in the book three times, as a novel, a movie script and a stage script respectively, which shows that its value is still quite high. Recently, the topic of homosexuality has been raging. In fact, many writers or public figures like Wang Xiaobo have shown their understanding and tolerance of homosexuality. Today, a department of People’s Daily also published an article on understanding homosexuality. I remember that Shi Tiesheng also wrote similar words, love is the same, everyone may have an object of love, but some people happen to be male, and some are female. Therefore, first there is love and the object of love, and secondly, the gender of the object is judged.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqnhrsb8zj30hs0a0gm6.jpg"></p>
+<p>I also real some physiological psychology relevant literature. For men, there is evidence that there are subtle differences between heterosexual and homosexual physiology, and this difference is often innate. Plus, sexual orientation is not an all-or-nothing thing, so this difference means that some men naturally like women more and some men naturally like men more. There is nothing wrong with blame. It cannot be said that this group is wrong just because the relative number is small.</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/life/" rel="tag">life</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/read/" rel="tag">read</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
   id="post-py12-API"
   class="article article-type-post"
   itemscope
@@ -614,246 +801,6 @@
 <h5 id="7-Shooting"><a href="#7-Shooting" class="headerlink" title="7. Shooting"></a>7. Shooting</h5><p><strong>Add Bullet Settings</strong><br>First, update settings.py to store the required values ​​for the new class Bullet at the end of its method <strong>init</strong>()</p>
 <p><strong>Create Bullet class</strong></p>
 <p><strong>Store bullets in groups</strong><br>After defining the Bullet class and the necessary settings, you can write code to shoot a bullet every time the player presses the space bar. First, we will create a group in alien_invasion.py to store all valid bullets so that we can manage all the bullets that are fired.</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py8-files"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/12/py8-files/"
-    >Files and Excepetions</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/12/py8-files/" class="article-date">
-  <time datetime="2017-10-12T07:30:55.000Z" itemprop="datePublished">2017-10-12</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="1-Read-data-from-file"><a href="#1-Read-data-from-file" class="headerlink" title="1 Read data from file"></a>1 Read data from file</h3><p><strong>file path</strong><br>Python looks for the specified file in the directory where the currently executed file is located.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;pi_digits.txt&#x27;</span>) <span class="keyword">as</span> file_object:</span><br><span class="line">contents = file_object.read()</span><br><span class="line">print(contents)</span><br></pre></td></tr></table></figure>
-<p>open(‘pi_digits.txt’) returns an object representing the file pi_digits.txt<br>You just open the file and use it when needed, and Python will automatically close it when appropriate.<br>We use the method <strong>read()</strong> to read the entire content of this file and store it as a long string in the variable contents. In this way, by printing the value of contents, the entire contents of the text file can be displayed<br>When read() reaches the end of the file, it returns an empty string print(contents.rstrip())</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ith open(<span class="string">&#x27;text_files/filename.txt&#x27;</span>) <span class="keyword">as</span> file_object:</span><br></pre></td></tr></table></figure>
-<p>This line of code tells Python to search for the specified .txt file in the text_files folder under the folder python_work.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file_path =<span class="string">&#x27;/home/ehmatthes/other_files/text_files/filename.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(file_path) <span class="keyword">as</span> file_object:</span><br></pre></td></tr></table></figure>
-<h6 id="Read-line-by-line"><a href="#Read-line-by-line" class="headerlink" title="Read line by line"></a>Read line by line</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> file_object:</span><br><span class="line">print(line)</span><br><span class="line">print(line.rstrip()) <span class="comment">#Eliminate blank lines</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line">lines = file_object.readlines()</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">print(line.rstrip())</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;pi_30_digits.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> file_object:</span><br><span class="line">lines = file_object.readlines()</span><br><span class="line"></span><br><span class="line">pi_string =<span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">pi_string += line.strip() <span class="comment">#Remove the left space</span></span><br><span class="line">print(pi_string)</span><br><span class="line">print(pi_string[:<span class="number">52</span>] + <span class="string">&quot;...&quot;</span>) <span class="comment">#Handle any amount of data</span></span><br><span class="line">print(len(pi_string))</span><br></pre></td></tr></table></figure>
-<p>When reading a text file, Python interprets all the text in it as a string. If you read a number and want to use it as a value, you must use the function int() to convert it to an integer, or use the function float() to convert it to a floating point number.</p>
-<h3 id="2-Write-file"><a href="#2-Write-file" class="headerlink" title="2 Write file"></a>2 Write file</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">filename =<span class="string">&#x27;programming.txt&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> file_object:</span><br><span class="line">file_object.write(<span class="string">&quot;I love programming.&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>The first argument is also the name of the file to be opened;<br>The second argument (‘w’) tells Python that we want to open the file in write mode.<br>When opening a file, you can specify <strong>read mode (‘r’)</strong>, <strong>write mode (‘w’)</strong>, <strong>addition mode (‘a’</strong>) or allow you to <strong>read The mode of fetching and writing files (‘r+’)</strong>.<br>If you omit the mode argument, Python will open the file in the default <strong>read-only mode</strong>.<br>If the file you want to write does not exist, the function open() will <strong>automatically create</strong> it.<br>However, be careful when opening a file in write (‘w’) mode, because if the specified file already exists, Python will <strong>empty the file</strong> before returning the file object.<br>Python** can only write strings** to text files. To store numeric data in a text file, you must first use the function str() to convert it to string format.</p>
-<p>Need to include a newline character in the write() statement</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file_object.write(<span class="string">&quot;I love programming.\n&quot;</span>)</span><br><span class="line">file_object.write(<span class="string">&quot;I love creating new games.\n&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h6 id="Additional-mode-‘a’"><a href="#Additional-mode-‘a’" class="headerlink" title="Additional mode ‘a’"></a>Additional mode ‘a’</h6><p>When you open the file in append mode, Python will not empty the file before returning the file object, and the lines you write to the file will be added to the end of the file.</p>
-<h3 id="3-Exception"><a href="#3-Exception" class="headerlink" title="3 Exception"></a>3 Exception</h3><p>When you think an error may have occurred, you can write a try-except code block to handle the possible exception.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">     print(<span class="number">5</span>/<span class="number">0</span>)</span><br><span class="line"><span class="keyword">except</span> ZeroDivisionError:</span><br><span class="line">print(<span class="string">&quot;You can&#x27;t divide by zero!&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>We put the code line print(5/0) that caused the error in a try code block. If the code in the try code block runs without problems, Python will skip the except code block; if the code in the try code block causes an error, Python will look for such an except code block and run the code in it, that is, the code specified in it. The error is the same as the error raised.</p>
-<p>A program crash is not good, but it is not a good idea to let users see the traceback. Users who do not understand the technology will be confused by them, and if the user is malicious, he will learn information you do not want him to know through traceback. For example, he will know the name of your program file, and will also see some code that does not run correctly. Sometimes, a well-trained attacker can use this information to determine what kind of attacks can be launched on your code.</p>
-<h6 id="try-except-else-code-block"><a href="#try-except-else-code-block" class="headerlink" title="try-except-else code block"></a>try-except-else code block</h6><p>The working principle is roughly as follows: Python tries to execute the code in the try block; only the code that may cause an exception needs to be placed in the try statement. Sometimes there are codes that need to be run only when the try block is successfully executed; these codes should be placed in the else block. The except code block tells Python what to do if the specified exception is raised when it tries to run the code in the try code block.</p>
-<h6 id="word-count-py"><a href="#word-count-py" class="headerlink" title="word_count.py"></a>word_count.py</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">:<span class="comment"># Calculate how many words the file contains</span></span><br><span class="line">words = contents.split()</span><br><span class="line">num_words = len(words)</span><br><span class="line">print(<span class="string">&quot;The file &quot;</span>+ filename +<span class="string">&quot; has about &quot;</span>+ str(num_words) +</span><br><span class="line"><span class="string">&quot;words.&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h6 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">--snip--</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line"><span class="keyword">pass</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    --snip--</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-Store-data"><a href="#4-Store-data" class="headerlink" title="4 Store data"></a>4 Store data</h3><p>The JSON (JavaScriptObjectNotation) format was originally developed for JavaScript, but then it became a common format and adopted by many languages ​​including Python.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line">numbers = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">13</span>]</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;numbers.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(numbers, f_obj)</span><br><span class="line"></span><br><span class="line">filename =<span class="string">&#x27;numbers.json&#x27;</span> <span class="number">12</span></span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">numbers = json.load(f_obj)</span><br><span class="line">print(numbers)</span><br></pre></td></tr></table></figure>
-<p>The function json.dump() accepts two actual parameters: the data to be stored and the file object that can be used to store the data.<br>Use the function json.load() to load the information stored in numbers.json and store it in the variable numbers.</p>
-<h6 id="remember-me-py"><a href="#remember-me-py" class="headerlink" title="remember_me.py"></a>remember_me.py</h6><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="comment"># If the user name was previously stored, load it</span></span><br><span class="line"><span class="comment"># Otherwise, prompt the user to enter the user name and store it filename =&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">username = json.load(f_obj)</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">username = input(<span class="string">&quot;What is your name? &quot;</span>)</span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(username, f_obj)</span><br><span class="line">print(<span class="string">&quot;We&#x27;ll remember you when you come back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Welcome back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h6 id="Refactor"><a href="#Refactor" class="headerlink" title="Refactor"></a>Refactor</h6><p>The code can run correctly, but it can be further improved—divide the code into a series of functions that accomplish specific tasks. This process is called reconstruction.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_stored_username</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;If the user name is stored, get it&quot;&quot;&quot;</span></span><br><span class="line">filename =<span class="string">&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line"><span class="keyword">with</span> open(filename) <span class="keyword">as</span> f_obj:</span><br><span class="line">username = json.load(f_obj)</span><br><span class="line"><span class="keyword">except</span> FileNotFoundError:</span><br><span class="line"><span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line"><span class="keyword">return</span> username</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">greet_user</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Greeting to the user and indicating their name&quot;&quot;&quot;</span></span><br><span class="line">username = get_stored_username()</span><br><span class="line"><span class="keyword">if</span> username:</span><br><span class="line">print(<span class="string">&quot;Welcome back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">username = input(<span class="string">&quot;What is your name? &quot;</span>)</span><br><span class="line">filename =<span class="string">&#x27;username.json&#x27;</span></span><br><span class="line"><span class="keyword">with</span> open(filename,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f_obj:</span><br><span class="line">json.dump(username, f_obj)</span><br><span class="line">print(<span class="string">&quot;We&#x27;ll remember you when you come back, &quot;</span>+ username + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"></span><br><span class="line">greet_user()</span><br><span class="line"></span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py7-class"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/11/py7-class/"
-    >Class</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/11/py7-class/" class="article-date">
-  <time datetime="2017-10-11T13:28:55.000Z" itemprop="datePublished">2017-10-11</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="1-Create-and-use-classes"><a href="#1-Create-and-use-classes" class="headerlink" title="1 Create and use classes"></a>1 Create and use classes</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span>():</span></span><br><span class="line"> <span class="string">&quot;&quot;&quot;A simple attempt to simulate a puppy&quot;&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, age</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize attributes name and age&quot;&quot;&quot;</span></span><br><span class="line">self.name = name</span><br><span class="line">self.age = age</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sit</span>(<span class="params">self</span>)</span></span><br><span class="line"><span class="function">&quot;&quot;&quot;<span class="title">Simulate</span> <span class="title">a</span> <span class="title">puppy</span> <span class="title">squatting</span> <span class="title">down</span> <span class="title">when</span> <span class="title">ordered</span>&quot;&quot;&quot;</span></span><br><span class="line"><span class="function"><span class="title">print</span>(<span class="params">self.name.title(<span class="params"></span>) + <span class="string">&quot;is now sitting.&quot;</span></span>)</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">def</span> <span class="title">roll_over</span>(<span class="params">self</span>):</span></span><br><span class="line">print(self.name.title() + <span class="string">&quot;rell over!&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>The functions in the class are called methods<br><strong>init</strong>() is a special method, Python will automatically run it whenever you create a new instance based on the Dog class.</p>
-<p>When Python calls this <strong>init</strong>() method to create a Dog instance, it will automatically pass in the actual parameter self. Each method call associated with the class automatically passes the actual parameter self, which is a reference to the instance itself, allowing the instance to access the properties and methods in the class. When we create a Dog instance, Python will call the method <strong>init</strong>() of the Dog class. We will pass the name and 17 age to Dog() through the actual parameters; self will pass it automatically, so we don’t need to pass it. Whenever we create an instance based on the Dog class, we only need to provide values ​​for the last two formal parameters (name and age).<br>Variables that can be accessed through an instance are called attributes.</p>
-<p><strong>Create instance</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog = Dog(<span class="string">&#x27;willie&#x27;</span>, <span class="number">6</span>)</span><br></pre></td></tr></table></figure>
-<p><strong>Access properties</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog.name</span><br></pre></td></tr></table></figure>
-<p><strong>Call method</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_dog.sit()</span><br></pre></td></tr></table></figure>
-
-<p><strong>Specify default values ​​for attributes</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span>():</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize the attributes describing the car&quot;&quot;&quot;</span></span><br><span class="line">self.make = make</span><br><span class="line">self.model = model</span><br><span class="line">self.year = year</span><br><span class="line">self.odometer_reading = <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p><strong>Directly modify the value of the attribute</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_new_car.odometer_reading = <span class="number">23</span></span><br></pre></td></tr></table></figure>
-<p><strong>Increment the value of the attribute through the method</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">increment_odometer</span>(<span class="params">self, miles</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Increase the odometer reading by the specified amount&quot;&quot;&quot;</span></span><br><span class="line">self.odometer_reading += miles `insert code piece here`</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-Inheritance"><a href="#2-Inheritance" class="headerlink" title="2 Inheritance"></a>2 Inheritance</h3><p>When creating a subclass, the parent class must be included in the current file and be in front of the subclass.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ElectricCar</span>(<span class="params">Car</span>):</span> <span class="comment">#When defining a subclass, you must specify the name of the parent class in parentheses.</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;The uniqueness of electric vehicles&quot;&quot;&quot;</span></span><br><span class="line">To</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span> <span class="comment">#Method __init__() accepts the information needed to create a Car instance</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize the properties of the parent class&quot;&quot;&quot;</span></span><br><span class="line">To</span><br><span class="line">super().__init__(make, model, year) <span class="comment">#super() at # is a special function that helps Python associate the parent class with the subclass.</span></span><br></pre></td></tr></table></figure>
-<p>If a property or method is available in any car and not unique to electric cars, it should be added to the Car class instead of the ElectricCar class. In this way, people who use the Car class will get the corresponding functions, while the ElectricCar class only contains code that handles the specific attributes and behavior of electric vehicles.</p>
-<p><strong>Rewrite the parent class</strong><br>As for the method of the parent class, as long as it does not conform to the behavior of the object simulated by the subclass, it can be rewritten. To this end, you can define a method in the subclass that has the same name as the superclass method to be overridden. In this way, Python will not consider the method of the parent class, but only focus on the corresponding method you defined in the subclass.</p>
-<p><strong>Big categories are split into small categories</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Battery</span>():</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;A simple attempt to simulate an electric car battery&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, battery_size=<span class="number">70</span></span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Initialize battery properties&quot;&quot;&quot;</span></span><br><span class="line">self.battery_size = battery_size</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">describe_battery</span>(<span class="params">self</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Print a message describing battery capacity&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;This car has a &quot;</span>+ str(self.battery_size) + <span class="string">&quot;-kWh battery.&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ElectricCar</span>(<span class="params">Car</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;The uniqueness of electric vehicles&quot;&quot;&quot;</span></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, make, model, year</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot; Initialize the properties of the parent class, and then initialize the specific properties of electric vehicles &quot;&quot;&quot;</span></span><br><span class="line">super().__init__(make, model, year)</span><br><span class="line">To</span><br><span class="line">self.battery = Battery() <span class="comment">#Added a property called self.battery</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="3-Import-class"><a href="#3-Import-class" class="headerlink" title="3 Import class"></a>3 Import class</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> car <span class="keyword">import</span> Car <span class="comment">#import a single class</span></span><br><span class="line">my_new_car = Car(<span class="string">&#x27;audi&#x27;</span>,<span class="string">&#x27;a4&#x27;</span>, <span class="number">2016</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> car <span class="keyword">import</span> Car, ElectricCar <span class="comment">#import multiple</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> car <span class="comment">#import the entire module</span></span><br><span class="line">my_beetle = car.Car(<span class="string">&#x27;volkswagen&#x27;</span>,<span class="string">&#x27;beetle&#x27;</span>, <span class="number">2016</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="4-Standard-Library"><a href="#4-Standard-Library" class="headerlink" title="4 Standard Library"></a>4 Standard Library</h3><p>You can use any function and class in the standard library, for this you only need to include a simple import statement at the beginning of the program.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</span><br></pre></td></tr></table></figure>
-<p>Module <a target="_blank" rel="noopener" href="http://pymotw.com/">http://pymotw.com/</a></p>
-<h3 id="5-Coding-style"><a href="#5-Coding-style" class="headerlink" title="5 Coding style"></a>5 Coding style</h3><p>The class name should adopt the camel case nomenclature, that is, the first letter of each word in the class name should be capitalized without underscore. Both the instance name and the module name are in lower case, with underscores between words.<br>For each class, a docstring should be included immediately after the class definition.</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py6-function"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/11/py6-function/"
-    >Function</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/11/py6-function/" class="article-date">
-  <time datetime="2017-10-11T08:52:55.000Z" itemprop="datePublished">2017-10-11</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="Defining-functions"><a href="#Defining-functions" class="headerlink" title="Defining functions"></a>Defining functions</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">greet_user</span>():</span> <span class="comment">#Use the keyword def to tell Python that you want to define a function</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Show simple greetings&quot;&quot;&quot;</span> <span class="comment">#Comment of docstring</span></span><br><span class="line">print(<span class="string">&quot;Hello!&quot;</span>) <span class="comment">#The only line of code in the function body</span></span><br><span class="line"></span><br><span class="line">greet_user() <span class="comment">#Function call</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ef greet_user(username):</span><br><span class="line"><span class="string">&quot;&quot;&quot;Display a simple greeting &quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;Hello, &quot;</span>+ username.title() + <span class="string">&quot;!&quot;</span>)</span><br><span class="line"></span><br><span class="line">greet_user(<span class="string">&#x27;jesse&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>When a function is defined, variables are formal parameters. When calling a function, the actual parameters are passed.<br>Can be called multiple times.<br>The order of the positional arguments is important.</p>
-<p><strong>Keyword Argument</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">describe_pet</span>(<span class="params">animal_type, pet_name</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Display pet information&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;\nI have a &quot;</span>+ animal_type + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;My &quot;</span>+ animal_type + <span class="string">&quot;&#x27;s name is&quot;</span> + pet_name.title() + <span class="string">&quot;.&quot;</span>)</span><br><span class="line"></span><br><span class="line">describe_pet(animal_type=<span class="string">&#x27;hamster&#x27;</span>, pet_name=<span class="string">&#x27;harry&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p><strong>Defaults</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">describe_pet</span>(<span class="params">pet_name, animal_type=<span class="string">&#x27;dog&#x27;</span></span>):</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="return-value"><a href="#return-value" class="headerlink" title="return value"></a>return value</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_formatted_name</span>(<span class="params">first_name, last_name, middle_name=<span class="string">&#x27;&#x27;</span></span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Return to a neat name&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">if</span> middle_name:</span><br><span class="line">full_name = first_name + <span class="string">&#x27;&#x27;</span> + middle_name + <span class="string">&#x27;&#x27;</span> + last_name</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">full_name = first_name + <span class="string">&#x27;&#x27;</span> + last_name</span><br><span class="line">    <span class="keyword">return</span> full_name.title()</span><br><span class="line"></span><br><span class="line">musician = get_formatted_name(<span class="string">&#x27;jimi&#x27;</span>,<span class="string">&#x27;hendrix&#x27;</span>)</span><br><span class="line">print(musician)</span><br><span class="line">musician = get_formatted_name(<span class="string">&#x27;john&#x27;</span>,<span class="string">&#x27;hooker&#x27;</span>,<span class="string">&#x27;lee&#x27;</span>)</span><br><span class="line">print(musician)</span><br></pre></td></tr></table></figure>
-<p><strong>Return to dictionary</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_person</span>(<span class="params">first_name, last_name</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Returns a dictionary containing information about a person&quot;&quot;&quot;</span></span><br><span class="line">person = &#123;<span class="string">&#x27;first&#x27;</span>: first_name,<span class="string">&#x27;last&#x27;</span>: last_name&#125;</span><br><span class="line"><span class="keyword">return</span> person</span><br></pre></td></tr></table></figure>
-
-<h3 id="Pass-list"><a href="#Pass-list" class="headerlink" title="Pass list"></a>Pass list</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">greet_users</span>(<span class="params">names</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Send a simple greeting to each user on the list&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names:</span><br><span class="line">msg = <span class="string">&quot;Hello, &quot;</span>+ name.title() + <span class="string">&quot;!&quot;</span> print(msg)</span><br><span class="line"></span><br><span class="line">usernames = [<span class="string">&#x27;hannah&#x27;</span>,<span class="string">&#x27;ty&#x27;</span>,<span class="string">&#x27;margot&#x27;</span>]</span><br><span class="line">greet_users(usernames)</span><br></pre></td></tr></table></figure>
-<p>When writing a function, if you find that it performs too many tasks, try to divide the code into two functions. Don’t forget, you can always call one function from another function, which helps to divide a complex task into a series of steps.</p>
-<h3 id="Pass-any-number-of-arguments"><a href="#Pass-any-number-of-arguments" class="headerlink" title="Pass any number of arguments"></a>Pass any number of arguments</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_pizza</span>(<span class="params">*toppings</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Print all ingredients ordered by customers&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;\nMaking a pizza with the following toppings:&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> topping <span class="keyword">in</span> toppings:</span><br><span class="line">print(<span class="string">&quot;- &quot;</span>+ topping)</span><br><span class="line">To</span><br><span class="line">make_pizza(<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">make_pizza(<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>)</span><br><span class="line"><span class="comment">#Asterisk tells Python to create an empty tuple called toppings and encapsulate all the received values ​​into this tuple</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_profile</span>(<span class="params">first, last, **user_info</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Create a dictionary that contains everything we know about the user&quot;&quot;&quot;</span></span><br><span class="line">profile = &#123;&#125;</span><br><span class="line">profile[<span class="string">&#x27;first_name&#x27;</span>] = first</span><br><span class="line">profile[<span class="string">&#x27;last_name&#x27;</span>] = last</span><br><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> user_info.items():</span><br><span class="line">profile[key] = value</span><br><span class="line">    <span class="keyword">return</span> profile</span><br><span class="line">user_profile = build_profile(<span class="string">&#x27;albert&#x27;</span>,<span class="string">&#x27;einstein&#x27;</span>,</span><br><span class="line">location=<span class="string">&#x27;princeton&#x27;</span>,</span><br><span class="line">field=<span class="string">&#x27;physics&#x27;</span>)</span><br><span class="line">print(user_profile)</span><br><span class="line"></span><br><span class="line">The two asterisks <span class="keyword">in</span> <span class="comment">#formal parameters** user_info tell Python to create an empty dictionary named user_info, and encapsulate all the received name-value pairs into this dictionary.</span></span><br></pre></td></tr></table></figure>
-<h3 id="Store-functions-in-modules"><a href="#Store-functions-in-modules" class="headerlink" title="Store functions in modules"></a>Store functions in modules</h3><p>Store the function in a separate file called a module, and then import the module into the main program. The import statement allows the code in the module to be used in the currently running program file.</p>
-<p><strong>Import the entire module</strong><br>To make the function importable, you must first create a module.<br>A module is a file with a .py extension and contains the code to be imported into the program.</p>
-<p>pizza.py</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_pizza</span>(<span class="params">size, *toppings</span>):</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;Overview of the pizza to be made&quot;&quot;&quot;</span></span><br><span class="line">print(<span class="string">&quot;\nMaking a &quot;</span>+ str(size) +</span><br><span class="line"><span class="string">&quot;-inch pizza with the following toppings:&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> topping <span class="keyword">in</span> toppings:</span><br><span class="line">      print(<span class="string">&quot;- &quot;</span>+ topping)</span><br></pre></td></tr></table></figure>
-<p>Create another file named making_pizzas.py in the directory where **pizza.py is located. This file imports the newly created module, and then call make_pizza() twice</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pizza</span><br><span class="line">pizza.make_pizza(<span class="number">16</span>,<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">    pizza.make_pizza(<span class="number">12</span>,<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p><strong>Import a specific function</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> module_name <span class="keyword">import</span> function_name</span><br><span class="line"><span class="keyword">from</span> module_name <span class="keyword">import</span> function_0, function_1, function_2</span><br></pre></td></tr></table></figure>
-<p><strong>Use as to assign an alias to the module</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pizza <span class="keyword">as</span> p</span><br><span class="line">p.make_pizza(<span class="number">16</span>,<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">p.make_pizza(<span class="number">12</span>,<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p><strong>Import all functions in the module</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pizza <span class="keyword">import</span> *</span><br><span class="line">make_pizza(<span class="number">16</span>,<span class="string">&#x27;pepperoni&#x27;</span>)</span><br><span class="line">make_pizza(<span class="number">12</span>,<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="Function-Writing-Guide"><a href="#Function-Writing-Guide" class="headerlink" title="Function Writing Guide"></a>Function Writing Guide</h3><p>When specifying default values ​​for formal parameters, do not have spaces on either side of the equal sign. For keyword arguments in function calls, this convention should also be followed</p>
  
       <!-- reward -->
       

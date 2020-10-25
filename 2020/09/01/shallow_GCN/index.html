@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Think about Bot 3 |  
+    First Encounter with GCN |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-shallow_bot3"
+  id="post-shallow_GCN"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,15 +55,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Think about Bot 3
+  First Encounter with GCN
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2020/08/27/shallow_bot3/" class="article-date">
-  <time datetime="2020-08-27T18:50:55.000Z" itemprop="datePublished">2020-08-27</time>
+      <a href="/2020/09/01/shallow_GCN/" class="article-date">
+  <time datetime="2020-09-01T15:50:55.000Z" itemprop="datePublished">2020-09-01</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
@@ -79,33 +79,19 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><p>It is difficult to evaluate bot response. Although it can be done with BLEU, the automatic evaluation method of machine translation, the effect will not be very good. Almost every paper will spend money to hire people to do manual evaluation, design a set of evaluation mechanism to score, manual evaluation is more convincing. This is especially true for practical engineering applications, and users say that it is really good. Rather than simply take the biased indicators you mentioned and compare them with several methods or other company bots to show you are good.</p>
-<h2 id="Thinking"><a href="#Thinking" class="headerlink" title="Thinking"></a>Thinking</h2><p>After reading some papers and communicating with front-line engineers who are doing bot applications, I have a little thought, and the summary is as follows:</p>
-<ol>
-<li><p>Do you want to be a bot? There is a popular saying that there are no useful bots on the market. To solve the problem of bots requires a lot of technological progress at the same time, and it may take a very long time. Now it is ridiculous to use this thing for business. My personal view is that bots that solve specific tasks, combined with current advanced technology, and do some framework tools, are not so far away. Although it is not easy, it is very meaningful and solves the bot problem in the vertical field. It is possible to solve the bot problem of open domain. It is precisely because it is not easy to raise the threshold, there will be real opportunities to give birth to some great technology companies.</p>
-</li>
-<li><p>Is it open domain or task-oriented? If it were me, I would choose the latter, because the former is just a dream, an unattainable dream that requires more technological breakthroughs. Task-oriented is more specific and more practical. It provides some solutions for specific businesses. Many companies are already doing it. Although a universal or extensible solution has not yet appeared, it must be a trend and a new one. Opportunity for a generation of bot companies.</p>
-</li>
-<li><p>Why is task-oriented bot difficult, and in which direction should it be used? End-to-end is an idealized model. Deep learning models are used to “capture” some features and “fit” some functions from a large amount of training data. Although very good results can be obtained, it is indeed very convenient to use , But embarrassment is embarrassment. Mass data cannot be obtained in a specific task. After the data scale is small, pure end-to-end becomes very tasteless. However, in real scenarios, many companies have certain data and bot needs. So the mature solution is to design some features, templates and rules for your specific business. When the customer’s business changes, you need Constantly maintaining the existing bot system is very time-consuming and laborious. Real scenarios often involve a lot of structured business data. It is impossible to generate response directly based on context purely and violently. Articles [8][9] all give very enlightening solutions. Apply end-to-end locally, rather than the whole, with technologies such as Information Extraction and Knowledge Graph to achieve a highly available framework system. This should be the development direction of task-oriented bots.</p>
-</li>
-<li><p>What factors should be related to the generation of response? The quality of the response needs to be linked to these features: (1) user query, the user’s question, what exactly the user is asking in this round of dialogue, and accurately understanding the user’s intention is crucial. (2) user modeling, modeling the user, including the user’s basic information, and more importantly, the mining of the user history conversation logs. This job is difficult, but at the same time it is also very good. It is also a technology company that proves its technology A great way. The mining of logs is very common now, not everyone is doing well, and the logs here are not generally set and structured indicators, but unstructured text logs, which are more difficult to mine. Another point is also seen in paper. User emotion and sentiment analysis are tasks that are studied in nlp. The user’s emotion is directly related to the success or failure of sales. If the technology is good enough, there can be enough factors to consider. The analysis is clear enough. Hanging the history in the model is not a good way, because the history is constantly growing, which will cause problems when the model captures information. A better way may be to build a user profile and so on, to precipitate the history as a vector Representation, or a kind of knowledge graph to represent a user. A bot with this ability is a personalized bot. (3) Knowledge, external knowledge source. When it comes to specific business, business data is also a kind of knowledge. How to model knowledge into the model and be more professional and accurate when generating dialogue is also a very important issue. Bot is a comprehensive problem, not only the difficulty of the system framework, but also the difficulty of modeling.</p>
-</li>
-<li><p>I have always felt that being a person and looking at problems can not be extreme. The world is not black and white, but a continuous value between the two. It is impossible to say that either it will be an open-domain giant bot or a bot that has no specific functions. You cannot just see that the existing bot is immature and the fantasy bot is out of reach. In this field, I also laughed at others for being able to get investment. There is no point in arguing. What is really meaningful is to dig deep into this field, find the pain points and difficulties, break them one by one, and constantly promote the development of this field, instead of being boring like some street-watchers! Before breakthroughs in many areas, it seemed that there was no light in sight, but after a few years, many of the problems that were difficult to solve at the time were not all in the Red Sea, were they all over the streets? It may be difficult to make a general-purpose bot for a long time, but there is still hope to make a bot solution with high availability and good scalability. You don’t need to be over-confident, and you don’t need to be humble, and do it steadily. That’s it.</p>
-</li>
-</ol>
-<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><p>[1] A Survey of Available Corpora for Building Data-Driven Dialogue Systems</p>
-<p>[2] A Neural Conversational Model</p>
-<p>[3] A Diversity-Promoting Objective Function for Neural Conversation Models</p>
-<p>[4] A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues</p>
-<p>[5] Sequence to Backward and Forward Sequences: A Content-Introducing Approach to Generative Short-Text Conversation</p>
-<p>[6] A Persona-Based Neural Conversation Model</p>
-<p>[7] Deep Reinforcement Learning for Dialogue Generation</p>
-<p>[8] End-to-end LSTM-based dialog control optimized with supervised and reinforcement learning</p>
-<p>[9] A Network-based End-to-End Trainable Task-oriented Dialogue System</p>
-<p>[10] Incorporating Unstructured Textual Knowledge Sources into Neural Dialogue Systems</p>
-<p>[11] A Neural Network Approach to Context-Sensitive Generation of Conversational Responses</p>
-<p>[12] A Dataset for Research on Short-Text Conversation</p>
-<p>[13] The Ubuntu Dialogue Corpus: A Large Dataset for Research in Unstructured Multi-Turn Dialogue Systems</p>
+  <h2 id="Intorduction"><a href="#Intorduction" class="headerlink" title="Intorduction"></a>Intorduction</h2><p>Graph Convolutional Network(GCN), has been very popular in the past two years and has made a lot of progress.</p>
+<p>Recently, Professor Maosong Sun’s group of Tsinghua University published the paper Graph Neural Networks: A Review of Methods and Applications on arXiv. The author gave a detailed and comprehensive overview of the existing GNN models. GCN is an important branch of GNN.</p>
+<h2 id="What-is-Convolution"><a href="#What-is-Convolution" class="headerlink" title="What is Convolution?"></a>What is Convolution?</h2><p>The mathematical definition of Convolution is:<br>$$<br>(f * g)(t)=\int_{\mathbb{R}} f(x) g(t-x) d x<br>$$<br>Generally called g is the filter or kernel acting on f<br>The one-dimensional convolution diagram is as follows:<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqrco4cr7g30d004376b.gif"></p>
+<p>The common CNN two-dimensional convolution diagram is as follows:<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqrd8bnvkg30az0chq6a.gif"></p>
+<p>The concept of convolution in an image is very straightforward, because the arrangement order of pixels has a clear up, down, left, and right positional relationship.</p>
+<p><strong>How to do convolution in the abstract graph?</strong></p>
+<h2 id="Fourier-Transform"><a href="#Fourier-Transform" class="headerlink" title="Fourier Transform"></a>Fourier Transform</h2><p>In order to solve the problem of convolution calculation on graph, we give the second equipment-Fourier transform.</p>
+<p>First of all, according to the convolution theorem, the convolution formula can also be written as:<br>$$<br>f * g=\mathcal{F}^{-1}{\mathcal{F}{f} \cdot \mathcal{F}{g}}<br>$$<br>In this way, we only need to define the fourier transformation on the graph to define the convolution transformation on the graph.</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqrfjkvkag30b408c786.gif"></p>
+<p>Okay, let’s first look at the definition of Fourier transform:<br>$$<br>\mathcal{F}{f}(v)=\int_{\mathbb{R}} f(x) e^{-2 \pi i x \cdot v} d x<br>$$<br>The Inverse Fourier transform is:<br>$$<br>\mathcal{F}^{-1}{f}(x)=\int_{\mathbb{R}} f(v) e^{2 \pi i x \cdot v} d v<br>$$</p>
+<p>According to the definition of Fourier transform and its inverse transform, let’s prove the <strong>convolution theorem</strong>.<br>$$<br>\begin{aligned}<br>h(z) &amp;=\int_{\mathbb{R}} f(x) g(z-x) d x \<br>\mathcal{F}{f * g}(v) &amp;=\mathcal{F}{h}(v) \<br>&amp;=\int_{\mathbb{R}} h(z) e^{-2 \pi i z \cdot v} d z \<br>&amp;=\int_{\mathbb{R}} \int_{\mathbb{R}} f(x) g(z-x) e^{-2 \pi i z \cdot v} d x d z \<br>&amp;=\int_{\mathbb{R}} f(x)\left(\int_{\mathbb{R}} g(z-x) e^{-2 \pi i z \cdot v} d z\right) d x<br>\end{aligned}<br>$$<br>where $y=z-x ; d y=d z$<br>$$<br>\begin{aligned}<br>\mathcal{F}{f * g}(v) &amp;=\int_{\mathbb{R}} f(x)\left(\int_{\mathbb{R}} g(y) e^{-2 \pi i(y+x) \cdot v} d y\right) d x \<br>&amp;=\int_{\mathbb{R}} f(x) e^{-2 \pi i x \cdot v}\left(\int_{\mathbb{R}} g(y) e^{-2 \pi i y \cdot v} d y\right) d x \<br>&amp;=\int_{\mathbb{R}} f(x) e^{-2 \pi i x \cdot v} d x \int_{\mathbb{R}} g(y) e^{-2 \pi i y \cdot v} d y \<br>&amp;=\mathcal{F}{f}(v) \cdot \mathcal{F}{g}(v)<br>\end{aligned}<br>$$<br>Finally, act $\mathcal{F}^{-1}$ on both sides of the equation at the same time to get</p>
+<h2 id="Laplacian-Operator"><a href="#Laplacian-Operator" class="headerlink" title="Laplacian Operator"></a>Laplacian Operator</h2><p>After a wave of unrest, another unfamiliar concept came.<br>Don’t worry, this is the last piece of equipment before the <em>Novice Village</em>.<br>The first derivative is defined as:<br>$$<br>f^{\prime}(x)=\lim <em>{h \rightarrow 0} \frac{f(x+h)-f(x)}{h}<br>$$<br>The laplacian operator is simply the second derivative:<br>$$<br>\Delta f(x)=\lim <em>{h \rightarrow 0} \frac{f(x+h)-2 f(x)+f(x-h)}{h^{2}}<br>$$<br>On the graph, we can define the first derivative as:<br>$$<br>f</em>{* g}^{\prime}(x)=f(x)-f(y)<br>$$<br>Where y is the neighbor node of x<br>Then the corresponding Laplacian operator can be defined as:<br>$$<br>\Delta</em>{* g} f^{\prime}(x)=\Sigma_{y \sim x} f(x)-f(y)<br>$$<br>Define $D$ to be the degree matrix of $N \times N$<br>$$<br>D(i, j)=\left{\begin{array}{ll}<br>d_{i} &amp; \text { if } i=j \<br>0 &amp; \text { otherwise }<br>\end{array}\right.<br>$$<br>Defice $A$ to be the adjacency matrix of  $N \times N$<br>$$<br>A(i, j)=\left{\begin{array}{ll}<br>1 &amp; \text { if } x_{i} \sim x_{j} \<br>0 &amp; \text { otherwise }<br>\end{array}\right.<br>$$<br>Then the Laplacian operator on the graph can be written as<br>$$<br>L=D-A<br>$$<br>After standardization $L=I_{N}-D^{-\frac{1}{2}} A D^{-\frac{1}{2}}$</p>
+<h2 id="Derive-Graph-Convolution"><a href="#Derive-Graph-Convolution" class="headerlink" title="Derive Graph Convolution"></a>Derive Graph Convolution</h2><p>Now that we have obtained all the equipment of Novice Village, we will start to derive the GCN formula below. Remember the convolution theorem we mentioned earlier?<br>$$<br>f * g=\mathcal{F}^{-1}{\mathcal{F}{f} \cdot \mathcal{F}{g}}<br>$$<br>Then the convolution formula of the graph can be expressed as:<br>$$<br>g * x=U\left(U^{T} g \cdot U^{T} x\right)<br>$$<br>As the filter function of graph convolution, we hope to have good locality. Just like the filter in the CNN model, it only affects pixels near one pixel. Then we can define as a function of laplacian matrix<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gju5ppjvdlg30fk0bon4f.gif"><br>Applying the laplacian matrix once is equivalent to spreading neighbor nodes on the graph once. Further we can regard $U^{T} g$ as a function of the laplacian eigenvalue of $g_{\theta}(\Lambda)$.<br>Rewriting the above graph convolution formula, we can get the formula (3) of the paper <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1609.02907.pdf">SEMI-SUPERVISED CLASSIFICATION WITH GRAPH CONVOLUTIONAL NETWORKS</a><br>$$<br>g_{\theta} * x=U g_{\theta} U^{T} x=U g_{\theta^{\prime}}(\Lambda) U^{T} x<br>$$<br>It can be seen that the complexity of this convolution calculation is very high, involving finding the eigenvector of the laplacian matrix and a large number of matrix calculations. Below we consider approximating the filter function, the goal is to save the solution of the feature vector<br>$$<br>g_{\theta^{\prime}}(\Lambda) \approx \sum_{k=0}^{K} \theta_{k}^{\prime} T_{k}(\tilde{\Lambda})<br>$$<br>Where $T_{k}$ is the Chebyshev polynomial. Here, simple $g_{\theta}(\Lambda)$ can be simply regarded as a polynomial of $(\Lambda)$.<br>Because $U \Lambda^{k} U^{T}=\left(U \Lambda U^{T}\right)^{k}=L^{k}$, so the filter function above can be written as a function of L<br>$$<br>g_{\theta^{\prime}}(\Lambda) \approx \sum_{k=0}^{K} \theta_{k}^{\prime} T_{k}(\tilde{L})<br>$$<br>Set K=1 and the convolution formula can be simplified to<br>$$<br>\begin{aligned}<br>g_{\theta^{\prime}} * x &amp; \approx \theta\left(I_{N}+L\right) x \<br>&amp;=\theta\left(I_{N}+D^{-\frac{1}{2}} A D^{-\frac{1}{2}}\right) x<br>\end{aligned}<br>$$<br>Assume that $\tilde{A}=A+I_{N}, \quad \tilde{D}<em>{i i}=\sum</em>{j} \tilde{A}<em>{i j}$,<br>$$<br>g</em>{\theta^{\prime}} * x=\theta\left(\tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}}\right) x<br>$$<br>Then coupled with the activation layer, we can get the final GCN formula:<br>$$<br>H^{(l+1)}=\sigma\left(\tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}} H^{(l)} W^{(l)}\right)<br>$$</p>
  
       <!-- reward -->
       
@@ -152,12 +138,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/08/27/shallow_bot3/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/09/01/shallow_GCN/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GCN/" rel="tag">GCN</a></li></ul>
 
     </footer>
   </div>
@@ -165,19 +151,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2020/09/01/shallow_GCN/" class="article-nav-link">
-        <strong class="article-nav-caption">last article</strong>
-        <div class="article-nav-title">
-          
-            First Encounter with GCN
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/08/20/shallow_bot2/" class="article-nav-link">
+      <a href="/2020/08/27/shallow_bot3/" class="article-nav-link">
         <strong class="article-nav-caption">next article</strong>
-        <div class="article-nav-title">Think about Bot 2</div>
+        <div class="article-nav-title">Think about Bot 3</div>
       </a>
     
   </nav>
