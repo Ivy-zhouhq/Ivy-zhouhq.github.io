@@ -114,6 +114,261 @@
     
     
     <article
+  id="post-shallow_bot3"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/27/shallow_bot3/"
+    >Think about Bot 3</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/08/27/shallow_bot3/" class="article-date">
+  <time datetime="2020-08-27T18:50:55.000Z" itemprop="datePublished">2020-08-27</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><p>It is difficult to evaluate bot response. Although it can be done with BLEU, the automatic evaluation method of machine translation, the effect will not be very good. Almost every paper will spend money to hire people to do manual evaluation, design a set of evaluation mechanism to score, manual evaluation is more convincing. This is especially true for practical engineering applications, and users say that it is really good. Rather than simply take the biased indicators you mentioned and compare them with several methods or other company bots to show you are good.</p>
+<h2 id="Thinking"><a href="#Thinking" class="headerlink" title="Thinking"></a>Thinking</h2><p>After reading some papers and communicating with front-line engineers who are doing bot applications, I have a little thought, and the summary is as follows:</p>
+<ol>
+<li><p>Do you want to be a bot? There is a popular saying that there are no useful bots on the market. To solve the problem of bots requires a lot of technological progress at the same time, and it may take a very long time. Now it is ridiculous to use this thing for business. My personal view is that bots that solve specific tasks, combined with current advanced technology, and do some framework tools, are not so far away. Although it is not easy, it is very meaningful and solves the bot problem in the vertical field. It is possible to solve the bot problem of open domain. It is precisely because it is not easy to raise the threshold, there will be real opportunities to give birth to some great technology companies.</p>
+</li>
+<li><p>Is it open domain or task-oriented? If it were me, I would choose the latter, because the former is just a dream, an unattainable dream that requires more technological breakthroughs. Task-oriented is more specific and more practical. It provides some solutions for specific businesses. Many companies are already doing it. Although a universal or extensible solution has not yet appeared, it must be a trend and a new one. Opportunity for a generation of bot companies.</p>
+</li>
+<li><p>Why is task-oriented bot difficult, and in which direction should it be used? End-to-end is an idealized model. Deep learning models are used to “capture” some features and “fit” some functions from a large amount of training data. Although very good results can be obtained, it is indeed very convenient to use , But embarrassment is embarrassment. Mass data cannot be obtained in a specific task. After the data scale is small, pure end-to-end becomes very tasteless. However, in real scenarios, many companies have certain data and bot needs. So the mature solution is to design some features, templates and rules for your specific business. When the customer’s business changes, you need Constantly maintaining the existing bot system is very time-consuming and laborious. Real scenarios often involve a lot of structured business data. It is impossible to generate response directly based on context purely and violently. Articles [8][9] all give very enlightening solutions. Apply end-to-end locally, rather than the whole, with technologies such as Information Extraction and Knowledge Graph to achieve a highly available framework system. This should be the development direction of task-oriented bots.</p>
+</li>
+<li><p>What factors should be related to the generation of response? The quality of the response needs to be linked to these features: (1) user query, the user’s question, what exactly the user is asking in this round of dialogue, and accurately understanding the user’s intention is crucial. (2) user modeling, modeling the user, including the user’s basic information, and more importantly, the mining of the user history conversation logs. This job is difficult, but at the same time it is also very good. It is also a technology company that proves its technology A great way. The mining of logs is very common now, not everyone is doing well, and the logs here are not generally set and structured indicators, but unstructured text logs, which are more difficult to mine. Another point is also seen in paper. User emotion and sentiment analysis are tasks that are studied in nlp. The user’s emotion is directly related to the success or failure of sales. If the technology is good enough, there can be enough factors to consider. The analysis is clear enough. Hanging the history in the model is not a good way, because the history is constantly growing, which will cause problems when the model captures information. A better way may be to build a user profile and so on, to precipitate the history as a vector Representation, or a kind of knowledge graph to represent a user. A bot with this ability is a personalized bot. (3) Knowledge, external knowledge source. When it comes to specific business, business data is also a kind of knowledge. How to model knowledge into the model and be more professional and accurate when generating dialogue is also a very important issue. Bot is a comprehensive problem, not only the difficulty of the system framework, but also the difficulty of modeling.</p>
+</li>
+<li><p>I have always felt that being a person and looking at problems can not be extreme. The world is not black and white, but a continuous value between the two. It is impossible to say that either it will be an open-domain giant bot or a bot that has no specific functions. You cannot just see that the existing bot is immature and the fantasy bot is out of reach. In this field, I also laughed at others for being able to get investment. There is no point in arguing. What is really meaningful is to dig deep into this field, find the pain points and difficulties, break them one by one, and constantly promote the development of this field, instead of being boring like some street-watchers! Before breakthroughs in many areas, it seemed that there was no light in sight, but after a few years, many of the problems that were difficult to solve at the time were not all in the Red Sea, were they all over the streets? It may be difficult to make a general-purpose bot for a long time, but there is still hope to make a bot solution with high availability and good scalability. You don’t need to be over-confident, and you don’t need to be humble, and do it steadily. That’s it.</p>
+</li>
+</ol>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><p>[1] A Survey of Available Corpora for Building Data-Driven Dialogue Systems</p>
+<p>[2] A Neural Conversational Model</p>
+<p>[3] A Diversity-Promoting Objective Function for Neural Conversation Models</p>
+<p>[4] A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues</p>
+<p>[5] Sequence to Backward and Forward Sequences: A Content-Introducing Approach to Generative Short-Text Conversation</p>
+<p>[6] A Persona-Based Neural Conversation Model</p>
+<p>[7] Deep Reinforcement Learning for Dialogue Generation</p>
+<p>[8] End-to-end LSTM-based dialog control optimized with supervised and reinforcement learning</p>
+<p>[9] A Network-based End-to-End Trainable Task-oriented Dialogue System</p>
+<p>[10] Incorporating Unstructured Textual Knowledge Sources into Neural Dialogue Systems</p>
+<p>[11] A Neural Network Approach to Context-Sensitive Generation of Conversational Responses</p>
+<p>[12] A Dataset for Research on Short-Text Conversation</p>
+<p>[13] The Ubuntu Dialogue Corpus: A Large Dataset for Research in Unstructured Multi-Turn Dialogue Systems</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-shallow_bot2"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/20/shallow_bot2/"
+    >Think about Bot 2</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/08/20/shallow_bot2/" class="article-date">
+  <time datetime="2020-08-20T15:50:55.000Z" itemprop="datePublished">2020-08-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><h3 id="2-user-modeling"><a href="#2-user-modeling" class="headerlink" title="2. user modeling"></a>2. user modeling</h3><p>Article [6] addresses the problem of inconsistent responses in multiple rounds of dialogue. Taking user identity (such as background information, user portrait, age, and other information) into the model, a personalized seq2seq model is constructed for different users. , And the same user generates different styles of responses for different requests.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yjoq0wbj30k708fmxn.jpg"></p>
+<p>The model of [6] is called Speaker Model, which is a typical seq2seq model. The difference is that a speaker embedding is added to the decoding part, which is similar to word embedding, except that the user is modeled here. Because the user’s information cannot be modeled explicitly, an embedding method is used to obtain the speaker vector through training. The figure on the left below is the representation of the speaker vector on a two-dimensional plane. Users with similar background information It will be very close, which is the same as the word vector.</p>
+<h3 id="3-reinforcement-learning-model"><a href="#3-reinforcement-learning-model" class="headerlink" title="3. reinforcement learning model"></a>3. reinforcement learning model</h3><p>Using reinforcement learning to solve human-computer dialogue problems has a long history, but with the hype of AlphaGo, deepmind has brought reinforcement learning back to the stage and combined with deep learning to solve some more difficult problems.</p>
+<p>Reinforcement learning uses long term reward as the objective function, which will enable the model to predict higher quality responses after training. The article [7] proposed a model framework with the following capabilities:</p>
+<ol>
+<li><p>Integrate the reward function defined by the developer to achieve the goal.</p>
+</li>
+<li><p>After generating a response, you can quantitatively describe the impact of this response on subsequent stages.</p>
+</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yke1oz3j30oh0bnwfc.jpg"></p>
+<p>Two bots are in a conversation. Initially, an input message is given, and then bot1 generates 5 candidate responses based on the input, and then proceeds sequentially, because each input generates 5 responses. As the turn increases, the response will increase exponentially , Here in each round of dialogue, select 5 as the response of the current round through sample.</p>
+<p>Train a good seq2seq on a large data set as the initial value, and use reinforcement learning to improve the model’s ability to implement a custom reward function to achieve the desired effect.</p>
+<p>The model in article [7] can generate more rounds of dialogue without falling into an infinite loop prematurely, and the generated dialogue diversity is very good.</p>
+<h3 id="4-task-oriented-seq2seq-model"><a href="#4-task-oriented-seq2seq-model" class="headerlink" title="4. task-oriented seq2seq model"></a>4. task-oriented seq2seq model</h3><p>Most of the existing task-oriented bots use rule-based, template-based or example-based or a combination of them, and data driven solutions are very rare. Articles [8] and [9] try to use deep learning techniques on individual parts of the bot, and give practical solutions.</p>
+<p>Article [8] first introduces a well-known scene, how an experienced customer service brings a new customer service, divided into four stages:</p>
+<ol>
+<li><p>Tell the new customer service what “controls” are available, such as: how to find customer information, how to determine customer identity, etc.</p>
+</li>
+<li><p>The new customer service imitates and learns from the good examples made by the old customer service.</p>
+</li>
+<li><p>The new customer service began to try to serve the customer, and the old customer service corrected his mistakes in time.</p>
+</li>
+<li><p>The old customer service will let go, and the new customer service will serve customers alone, keep learning and accumulate experience.</p>
+</li>
+</ol>
+<p>The model framework of [8] is designed according to the above process:</p>
+<ol>
+<li><p>The developer provides a series of alternative actions, including response templates and some API functions, to be called by the bot.</p>
+</li>
+<li><p>Experts provide a series of example dialogues and use RNN to learn.</p>
+</li>
+<li><p>A simulated user randomly generates a query, a bot responds, and an expert corrects it.</p>
+</li>
+<li><p>Bot goes online for service, talks with real customers, and improves bot service quality through feedback.<br><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yl8y707j30t809j3yu.jpg"></p>
+</li>
+</ol>
+<p>When training, a part of high-quality data is used for supervised learning SL, and reinforcement learning RL is used to optimize the model to obtain higher quality results.</p>
+<p>The article [9] balances the advantages and disadvantages of two popular schemes, and proposes a set of reference value and practical seq2seq solutions.</p>
+<h3 id="6-Knowledge-Sources-based-model"><a href="#6-Knowledge-Sources-based-model" class="headerlink" title="6. Knowledge Sources based model"></a>6. Knowledge Sources based model</h3><p>Pure seq2seq can solve many problems, but for specific tasks, adding a related knowledge source on the basis of seq2seq will make the effect much better. The knowledge here can be unstructured text sources, such as the ubuntu manpages in article [10], or structured business data, such as the database in article [9], or it can be a source data and business data The extracted knowledge graph.</p>
+<p>The author of the article [10] defines the bot task as next utterance classification, which is a bit like a question answering task. Given a context and a response candidate list as candidate answers, select the correct response from the candidate list through the context. The contribution of this article lies in the introduction of task-related external professional knowledge base on the basis of context, and this knowledge base is unstructured.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ym1poayj30gz078glx.jpg"></p>
+<p>The model is composed of three rnn encoders, one rnn to encode context, one rnn to encode response, and one rnn to encode knowledge, and then make predictions together to select the most suitable response. The model is called a knowledge encoder. Because the data set is related to ubuntu technical support, ubuntu manpages is used for external resources.</p>
+<h3 id="7-context-sensitive-model"><a href="#7-context-sensitive-model" class="headerlink" title="7. context sensitive model"></a>7. context sensitive model</h3><p>The model in article [11] is relatively simple, but the issues considered are of great significance. The modeling of history information is of great help to bots in solving practical engineering applications, and directly determines whether your bot can work. The author expresses the history context with a bag of words model instead of the rnn we often use, and then passes the context and user query through a simple FNN to get an output.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ymlc3o5j305j0acweh.jpg"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-shallow_bot1"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/13/shallow_bot1/"
+    >Think about Bot 1</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/08/13/shallow_bot1/" class="article-date">
+  <time datetime="2020-08-13T15:50:55.000Z" itemprop="datePublished">2020-08-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><em>Thinking during the internship in HCI group</em></p>
+<p>Chatbot is a word or an application that has been very popular recently. Not only are the major news media hyping up the concept of bots, but major giants have also invested huge resources in research and development.  I have to say that an embarrassing fact is that it is really difficult to find a really useful bot on the market. According to the field involved, bots are divided into open-domain and task-oriented bots. The open domain has a lot to do, and it’s more like a platform that can do anything. No matter what kind of needs you raise, it can solve it. It means true AI, while task-oriented bots focus on doing a good job. Things, booking air tickets, order meals, get passports, etc.</p>
+<p>When it comes to open-domain bots, the ones that everyone comes into contact with the most are entertainment bots that have very nonsensical answers. The bot companies that use deep learning to solve bot technology are all of this type. They can’t solve any practical problems. They can just talk to everyone. And many times the answer is that they are not right, which is very ridiculous.</p>
+<p>Let’s talk about task-oriented bots. The most popular one on the market is customer service robots, whether it’s a bank or an e-commerce company. If you don’t want to answer the user’s questions repeatedly, just use a customer service bot to respond and develop a specific task. The bot requires a lot of work and a lot of maintenance in the later period. Because too many hand crafted features are used, the horizontal scalability of the entire bot framework is relatively poor. </p>
+<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>Bot is a comprehensive problem involving the following three main issues:</p>
+<h3 id="1-Response-generation-selection"><a href="#1-Response-generation-selection" class="headerlink" title="1. Response generation (selection)"></a>1. Response generation (selection)</h3><p>The dialog generation is the last step, the output part. In a brief summary, there are four solutions:</p>
+<p>Solution 1 generates dialogue directly based on context. There are a lot of recent papers in this regard, especially after the seq2seq+attention framework has swept many tasks of NLP, the benchmark generated by dialogue has been refreshed by various models again and again. The problem of dialogue generation is defined as a generative model based on a certain condition. Typically, predict words based on context. When it comes to sentence generation, the evaluation problem will be a more difficult problem.</p>
+<p>Solution 2 Of course, some papers do not define dialogue generation as a language model problem, but a next utterance selection problem, a multiple choice problem, given a context, given a utterance candidate list, select one from the list As a response, of course, this type of problem is much less difficult and very easy to evaluate, but it takes more effort to prepare the data set, and it is not easy to learn from in practical applications.</p>
+<p>Solution 3 rule-based or template-based, the final form of response is actually filled with a template, most of the things are given, only some specific values ​​need to be filled. This type of solution is very suitable for task-oriented bots, but too many manual features and templates make it difficult to port to other tasks.</p>
+<p>Solution 4 query-based or example-based, the response comes from a database called a knowledge base, which contains a large number of rich examples, according to the user’s query, find the closest example, and return the corresponding response as Output. This type of solution is very suitable for entertainment and funny bots. The core technology is to find more data to enrich and clean the knowledge base. But after all, respnose is taken from others, which may be funny, but most of them will be wrong.</p>
+<h3 id="2-dialog-state-tracking-DST"><a href="#2-dialog-state-tracking-DST" class="headerlink" title="2. dialog state tracking (DST)"></a>2. dialog state tracking (DST)</h3><p>Some papers call DST the belief trackers. This component is actually the core of the bot. Its function is to understand or capture user intention or goal. Only when you really know what the user needs can you make the correct action or response. For this part, there will be a Dialog State Tracking Challenge competition. Generally speaking, a range of state is given, and the context is used to predict which state the user belongs to, what kind of needs they have, and whether they need to query the weather or train tickets.</p>
+<h3 id="3-User-modeling"><a href="#3-User-modeling" class="headerlink" title="3. User modeling"></a>3. User modeling</h3><p>The bot is oriented to specific businesses and deals with real users. If it is just a simple FAQ bot, it may not be necessary to answer a few common questions, but if it is other more complex and detailed businesses, it needs to be provided to users. Modeling, the same problem, the response that the bot gives to each person must be different, the reason is very simple. User modeling needs to involve not only simple basic user information and some explicit feedback information of the user, but more importantly the history conversations of the user, these implicit feedback information. It’s like before the recommendation system went viral, everyone was selling things fairly, but some smart people started to analyze user behavior, not only those likes, but also the “clues” left by users inadvertently. In this way, we know what users are potentially interested in, which is what the recommendation system is doing later. Modeling the user is to make a personalized bot, and each response generated has the distinctive characteristics of the user.</p>
+<h2 id="Corpus"><a href="#Corpus" class="headerlink" title="Corpus"></a>Corpus</h2><p>Large-scale corpora are used to train open-domain bot dialogue generation models, and data sources are generally from social networking sites. For task-oriented bots, the size of customer data is generally very small. This is one of the main reasons why it is difficult to directly apply data driven solutions to task-oriented bots.</p>
+<p>The survey of bot training corpus is given in [1].</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yfyvum5j30l208hgmg.jpg"></p>
+<p>The picture comes from the article [13]. There are indeed many English corpora. The corpus of Sina Weibo was released by Huawei’s Noah’s Ark Lab [12]. If bot data is generated from twitter or Weibo, the effect of “conversational in nature” is not as good as the data generated from chat rooms such as ubuntu chat logs, which is more suitable for training response generation models, because it is more natural and pollution-free. The article [5] also uses a large Chinese corpus, with data from Baidu Tieba.</p>
+<h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><p>There are too many papers studying bots. This is a very active research field, and there are many subdivisions. Next, we will introduce some models according to the research questions targeted.</p>
+<h3 id="1-seq2seq-generative-model"><a href="#1-seq2seq-generative-model" class="headerlink" title="1. seq2seq generative model"></a>1. seq2seq generative model</h3><p>The most popular solution now is seq2seq+attention, the encoder feeds the user query feed in, outputs a vector representation to represent the entire query, and then serves as the condition of the decoder, and the decoder is essentially a language model that generates the response step by step, [2 ] Adopting this kind of scheme, Google used a large number of parameters to train such a model and got a good bot.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ygs7tbtj30gt04eaa0.jpg"></p>
+<p>There is a problem with typical seq2seq, that is, it is easy to generate some “huh” responses, that is, some very safe, grammatical but meaningless responses, such as “I don’t know!”. The reason is that traditional seq2seq uses MLE (Maximum Likelihood Estimate) as the objective function in the decoding process, that is, to generate the most grammatical words, not the most useful words. These safe sentences appear in large numbers in the training corpus. After the model learns, It is inevitable that such a response is always generated, and the article [3] draws on some experience in speech recognition, and uses MMI (Maximum Mutual Information) as the objective function when decoding, which improves the diversity of the response.</p>
+<p>The article [4] believes that the fundamental reason for the low quality of human speech generated by language models like RNNLM is that the random feature or noise hidden in utterance is not handled properly, thus generating next token (short term goal) and future tokens (long term goal) have a mediocre effect.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yhyje8pj30lq0bnwfn.jpg"></p>
+<p>When generating each utterance, four parts are needed, encoder RNN, context RNN, latent variable, decoder RNN, which are input and output in sequence. The latent variable here is a bit similar to the LSI in the IR. Latent shows that we can’t tell what they are, but it may represent a topic or sentiment, a representation of dimensionality reduction.</p>
+<p>The article [5] proposed a method called content introducing to generate short text response.</p>
+<p>Step 1 After a given query, predict a keyword as the topic of the response. This topic part of speech is a noun. The keyword here cannot capture complex semantics and grammar, but only predicts a PMI (Pointwise Mutual) based on each word in the query. Information) The highest noun is used as the keyword.</p>
+<p>The model of step 2 [5] is called Sequence To Backward and Forward Sequences. First, a backward step is performed. Given a query, express it with an encoder to get a context. In the decoder part, first give the keyword as the first word, and then perform decoding. The generated part is equivalent to the part in front of the keyword; the next step is forward step, which is also a typical seq2seq. The query is expressed as a context with an encoder, and then given the words generated by the backward and the keyword as the first half of the decoder, continue decoding Generate the second half. The entire process is briefly described as follows:</p>
+<p>step 1 query + keyword =&gt; backward sequence</p>
+<p>step 2 query + keyword + backward sequence(reverse) =&gt; forward sequence</p>
+<p>step 3 response = backward (reverse) sequence + keyword + forward sequence</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
   id="post-py12-API"
   class="article article-type-post"
   itemscope
@@ -600,227 +855,6 @@
 
 <h3 id="Function-Writing-Guide"><a href="#Function-Writing-Guide" class="headerlink" title="Function Writing Guide"></a>Function Writing Guide</h3><p>When specifying default values ​​for formal parameters, do not have spaces on either side of the equal sign. For keyword arguments in function calls, this convention should also be followed</p>
  
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py5-input"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/10/py5-input/"
-    >Input and While Loop</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/10/py5-input/" class="article-date">
-  <time datetime="2017-10-10T19:52:55.000Z" itemprop="datePublished">2017-10-10</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="input"><a href="#input" class="headerlink" title="input"></a>input</h3><p>input() makes the program pause and wait for the user to input some text. After getting user input, Python stores it in a variable for your convenience.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">message = input(<span class="string">&quot;Tell me something, and I will repeat it back to you: &quot;</span>) print(message)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name = input(<span class="string">&quot;Please enter your name: &quot;</span>)</span><br><span class="line">print(<span class="string">&quot;Hello, &quot;</span>+ name + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p><strong>int()</strong><br>When using the function input(), Python interprets user input as a string. You can use the function <strong>int()</strong>, which tells Python to treat the input as a number.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">age = input(<span class="string">&quot;How old are you? &quot;</span>)</span><br><span class="line">How old are you? 21</span><br><span class="line">age = int(age)</span><br><span class="line">age &gt;= <span class="number">18</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-<p><strong>Modulus Operator (%)</strong><br>The modulus operator does not indicate how many times a number is another, but only indicates the remainder.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">number = input(<span class="string">&quot;Enter a number, and I&#x27;ll tell you if it&#x27;s even or odd: &quot;</span>)</span><br><span class="line">number = int(number)</span><br><span class="line"><span class="keyword">if</span> number% <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">print(<span class="string">&quot;\nThe number &quot;</span>+ str(number) +<span class="string">&quot; is even.&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;\nThe number &quot;</span>+ str(number) +<span class="string">&quot; is odd.&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="while-loop"><a href="#while-loop" class="headerlink" title="while loop"></a>while loop</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">current_number = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> current_number &lt;= <span class="number">5</span>:</span><br><span class="line">print(current_number)</span><br><span class="line">current_number += <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>Loop with exit</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">prompt = <span class="string">&quot;\nTell me something, and I will repeat it back to you:&quot;</span></span><br><span class="line">prompt += <span class="string">&quot;\nEnter&#x27;quit&#x27; to end the program. &quot;</span></span><br><span class="line"></span><br><span class="line">message = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">while</span> message !=<span class="string">&#x27;quit&#x27;</span>:</span><br><span class="line">message = input(prompt)</span><br><span class="line">print(message) <span class="comment">#User choice</span></span><br><span class="line"></span><br><span class="line">active = <span class="literal">True</span> <span class="comment">#Set a flag</span></span><br><span class="line"><span class="keyword">while</span> active:</span><br><span class="line">    message = input(prompt)</span><br><span class="line"><span class="keyword">if</span> message ==<span class="string">&#x27;quit&#x27;</span>: active = <span class="literal">False</span></span><br><span class="line"><span class="keyword">else</span>: print(message)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">city ​​= input(prompt)</span><br><span class="line"><span class="keyword">if</span> city ==<span class="string">&#x27;quit&#x27;</span>: <span class="keyword">break</span> <span class="comment">#Use break to exit</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;I&#x27;d love to go to &quot;</span>+ city.title() + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>The break statement can be used in any Python loop. For example, you can use the break statement to exit a for loop that traverses a list or dictionary.</p>
-<p><strong>Use continue</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">current_number = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> current_number &lt;<span class="number">10</span>:</span><br><span class="line">current_number += <span class="number">1</span></span><br><span class="line"><span class="keyword">if</span> current_number% <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line">print(current_number)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><strong>Avoid infinite loops</strong></p>
-<h3 id="Use-a-while-loop-to-process-lists-and-dictionaries"><a href="#Use-a-while-loop-to-process-lists-and-dictionaries" class="headerlink" title="Use a while loop to process lists and dictionaries"></a>Use a while loop to process lists and dictionaries</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># First, create a list of users to be verified</span></span><br><span class="line"><span class="comment"># And an empty list for storing authenticated users</span></span><br><span class="line">unconfirmed_users = [<span class="string">&#x27;alice&#x27;</span>,<span class="string">&#x27;brian&#x27;</span>,<span class="string">&#x27;candace&#x27;</span>]</span><br><span class="line">confirmed_users = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># Verify each user until there are no unverified users</span></span><br><span class="line"><span class="comment"># Move each verified list to the verified user list</span></span><br><span class="line"><span class="keyword">while</span> unconfirmed_users:</span><br><span class="line">current_user = unconfirmed_users.pop()</span><br><span class="line">print(<span class="string">&quot;Verifying user: &quot;</span>+ current_user.title())</span><br><span class="line">confirmed_users.append(current_user)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show all verified users</span></span><br><span class="line">print(<span class="string">&quot;\nThe following users have been confirmed:&quot;</span>) <span class="keyword">for</span> confirmed_user <span class="keyword">in</span> confirmed_users:</span><br><span class="line">print(confirmed_user.title())</span><br></pre></td></tr></table></figure>
-<p><strong>Delete all list elements that contain a specific value</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pets = [<span class="string">&#x27;dog&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>, <span class="string">&#x27;dog&#x27;</span>, <span class="string">&#x27;goldfish&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>, <span class="string">&#x27;rabbit&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>] </span><br><span class="line">print(pets)</span><br><span class="line"><span class="keyword">while</span> <span class="string">&#x27;cat&#x27;</span> <span class="keyword">in</span> pets: </span><br><span class="line">	pets.remove(<span class="string">&#x27;cat&#x27;</span>)</span><br><span class="line">print(pets)</span><br></pre></td></tr></table></figure>
-
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py4-dictionary"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/10/py4-dictionary/"
-    >Dictionary</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/10/py4-dictionary/" class="article-date">
-  <time datetime="2017-10-10T19:02:55.000Z" itemprop="datePublished">2017-10-10</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h3 id="Dictionary"><a href="#Dictionary" class="headerlink" title="Dictionary"></a>Dictionary</h3><p>Is a series of <strong>key-value pairs</strong>. Each key is associated with a value, and you can use the key to access the value associated with it.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alien = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>,<span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line">print(alien[<span class="string">&#x27;color&#x27;</span>])</span><br></pre></td></tr></table></figure>
-<p>A key-value pair is two related values. When you specify a key, Python will return the value associated with it.<br>The key and value are separated by a colon, and the key-value pair is separated by a comma.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">new_points = alien_0[<span class="string">&#x27;points&#x27;</span>]</span><br><span class="line">print(<span class="string">&quot;You just earned &quot;</span>+ str(new_points) +<span class="string">&quot; points!&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="Add-information"><a href="#Add-information" class="headerlink" title="Add information"></a>Add information</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alien_0[<span class="string">&#x27;x_position&#x27;</span>] = <span class="number">0</span></span><br><span class="line">alien_0[<span class="string">&#x27;y_position&#x27;</span>] = <span class="number">25</span></span><br></pre></td></tr></table></figure>
-<p>The order of the key-value pairs is different from the order of addition. Python does not care about the order in which key-value pairs are added, but only cares about the relationship between keys and values.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;&#125;</span><br><span class="line">alien_0[<span class="string">&#x27;color&#x27;</span>] =<span class="string">&#x27;green&#x27;</span></span><br><span class="line">alien_0[<span class="string">&#x27;points&#x27;</span>] = <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<p>When using a dictionary to store user-supplied data or writing code that can automatically generate a large number of key-value pairs, you usually need to define an empty dictionary first.</p>
-<h3 id="Modify-value"><a href="#Modify-value" class="headerlink" title="Modify value"></a>Modify value</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>&#125;</span><br><span class="line">print(<span class="string">&quot;The alien is &quot;</span>+ alien_0[<span class="string">&#x27;color&#x27;</span>] + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">alien_0[<span class="string">&#x27;color&#x27;</span>] =<span class="string">&#x27;yellow&#x27;</span> <span class="comment">#directly associated with the new</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;x_position&#x27;</span>: <span class="number">0</span>,<span class="string">&#x27;y_position&#x27;</span>: <span class="number">25</span>,<span class="string">&#x27;speed&#x27;</span>:<span class="string">&#x27;medium&#x27;</span>&#125; print(<span class="string">&quot;Original x-position: &quot;</span>+ str(alien_0[<span class="string">&#x27;x_position&#x27;</span>]))</span><br><span class="line"><span class="comment"># Move the alien to the right</span></span><br><span class="line"><span class="comment"># Determine how far to move the alien according to its current speed</span></span><br><span class="line"><span class="keyword">if</span> alien_0[<span class="string">&#x27;speed&#x27;</span>] ==<span class="string">&#x27;slow&#x27;</span>:</span><br><span class="line">x_increment = <span class="number">1</span></span><br><span class="line"><span class="keyword">elif</span> alien_0[<span class="string">&#x27;speed&#x27;</span>] ==<span class="string">&#x27;medium&#x27;</span>:</span><br><span class="line">x_increment = <span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line"><span class="comment"># This alien must be fast</span></span><br><span class="line">x_increment = <span class="number">3</span></span><br><span class="line"><span class="comment"># The new position is equal to the old position plus the increment</span></span><br><span class="line">alien_0[<span class="string">&#x27;x_position&#x27;</span>] = alien_0[<span class="string">&#x27;x_position&#x27;</span>] + x_increment</span><br></pre></td></tr></table></figure>
-<h3 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">del</span> alien_0[<span class="string">&#x27;points&#x27;</span>]</span><br></pre></td></tr></table></figure>
-<h3 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">favorite_languages ​​= &#123;</span><br><span class="line"><span class="string">&#x27;jen&#x27;</span>:<span class="string">&#x27;python&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;sarah&#x27;</span>:<span class="string">&#x27;c&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;edward&#x27;</span>:<span class="string">&#x27;ruby&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;phil&#x27;</span>:<span class="string">&#x27;python&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line">print(<span class="string">&quot;Sarah&#x27;s favorite language is &quot;</span>+</span><br><span class="line">favorite_languages[<span class="string">&#x27;sarah&#x27;</span>].title() +</span><br><span class="line"><span class="string">&quot;.&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="Traverse"><a href="#Traverse" class="headerlink" title="Traverse"></a>Traverse</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">user_0 = &#123;</span><br><span class="line"><span class="string">&#x27;username&#x27;</span>:<span class="string">&#x27;efermi&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;enrico&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;fermi&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> user_0.items():</span><br><span class="line">print(<span class="string">&quot;\nKey: &quot;</span>+ key)</span><br><span class="line">print(<span class="string">&quot;Value: &quot;</span>+ value)</span><br></pre></td></tr></table></figure>
-<p>Even when traversing the dictionary, the return order of key-value pairs is different from the storage order.</p>
-<p><strong>Traverse all key values</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> favorite_languages.keys():</span><br><span class="line">print(name.title())</span><br></pre></td></tr></table></figure>
-<p>When traversing the dictionary, all keys are traversed by default. Therefore, if you replace for name in favorite_languages.keys(): in the above code with for name in favorite_languages:, the output will not change.</p>
-<p><strong>Traverse all keys in order sort()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> sorted(favorite_languages.keys()):</span><br><span class="line">print(name.title() + <span class="string">&quot;, thank you for taking the poll.&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p><strong>Iterate over all values</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> favorite_languages.values():</span><br><span class="line">print(language.title())</span><br></pre></td></tr></table></figure>
-
-<p><strong>Make the value not repeat set()</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> set(favorite_languages.values()):</span><br><span class="line">print(language.title())</span><br></pre></td></tr></table></figure>
-
-<h3 id="Nesting"><a href="#Nesting" class="headerlink" title="Nesting"></a>Nesting</h3><p>You can nest dictionaries in lists, nest lists in dictionaries, and even nest dictionaries in dictionaries</p>
-<p><strong>Dictionary List</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create an empty list for storing aliens aliens = []</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create 30 green aliens</span></span><br><span class="line"><span class="keyword">for</span> alien_number <span class="keyword">in</span> range(<span class="number">30</span>):</span><br><span class="line">new_alien = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>,<span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>,<span class="string">&#x27;speed&#x27;</span>:<span class="string">&#x27;slow&#x27;</span>&#125;</span><br><span class="line">aliens.append(new_alien)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show the first five aliens</span></span><br><span class="line"><span class="keyword">for</span> alien <span class="keyword">in</span> aliens[:<span class="number">5</span>]:</span><br><span class="line">print(alien)</span><br><span class="line">print(<span class="string">&quot;...&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show how many aliens have been created</span></span><br><span class="line">print(<span class="string">&quot;Total number of aliens: &quot;</span>+ str(len(aliens)))</span><br></pre></td></tr></table></figure>
-
-<p><strong>Store list in dictionary</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Store the information of the pizza ordered</span></span><br><span class="line">pizza = &#123;</span><br><span class="line"><span class="string">&#x27;crust&#x27;</span>:<span class="string">&#x27;thick&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;toppings&#x27;</span>: [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>],&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Overview of the pizza ordered</span></span><br><span class="line">print(<span class="string">&quot;You ordered a &quot;</span>+ pizza[<span class="string">&#x27;crust&#x27;</span>] + <span class="string">&quot;-crust pizza&quot;</span> +</span><br><span class="line"><span class="string">&quot;with the following toppings:&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> topping <span class="keyword">in</span> pizza[<span class="string">&#x27;toppings&#x27;</span>]:</span><br><span class="line">print(<span class="string">&quot;\t&quot;</span> + topping)</span><br></pre></td></tr></table></figure>
-<p>Whenever you need to associate a key with multiple values ​​in a dictionary, you can nest a list in the dictionary.</p>
-<p>Sometimes it takes two for loops</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">favorite_languages ​​= &#123;</span><br><span class="line"><span class="string">&#x27;jen&#x27;</span>: [<span class="string">&#x27;python&#x27;</span>,<span class="string">&#x27;ruby&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;sarah&#x27;</span>: [<span class="string">&#x27;c&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;edward&#x27;</span>: [<span class="string">&#x27;ruby&#x27;</span>,<span class="string">&#x27;go&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;phil&#x27;</span>: [<span class="string">&#x27;python&#x27;</span>,<span class="string">&#x27;haskell&#x27;</span>],&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> name, languages ​​<span class="keyword">in</span> favorite_languages.items():</span><br><span class="line">print(<span class="string">&quot;\n&quot;</span> + name.title() + <span class="string">&quot;&#x27;s favorite languages ​​are:&quot;</span>)</span><br><span class="line">To</span><br><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> languages:</span><br><span class="line">print(<span class="string">&quot;\t&quot;</span> + language.title())</span><br></pre></td></tr></table></figure>
-
-<p><strong>Dictionary stored in dictionary</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">users = &#123;</span><br><span class="line"><span class="string">&#x27;aeinstein&#x27;</span>: &#123;</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;albert&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;einstein&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;location&#x27;</span>:<span class="string">&#x27;princeton&#x27;</span>, &#125;,</span><br><span class="line"><span class="string">&#x27;mcurie&#x27;</span>: &#123;</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;marie&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;curie&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;location&#x27;</span>:<span class="string">&#x27;paris&#x27;</span>, &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> username, user_info <span class="keyword">in</span> users.items():</span><br><span class="line">print(<span class="string">&quot;\nUsername: &quot;</span>+ username)</span><br><span class="line">full_name = user_info[<span class="string">&#x27;first&#x27;</span>] + <span class="string">&quot;&quot;</span> + user_info[<span class="string">&#x27;last&#x27;</span>]</span><br><span class="line">location = user_info[<span class="string">&#x27;location&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&quot;\tFull name: &quot;</span>+ full_name.title())</span><br><span class="line">print(<span class="string">&quot;\tLocation: &quot;</span>+ location.title())</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-</article>
-
-    
-    <article
-  id="post-py3-if"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2017/10/09/py3-if/"
-    >IF Conditional Statement</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2017/10/09/py3-if/" class="article-date">
-  <time datetime="2017-10-09T15:30:55.000Z" itemprop="datePublished">2017-10-09</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
-  </div>
- 
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;audi&#x27;</span>,<span class="string">&#x27;bmw&#x27;</span>,<span class="string">&#x27;subaru&#x27;</span>,<span class="string">&#x27;toyota&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> car <span class="keyword">in</span> cars:</span><br><span class="line"><span class="keyword">if</span> car ==<span class="string">&#x27;bmw&#x27;</span>:</span><br><span class="line">print(car.upper())</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(car.title())</span><br></pre></td></tr></table></figure>
-<p><strong>Note the : after if and else</strong><br>When checking for equality in Python, <strong>distinguish between uppercase and lowercase</strong>. If the case is not important and you only want to check the value of the variable, you can convert the value of the variable to lowercase</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">car =<span class="string">&#x27;Audi&#x27;</span></span><br><span class="line">car.lower() ==<span class="string">&#x27;audi&#x27;</span></span><br></pre></td></tr></table></figure>
-<p>Multiple conditions</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(age_0 &gt;= <span class="number">21</span>) <span class="keyword">or</span> (age_1 &gt;= <span class="number">21</span>)</span><br><span class="line">(age_0 &gt;= <span class="number">21</span>) <span class="keyword">and</span> (age_1 &gt;= <span class="number">21</span>) <span class="comment">#The brackets are to enhance readability</span></span><br></pre></td></tr></table></figure>
-<p>List</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">requested_toppings = [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;onions&#x27;</span>,<span class="string">&#x27;pineapple&#x27;</span>]</span><br><span class="line"><span class="string">&#x27;mushrooms&#x27;</span> (<span class="keyword">not</span>) <span class="keyword">in</span> requested_toppings <span class="comment">#Check if the value is in the list, you can add not</span></span><br><span class="line"><span class="literal">True</span></span><br></pre></td></tr></table></figure>
-
-<p>if-elif-else structure</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">12</span></span><br><span class="line"><span class="keyword">if</span> age &lt;<span class="number">4</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $0.&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">18</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $5.&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $10.&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">12</span></span><br><span class="line"><span class="keyword">if</span> age &lt;<span class="number">4</span>: price = <span class="number">0</span></span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">18</span>: price = <span class="number">5</span></span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">65</span>: price = <span class="number">10</span></span><br><span class="line"><span class="keyword">else</span>: price = <span class="number">5</span> <span class="comment">#Multiple elifs can be used</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="Processing-the-list"><a href="#Processing-the-list" class="headerlink" title="Processing the list"></a>Processing the list</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">requested_toppings = [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> requested_topping <span class="keyword">in</span> requested_toppings:</span><br><span class="line"><span class="keyword">if</span> requested_topping ==<span class="string">&#x27;green peppers&#x27;</span>:</span><br><span class="line">print(<span class="string">&quot;Sorry, we are out of green peppers right now.&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Adding &quot;</span>+ requested_topping + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\nFinished making your pizza!&quot;</span>)</span><br></pre></td></tr></table></figure> 
       <!-- reward -->
       
     </div>

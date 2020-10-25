@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    API |  
+    Think about Bot 3 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-py12-API"
+  id="post-shallow_bot3"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,18 +55,18 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  API
+  Think about Bot 3
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2017/10/13/py12-API/" class="article-date">
-  <time datetime="2017-10-13T15:50:55.000Z" itemprop="datePublished">2017-10-13</time>
+      <a href="/2020/08/27/shallow_bot3/" class="article-date">
+  <time datetime="2020-08-27T18:50:55.000Z" itemprop="datePublished">2020-08-27</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
+    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
   </div>
  
     </div>
@@ -79,12 +79,34 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="1-Use-WebAPI"><a href="#1-Use-WebAPI" class="headerlink" title="1. Use WebAPI"></a>1. Use WebAPI</h2><h4 id="Processing-API-response"><a href="#Processing-API-response" class="headerlink" title="Processing API response"></a>Processing API response</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="comment"># Execute API call and store response</span></span><br><span class="line">url =<span class="string">&#x27;https://api.github.com/search/repositories?q=language:python&amp;sort=stars&#x27;</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line">print(<span class="string">&quot;Status code:&quot;</span>, r.status_code)</span><br><span class="line"><span class="comment"># Store the API response in a variable</span></span><br><span class="line">response_dict = r.json()</span><br><span class="line"><span class="comment"># process result </span></span><br><span class="line">print(response_dict.keys())</span><br></pre></td></tr></table></figure>
-<p>The attribute named status_code, which lets us know whether the request was successful (status code 200 means the request was successful)<br>This API returns information in JSON format, so we use the method json() to convert this information into a Python dictionary. We store the converted dictionary in response_dict.</p>
-<h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">repo_dicts = response_dict[<span class="string">&#x27;items&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;Name:&#x27;</span>, repo_dict[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Owner:&#x27;</span>, repo_dict[<span class="string">&#x27;owner&#x27;</span>][<span class="string">&#x27;login&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Stars:&#x27;</span>, repo_dict[<span class="string">&#x27;stargazers_count&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Repository:&#x27;</span>, repo_dict[<span class="string">&#x27;html_url&#x27;</span>])</span><br></pre></td></tr></table></figure>
-
-<h4 id="Rate"><a href="#Rate" class="headerlink" title="Rate"></a>Rate</h4><p>Most APIs have rate limits, that is, there is a limit on the number of requests you can execute within a certain period of time.<br><a target="_blank" rel="noopener" href="https://api.github.com/rate_limit">https://api.github.com/rate_limit</a></p>
-<h2 id="2-Use-Pygal-to-visualize-the-warehouse"><a href="#2-Use-Pygal-to-visualize-the-warehouse" class="headerlink" title="2. Use Pygal to visualize the warehouse"></a>2. Use Pygal to visualize the warehouse</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pygal</span><br><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle <span class="keyword">as</span> LCS, LightenStyle <span class="keyword">as</span> LS</span><br><span class="line"></span><br><span class="line">my_style = LS(<span class="string">&#x27;#333366&#x27;</span>, base_style=LCS)</span><br><span class="line">chart = pygal.Bar(style=my_style, x_label_rotation=<span class="number">45</span>, show_legend=<span class="literal">False</span>)</span><br><span class="line">chart.title =<span class="string">&#x27;Most-Starred Python Projects on GitHub&#x27;</span></span><br><span class="line">chart.x_labels = names</span><br></pre></td></tr></table></figure> 
+  <h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><p>It is difficult to evaluate bot response. Although it can be done with BLEU, the automatic evaluation method of machine translation, the effect will not be very good. Almost every paper will spend money to hire people to do manual evaluation, design a set of evaluation mechanism to score, manual evaluation is more convincing. This is especially true for practical engineering applications, and users say that it is really good. Rather than simply take the biased indicators you mentioned and compare them with several methods or other company bots to show you are good.</p>
+<h2 id="Thinking"><a href="#Thinking" class="headerlink" title="Thinking"></a>Thinking</h2><p>After reading some papers and communicating with front-line engineers who are doing bot applications, I have a little thought, and the summary is as follows:</p>
+<ol>
+<li><p>Do you want to be a bot? There is a popular saying that there are no useful bots on the market. To solve the problem of bots requires a lot of technological progress at the same time, and it may take a very long time. Now it is ridiculous to use this thing for business. My personal view is that bots that solve specific tasks, combined with current advanced technology, and do some framework tools, are not so far away. Although it is not easy, it is very meaningful and solves the bot problem in the vertical field. It is possible to solve the bot problem of open domain. It is precisely because it is not easy to raise the threshold, there will be real opportunities to give birth to some great technology companies.</p>
+</li>
+<li><p>Is it open domain or task-oriented? If it were me, I would choose the latter, because the former is just a dream, an unattainable dream that requires more technological breakthroughs. Task-oriented is more specific and more practical. It provides some solutions for specific businesses. Many companies are already doing it. Although a universal or extensible solution has not yet appeared, it must be a trend and a new one. Opportunity for a generation of bot companies.</p>
+</li>
+<li><p>Why is task-oriented bot difficult, and in which direction should it be used? End-to-end is an idealized model. Deep learning models are used to “capture” some features and “fit” some functions from a large amount of training data. Although very good results can be obtained, it is indeed very convenient to use , But embarrassment is embarrassment. Mass data cannot be obtained in a specific task. After the data scale is small, pure end-to-end becomes very tasteless. However, in real scenarios, many companies have certain data and bot needs. So the mature solution is to design some features, templates and rules for your specific business. When the customer’s business changes, you need Constantly maintaining the existing bot system is very time-consuming and laborious. Real scenarios often involve a lot of structured business data. It is impossible to generate response directly based on context purely and violently. Articles [8][9] all give very enlightening solutions. Apply end-to-end locally, rather than the whole, with technologies such as Information Extraction and Knowledge Graph to achieve a highly available framework system. This should be the development direction of task-oriented bots.</p>
+</li>
+<li><p>What factors should be related to the generation of response? The quality of the response needs to be linked to these features: (1) user query, the user’s question, what exactly the user is asking in this round of dialogue, and accurately understanding the user’s intention is crucial. (2) user modeling, modeling the user, including the user’s basic information, and more importantly, the mining of the user history conversation logs. This job is difficult, but at the same time it is also very good. It is also a technology company that proves its technology A great way. The mining of logs is very common now, not everyone is doing well, and the logs here are not generally set and structured indicators, but unstructured text logs, which are more difficult to mine. Another point is also seen in paper. User emotion and sentiment analysis are tasks that are studied in nlp. The user’s emotion is directly related to the success or failure of sales. If the technology is good enough, there can be enough factors to consider. The analysis is clear enough. Hanging the history in the model is not a good way, because the history is constantly growing, which will cause problems when the model captures information. A better way may be to build a user profile and so on, to precipitate the history as a vector Representation, or a kind of knowledge graph to represent a user. A bot with this ability is a personalized bot. (3) Knowledge, external knowledge source. When it comes to specific business, business data is also a kind of knowledge. How to model knowledge into the model and be more professional and accurate when generating dialogue is also a very important issue. Bot is a comprehensive problem, not only the difficulty of the system framework, but also the difficulty of modeling.</p>
+</li>
+<li><p>I have always felt that being a person and looking at problems can not be extreme. The world is not black and white, but a continuous value between the two. It is impossible to say that either it will be an open-domain giant bot or a bot that has no specific functions. You cannot just see that the existing bot is immature and the fantasy bot is out of reach. In this field, I also laughed at others for being able to get investment. There is no point in arguing. What is really meaningful is to dig deep into this field, find the pain points and difficulties, break them one by one, and constantly promote the development of this field, instead of being boring like some street-watchers! Before breakthroughs in many areas, it seemed that there was no light in sight, but after a few years, many of the problems that were difficult to solve at the time were not all in the Red Sea, were they all over the streets? It may be difficult to make a general-purpose bot for a long time, but there is still hope to make a bot solution with high availability and good scalability. You don’t need to be over-confident, and you don’t need to be humble, and do it steadily. That’s it.</p>
+</li>
+</ol>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><p>[1] A Survey of Available Corpora for Building Data-Driven Dialogue Systems</p>
+<p>[2] A Neural Conversational Model</p>
+<p>[3] A Diversity-Promoting Objective Function for Neural Conversation Models</p>
+<p>[4] A Hierarchical Latent Variable Encoder-Decoder Model for Generating Dialogues</p>
+<p>[5] Sequence to Backward and Forward Sequences: A Content-Introducing Approach to Generative Short-Text Conversation</p>
+<p>[6] A Persona-Based Neural Conversation Model</p>
+<p>[7] Deep Reinforcement Learning for Dialogue Generation</p>
+<p>[8] End-to-end LSTM-based dialog control optimized with supervised and reinforcement learning</p>
+<p>[9] A Network-based End-to-End Trainable Task-oriented Dialogue System</p>
+<p>[10] Incorporating Unstructured Textual Knowledge Sources into Neural Dialogue Systems</p>
+<p>[11] A Neural Network Approach to Context-Sensitive Generation of Conversational Responses</p>
+<p>[12] A Dataset for Research on Short-Text Conversation</p>
+<p>[13] The Ubuntu Dialogue Corpus: A Large Dataset for Research in Unstructured Multi-Turn Dialogue Systems</p>
+ 
       <!-- reward -->
       
     </div>
@@ -130,30 +152,23 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2017/10/13/py12-API/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/08/27/shallow_bot3/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
+
     </footer>
   </div>
 
    
   <nav class="article-nav">
     
-      <a href="/2020/08/13/shallow_bot1/" class="article-nav-link">
-        <strong class="article-nav-caption">last article</strong>
-        <div class="article-nav-title">
-          
-            Think about Bot 1
-          
-        </div>
-      </a>
     
-    
-      <a href="/2017/10/13/py11-download/" class="article-nav-link">
+      <a href="/2020/08/20/shallow_bot2/" class="article-nav-link">
         <strong class="article-nav-caption">next article</strong>
-        <div class="article-nav-title">Download Data</div>
+        <div class="article-nav-title">Think about Bot 2</div>
       </a>
     
   </nav>

@@ -114,6 +114,227 @@
     
     
     <article
+  id="post-py5-input"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/10/py5-input/"
+    >Input and While Loop</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/10/py5-input/" class="article-date">
+  <time datetime="2017-10-10T19:52:55.000Z" itemprop="datePublished">2017-10-10</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="input"><a href="#input" class="headerlink" title="input"></a>input</h3><p>input() makes the program pause and wait for the user to input some text. After getting user input, Python stores it in a variable for your convenience.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">message = input(<span class="string">&quot;Tell me something, and I will repeat it back to you: &quot;</span>) print(message)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name = input(<span class="string">&quot;Please enter your name: &quot;</span>)</span><br><span class="line">print(<span class="string">&quot;Hello, &quot;</span>+ name + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>int()</strong><br>When using the function input(), Python interprets user input as a string. You can use the function <strong>int()</strong>, which tells Python to treat the input as a number.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">age = input(<span class="string">&quot;How old are you? &quot;</span>)</span><br><span class="line">How old are you? 21</span><br><span class="line">age = int(age)</span><br><span class="line">age &gt;= <span class="number">18</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p><strong>Modulus Operator (%)</strong><br>The modulus operator does not indicate how many times a number is another, but only indicates the remainder.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">number = input(<span class="string">&quot;Enter a number, and I&#x27;ll tell you if it&#x27;s even or odd: &quot;</span>)</span><br><span class="line">number = int(number)</span><br><span class="line"><span class="keyword">if</span> number% <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">print(<span class="string">&quot;\nThe number &quot;</span>+ str(number) +<span class="string">&quot; is even.&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;\nThe number &quot;</span>+ str(number) +<span class="string">&quot; is odd.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="while-loop"><a href="#while-loop" class="headerlink" title="while loop"></a>while loop</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">current_number = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> current_number &lt;= <span class="number">5</span>:</span><br><span class="line">print(current_number)</span><br><span class="line">current_number += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Loop with exit</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">prompt = <span class="string">&quot;\nTell me something, and I will repeat it back to you:&quot;</span></span><br><span class="line">prompt += <span class="string">&quot;\nEnter&#x27;quit&#x27; to end the program. &quot;</span></span><br><span class="line"></span><br><span class="line">message = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">while</span> message !=<span class="string">&#x27;quit&#x27;</span>:</span><br><span class="line">message = input(prompt)</span><br><span class="line">print(message) <span class="comment">#User choice</span></span><br><span class="line"></span><br><span class="line">active = <span class="literal">True</span> <span class="comment">#Set a flag</span></span><br><span class="line"><span class="keyword">while</span> active:</span><br><span class="line">    message = input(prompt)</span><br><span class="line"><span class="keyword">if</span> message ==<span class="string">&#x27;quit&#x27;</span>: active = <span class="literal">False</span></span><br><span class="line"><span class="keyword">else</span>: print(message)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">city ​​= input(prompt)</span><br><span class="line"><span class="keyword">if</span> city ==<span class="string">&#x27;quit&#x27;</span>: <span class="keyword">break</span> <span class="comment">#Use break to exit</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;I&#x27;d love to go to &quot;</span>+ city.title() + <span class="string">&quot;!&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>The break statement can be used in any Python loop. For example, you can use the break statement to exit a for loop that traverses a list or dictionary.</p>
+<p><strong>Use continue</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">current_number = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> current_number &lt;<span class="number">10</span>:</span><br><span class="line">current_number += <span class="number">1</span></span><br><span class="line"><span class="keyword">if</span> current_number% <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line">print(current_number)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>Avoid infinite loops</strong></p>
+<h3 id="Use-a-while-loop-to-process-lists-and-dictionaries"><a href="#Use-a-while-loop-to-process-lists-and-dictionaries" class="headerlink" title="Use a while loop to process lists and dictionaries"></a>Use a while loop to process lists and dictionaries</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># First, create a list of users to be verified</span></span><br><span class="line"><span class="comment"># And an empty list for storing authenticated users</span></span><br><span class="line">unconfirmed_users = [<span class="string">&#x27;alice&#x27;</span>,<span class="string">&#x27;brian&#x27;</span>,<span class="string">&#x27;candace&#x27;</span>]</span><br><span class="line">confirmed_users = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># Verify each user until there are no unverified users</span></span><br><span class="line"><span class="comment"># Move each verified list to the verified user list</span></span><br><span class="line"><span class="keyword">while</span> unconfirmed_users:</span><br><span class="line">current_user = unconfirmed_users.pop()</span><br><span class="line">print(<span class="string">&quot;Verifying user: &quot;</span>+ current_user.title())</span><br><span class="line">confirmed_users.append(current_user)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show all verified users</span></span><br><span class="line">print(<span class="string">&quot;\nThe following users have been confirmed:&quot;</span>) <span class="keyword">for</span> confirmed_user <span class="keyword">in</span> confirmed_users:</span><br><span class="line">print(confirmed_user.title())</span><br></pre></td></tr></table></figure>
+<p><strong>Delete all list elements that contain a specific value</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pets = [<span class="string">&#x27;dog&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>, <span class="string">&#x27;dog&#x27;</span>, <span class="string">&#x27;goldfish&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>, <span class="string">&#x27;rabbit&#x27;</span>, <span class="string">&#x27;cat&#x27;</span>] </span><br><span class="line">print(pets)</span><br><span class="line"><span class="keyword">while</span> <span class="string">&#x27;cat&#x27;</span> <span class="keyword">in</span> pets: </span><br><span class="line">	pets.remove(<span class="string">&#x27;cat&#x27;</span>)</span><br><span class="line">print(pets)</span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-py4-dictionary"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/10/py4-dictionary/"
+    >Dictionary</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/10/py4-dictionary/" class="article-date">
+  <time datetime="2017-10-10T19:02:55.000Z" itemprop="datePublished">2017-10-10</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="Dictionary"><a href="#Dictionary" class="headerlink" title="Dictionary"></a>Dictionary</h3><p>Is a series of <strong>key-value pairs</strong>. Each key is associated with a value, and you can use the key to access the value associated with it.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alien = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>,<span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>&#125;</span><br><span class="line">print(alien[<span class="string">&#x27;color&#x27;</span>])</span><br></pre></td></tr></table></figure>
+<p>A key-value pair is two related values. When you specify a key, Python will return the value associated with it.<br>The key and value are separated by a colon, and the key-value pair is separated by a comma.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">new_points = alien_0[<span class="string">&#x27;points&#x27;</span>]</span><br><span class="line">print(<span class="string">&quot;You just earned &quot;</span>+ str(new_points) +<span class="string">&quot; points!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Add-information"><a href="#Add-information" class="headerlink" title="Add information"></a>Add information</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alien_0[<span class="string">&#x27;x_position&#x27;</span>] = <span class="number">0</span></span><br><span class="line">alien_0[<span class="string">&#x27;y_position&#x27;</span>] = <span class="number">25</span></span><br></pre></td></tr></table></figure>
+<p>The order of the key-value pairs is different from the order of addition. Python does not care about the order in which key-value pairs are added, but only cares about the relationship between keys and values.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;&#125;</span><br><span class="line">alien_0[<span class="string">&#x27;color&#x27;</span>] =<span class="string">&#x27;green&#x27;</span></span><br><span class="line">alien_0[<span class="string">&#x27;points&#x27;</span>] = <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p>When using a dictionary to store user-supplied data or writing code that can automatically generate a large number of key-value pairs, you usually need to define an empty dictionary first.</p>
+<h3 id="Modify-value"><a href="#Modify-value" class="headerlink" title="Modify value"></a>Modify value</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>&#125;</span><br><span class="line">print(<span class="string">&quot;The alien is &quot;</span>+ alien_0[<span class="string">&#x27;color&#x27;</span>] + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">alien_0[<span class="string">&#x27;color&#x27;</span>] =<span class="string">&#x27;yellow&#x27;</span> <span class="comment">#directly associated with the new</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">alien_0 = &#123;<span class="string">&#x27;x_position&#x27;</span>: <span class="number">0</span>,<span class="string">&#x27;y_position&#x27;</span>: <span class="number">25</span>,<span class="string">&#x27;speed&#x27;</span>:<span class="string">&#x27;medium&#x27;</span>&#125; print(<span class="string">&quot;Original x-position: &quot;</span>+ str(alien_0[<span class="string">&#x27;x_position&#x27;</span>]))</span><br><span class="line"><span class="comment"># Move the alien to the right</span></span><br><span class="line"><span class="comment"># Determine how far to move the alien according to its current speed</span></span><br><span class="line"><span class="keyword">if</span> alien_0[<span class="string">&#x27;speed&#x27;</span>] ==<span class="string">&#x27;slow&#x27;</span>:</span><br><span class="line">x_increment = <span class="number">1</span></span><br><span class="line"><span class="keyword">elif</span> alien_0[<span class="string">&#x27;speed&#x27;</span>] ==<span class="string">&#x27;medium&#x27;</span>:</span><br><span class="line">x_increment = <span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line"><span class="comment"># This alien must be fast</span></span><br><span class="line">x_increment = <span class="number">3</span></span><br><span class="line"><span class="comment"># The new position is equal to the old position plus the increment</span></span><br><span class="line">alien_0[<span class="string">&#x27;x_position&#x27;</span>] = alien_0[<span class="string">&#x27;x_position&#x27;</span>] + x_increment</span><br></pre></td></tr></table></figure>
+<h3 id="Delete"><a href="#Delete" class="headerlink" title="Delete"></a>Delete</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">del</span> alien_0[<span class="string">&#x27;points&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">favorite_languages ​​= &#123;</span><br><span class="line"><span class="string">&#x27;jen&#x27;</span>:<span class="string">&#x27;python&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;sarah&#x27;</span>:<span class="string">&#x27;c&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;edward&#x27;</span>:<span class="string">&#x27;ruby&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;phil&#x27;</span>:<span class="string">&#x27;python&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line">print(<span class="string">&quot;Sarah&#x27;s favorite language is &quot;</span>+</span><br><span class="line">favorite_languages[<span class="string">&#x27;sarah&#x27;</span>].title() +</span><br><span class="line"><span class="string">&quot;.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Traverse"><a href="#Traverse" class="headerlink" title="Traverse"></a>Traverse</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">user_0 = &#123;</span><br><span class="line"><span class="string">&#x27;username&#x27;</span>:<span class="string">&#x27;efermi&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;enrico&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;fermi&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> user_0.items():</span><br><span class="line">print(<span class="string">&quot;\nKey: &quot;</span>+ key)</span><br><span class="line">print(<span class="string">&quot;Value: &quot;</span>+ value)</span><br></pre></td></tr></table></figure>
+<p>Even when traversing the dictionary, the return order of key-value pairs is different from the storage order.</p>
+<p><strong>Traverse all key values</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> favorite_languages.keys():</span><br><span class="line">print(name.title())</span><br></pre></td></tr></table></figure>
+<p>When traversing the dictionary, all keys are traversed by default. Therefore, if you replace for name in favorite_languages.keys(): in the above code with for name in favorite_languages:, the output will not change.</p>
+<p><strong>Traverse all keys in order sort()</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> sorted(favorite_languages.keys()):</span><br><span class="line">print(name.title() + <span class="string">&quot;, thank you for taking the poll.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Iterate over all values</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> favorite_languages.values():</span><br><span class="line">print(language.title())</span><br></pre></td></tr></table></figure>
+
+<p><strong>Make the value not repeat set()</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> set(favorite_languages.values()):</span><br><span class="line">print(language.title())</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nesting"><a href="#Nesting" class="headerlink" title="Nesting"></a>Nesting</h3><p>You can nest dictionaries in lists, nest lists in dictionaries, and even nest dictionaries in dictionaries</p>
+<p><strong>Dictionary List</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create an empty list for storing aliens aliens = []</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create 30 green aliens</span></span><br><span class="line"><span class="keyword">for</span> alien_number <span class="keyword">in</span> range(<span class="number">30</span>):</span><br><span class="line">new_alien = &#123;<span class="string">&#x27;color&#x27;</span>:<span class="string">&#x27;green&#x27;</span>,<span class="string">&#x27;points&#x27;</span>: <span class="number">5</span>,<span class="string">&#x27;speed&#x27;</span>:<span class="string">&#x27;slow&#x27;</span>&#125;</span><br><span class="line">aliens.append(new_alien)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show the first five aliens</span></span><br><span class="line"><span class="keyword">for</span> alien <span class="keyword">in</span> aliens[:<span class="number">5</span>]:</span><br><span class="line">print(alien)</span><br><span class="line">print(<span class="string">&quot;...&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show how many aliens have been created</span></span><br><span class="line">print(<span class="string">&quot;Total number of aliens: &quot;</span>+ str(len(aliens)))</span><br></pre></td></tr></table></figure>
+
+<p><strong>Store list in dictionary</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Store the information of the pizza ordered</span></span><br><span class="line">pizza = &#123;</span><br><span class="line"><span class="string">&#x27;crust&#x27;</span>:<span class="string">&#x27;thick&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;toppings&#x27;</span>: [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>],&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Overview of the pizza ordered</span></span><br><span class="line">print(<span class="string">&quot;You ordered a &quot;</span>+ pizza[<span class="string">&#x27;crust&#x27;</span>] + <span class="string">&quot;-crust pizza&quot;</span> +</span><br><span class="line"><span class="string">&quot;with the following toppings:&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> topping <span class="keyword">in</span> pizza[<span class="string">&#x27;toppings&#x27;</span>]:</span><br><span class="line">print(<span class="string">&quot;\t&quot;</span> + topping)</span><br></pre></td></tr></table></figure>
+<p>Whenever you need to associate a key with multiple values ​​in a dictionary, you can nest a list in the dictionary.</p>
+<p>Sometimes it takes two for loops</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">favorite_languages ​​= &#123;</span><br><span class="line"><span class="string">&#x27;jen&#x27;</span>: [<span class="string">&#x27;python&#x27;</span>,<span class="string">&#x27;ruby&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;sarah&#x27;</span>: [<span class="string">&#x27;c&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;edward&#x27;</span>: [<span class="string">&#x27;ruby&#x27;</span>,<span class="string">&#x27;go&#x27;</span>],</span><br><span class="line"><span class="string">&#x27;phil&#x27;</span>: [<span class="string">&#x27;python&#x27;</span>,<span class="string">&#x27;haskell&#x27;</span>],&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> name, languages ​​<span class="keyword">in</span> favorite_languages.items():</span><br><span class="line">print(<span class="string">&quot;\n&quot;</span> + name.title() + <span class="string">&quot;&#x27;s favorite languages ​​are:&quot;</span>)</span><br><span class="line">To</span><br><span class="line"><span class="keyword">for</span> language <span class="keyword">in</span> languages:</span><br><span class="line">print(<span class="string">&quot;\t&quot;</span> + language.title())</span><br></pre></td></tr></table></figure>
+
+<p><strong>Dictionary stored in dictionary</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">users = &#123;</span><br><span class="line"><span class="string">&#x27;aeinstein&#x27;</span>: &#123;</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;albert&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;einstein&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;location&#x27;</span>:<span class="string">&#x27;princeton&#x27;</span>, &#125;,</span><br><span class="line"><span class="string">&#x27;mcurie&#x27;</span>: &#123;</span><br><span class="line"><span class="string">&#x27;first&#x27;</span>:<span class="string">&#x27;marie&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;last&#x27;</span>:<span class="string">&#x27;curie&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;location&#x27;</span>:<span class="string">&#x27;paris&#x27;</span>, &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> username, user_info <span class="keyword">in</span> users.items():</span><br><span class="line">print(<span class="string">&quot;\nUsername: &quot;</span>+ username)</span><br><span class="line">full_name = user_info[<span class="string">&#x27;first&#x27;</span>] + <span class="string">&quot;&quot;</span> + user_info[<span class="string">&#x27;last&#x27;</span>]</span><br><span class="line">location = user_info[<span class="string">&#x27;location&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&quot;\tFull name: &quot;</span>+ full_name.title())</span><br><span class="line">print(<span class="string">&quot;\tLocation: &quot;</span>+ location.title())</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
+  id="post-py3-if"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2017/10/09/py3-if/"
+    >IF Conditional Statement</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2017/10/09/py3-if/" class="article-date">
+  <time datetime="2017-10-09T15:30:55.000Z" itemprop="datePublished">2017-10-09</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </div>
+ 
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cars = [<span class="string">&#x27;audi&#x27;</span>,<span class="string">&#x27;bmw&#x27;</span>,<span class="string">&#x27;subaru&#x27;</span>,<span class="string">&#x27;toyota&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> car <span class="keyword">in</span> cars:</span><br><span class="line"><span class="keyword">if</span> car ==<span class="string">&#x27;bmw&#x27;</span>:</span><br><span class="line">print(car.upper())</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(car.title())</span><br></pre></td></tr></table></figure>
+<p><strong>Note the : after if and else</strong><br>When checking for equality in Python, <strong>distinguish between uppercase and lowercase</strong>. If the case is not important and you only want to check the value of the variable, you can convert the value of the variable to lowercase</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">car =<span class="string">&#x27;Audi&#x27;</span></span><br><span class="line">car.lower() ==<span class="string">&#x27;audi&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>Multiple conditions</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(age_0 &gt;= <span class="number">21</span>) <span class="keyword">or</span> (age_1 &gt;= <span class="number">21</span>)</span><br><span class="line">(age_0 &gt;= <span class="number">21</span>) <span class="keyword">and</span> (age_1 &gt;= <span class="number">21</span>) <span class="comment">#The brackets are to enhance readability</span></span><br></pre></td></tr></table></figure>
+<p>List</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">requested_toppings = [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;onions&#x27;</span>,<span class="string">&#x27;pineapple&#x27;</span>]</span><br><span class="line"><span class="string">&#x27;mushrooms&#x27;</span> (<span class="keyword">not</span>) <span class="keyword">in</span> requested_toppings <span class="comment">#Check if the value is in the list, you can add not</span></span><br><span class="line"><span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>if-elif-else structure</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">12</span></span><br><span class="line"><span class="keyword">if</span> age &lt;<span class="number">4</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $0.&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">18</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $5.&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Your admission cost is $10.&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">age = <span class="number">12</span></span><br><span class="line"><span class="keyword">if</span> age &lt;<span class="number">4</span>: price = <span class="number">0</span></span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">18</span>: price = <span class="number">5</span></span><br><span class="line"><span class="keyword">elif</span> age &lt;<span class="number">65</span>: price = <span class="number">10</span></span><br><span class="line"><span class="keyword">else</span>: price = <span class="number">5</span> <span class="comment">#Multiple elifs can be used</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Processing-the-list"><a href="#Processing-the-list" class="headerlink" title="Processing the list"></a>Processing the list</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">requested_toppings = [<span class="string">&#x27;mushrooms&#x27;</span>,<span class="string">&#x27;green peppers&#x27;</span>,<span class="string">&#x27;extra cheese&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> requested_topping <span class="keyword">in</span> requested_toppings:</span><br><span class="line"><span class="keyword">if</span> requested_topping ==<span class="string">&#x27;green peppers&#x27;</span>:</span><br><span class="line">print(<span class="string">&quot;Sorry, we are out of green peppers right now.&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">print(<span class="string">&quot;Adding &quot;</span>+ requested_topping + <span class="string">&quot;.&quot;</span>)</span><br><span class="line">print(<span class="string">&quot;\nFinished making your pizza!&quot;</span>)</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+</article>
+
+    
+    <article
   id="post-py2-lists"
   class="article article-type-post"
   itemscope

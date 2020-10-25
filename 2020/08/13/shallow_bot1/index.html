@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    API |  
+    Think about Bot 1 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-py12-API"
+  id="post-shallow_bot1"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,18 +55,18 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  API
+  Think about Bot 1
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2017/10/13/py12-API/" class="article-date">
-  <time datetime="2017-10-13T15:50:55.000Z" itemprop="datePublished">2017-10-13</time>
+      <a href="/2020/08/13/shallow_bot1/" class="article-date">
+  <time datetime="2020-08-13T15:50:55.000Z" itemprop="datePublished">2020-08-13</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/python/">python</a>
+    <a class="article-category-link" href="/categories/shallow-understanding/">shallow understanding</a>
   </div>
  
     </div>
@@ -79,12 +79,36 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="1-Use-WebAPI"><a href="#1-Use-WebAPI" class="headerlink" title="1. Use WebAPI"></a>1. Use WebAPI</h2><h4 id="Processing-API-response"><a href="#Processing-API-response" class="headerlink" title="Processing API response"></a>Processing API response</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="comment"># Execute API call and store response</span></span><br><span class="line">url =<span class="string">&#x27;https://api.github.com/search/repositories?q=language:python&amp;sort=stars&#x27;</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line">print(<span class="string">&quot;Status code:&quot;</span>, r.status_code)</span><br><span class="line"><span class="comment"># Store the API response in a variable</span></span><br><span class="line">response_dict = r.json()</span><br><span class="line"><span class="comment"># process result </span></span><br><span class="line">print(response_dict.keys())</span><br></pre></td></tr></table></figure>
-<p>The attribute named status_code, which lets us know whether the request was successful (status code 200 means the request was successful)<br>This API returns information in JSON format, so we use the method json() to convert this information into a Python dictionary. We store the converted dictionary in response_dict.</p>
-<h4 id="Print"><a href="#Print" class="headerlink" title="Print"></a>Print</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">repo_dicts = response_dict[<span class="string">&#x27;items&#x27;</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;Name:&#x27;</span>, repo_dict[<span class="string">&#x27;name&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Owner:&#x27;</span>, repo_dict[<span class="string">&#x27;owner&#x27;</span>][<span class="string">&#x27;login&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Stars:&#x27;</span>, repo_dict[<span class="string">&#x27;stargazers_count&#x27;</span>])</span><br><span class="line">print(<span class="string">&#x27;Repository:&#x27;</span>, repo_dict[<span class="string">&#x27;html_url&#x27;</span>])</span><br></pre></td></tr></table></figure>
-
-<h4 id="Rate"><a href="#Rate" class="headerlink" title="Rate"></a>Rate</h4><p>Most APIs have rate limits, that is, there is a limit on the number of requests you can execute within a certain period of time.<br><a target="_blank" rel="noopener" href="https://api.github.com/rate_limit">https://api.github.com/rate_limit</a></p>
-<h2 id="2-Use-Pygal-to-visualize-the-warehouse"><a href="#2-Use-Pygal-to-visualize-the-warehouse" class="headerlink" title="2. Use Pygal to visualize the warehouse"></a>2. Use Pygal to visualize the warehouse</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pygal</span><br><span class="line"><span class="keyword">from</span> pygal.style <span class="keyword">import</span> LightColorizedStyle <span class="keyword">as</span> LCS, LightenStyle <span class="keyword">as</span> LS</span><br><span class="line"></span><br><span class="line">my_style = LS(<span class="string">&#x27;#333366&#x27;</span>, base_style=LCS)</span><br><span class="line">chart = pygal.Bar(style=my_style, x_label_rotation=<span class="number">45</span>, show_legend=<span class="literal">False</span>)</span><br><span class="line">chart.title =<span class="string">&#x27;Most-Starred Python Projects on GitHub&#x27;</span></span><br><span class="line">chart.x_labels = names</span><br></pre></td></tr></table></figure> 
+  <p><em>Thinking during the internship in HCI group</em></p>
+<p>Chatbot is a word or an application that has been very popular recently. Not only are the major news media hyping up the concept of bots, but major giants have also invested huge resources in research and development.  I have to say that an embarrassing fact is that it is really difficult to find a really useful bot on the market. According to the field involved, bots are divided into open-domain and task-oriented bots. The open domain has a lot to do, and it’s more like a platform that can do anything. No matter what kind of needs you raise, it can solve it. It means true AI, while task-oriented bots focus on doing a good job. Things, booking air tickets, order meals, get passports, etc.</p>
+<p>When it comes to open-domain bots, the ones that everyone comes into contact with the most are entertainment bots that have very nonsensical answers. The bot companies that use deep learning to solve bot technology are all of this type. They can’t solve any practical problems. They can just talk to everyone. And many times the answer is that they are not right, which is very ridiculous.</p>
+<p>Let’s talk about task-oriented bots. The most popular one on the market is customer service robots, whether it’s a bank or an e-commerce company. If you don’t want to answer the user’s questions repeatedly, just use a customer service bot to respond and develop a specific task. The bot requires a lot of work and a lot of maintenance in the later period. Because too many hand crafted features are used, the horizontal scalability of the entire bot framework is relatively poor. </p>
+<h2 id="Problem-Description"><a href="#Problem-Description" class="headerlink" title="Problem Description"></a>Problem Description</h2><p>Bot is a comprehensive problem involving the following three main issues:</p>
+<h3 id="1-Response-generation-selection"><a href="#1-Response-generation-selection" class="headerlink" title="1. Response generation (selection)"></a>1. Response generation (selection)</h3><p>The dialog generation is the last step, the output part. In a brief summary, there are four solutions:</p>
+<p>Solution 1 generates dialogue directly based on context. There are a lot of recent papers in this regard, especially after the seq2seq+attention framework has swept many tasks of NLP, the benchmark generated by dialogue has been refreshed by various models again and again. The problem of dialogue generation is defined as a generative model based on a certain condition. Typically, predict words based on context. When it comes to sentence generation, the evaluation problem will be a more difficult problem.</p>
+<p>Solution 2 Of course, some papers do not define dialogue generation as a language model problem, but a next utterance selection problem, a multiple choice problem, given a context, given a utterance candidate list, select one from the list As a response, of course, this type of problem is much less difficult and very easy to evaluate, but it takes more effort to prepare the data set, and it is not easy to learn from in practical applications.</p>
+<p>Solution 3 rule-based or template-based, the final form of response is actually filled with a template, most of the things are given, only some specific values ​​need to be filled. This type of solution is very suitable for task-oriented bots, but too many manual features and templates make it difficult to port to other tasks.</p>
+<p>Solution 4 query-based or example-based, the response comes from a database called a knowledge base, which contains a large number of rich examples, according to the user’s query, find the closest example, and return the corresponding response as Output. This type of solution is very suitable for entertainment and funny bots. The core technology is to find more data to enrich and clean the knowledge base. But after all, respnose is taken from others, which may be funny, but most of them will be wrong.</p>
+<h3 id="2-dialog-state-tracking-DST"><a href="#2-dialog-state-tracking-DST" class="headerlink" title="2. dialog state tracking (DST)"></a>2. dialog state tracking (DST)</h3><p>Some papers call DST the belief trackers. This component is actually the core of the bot. Its function is to understand or capture user intention or goal. Only when you really know what the user needs can you make the correct action or response. For this part, there will be a Dialog State Tracking Challenge competition. Generally speaking, a range of state is given, and the context is used to predict which state the user belongs to, what kind of needs they have, and whether they need to query the weather or train tickets.</p>
+<h3 id="3-User-modeling"><a href="#3-User-modeling" class="headerlink" title="3. User modeling"></a>3. User modeling</h3><p>The bot is oriented to specific businesses and deals with real users. If it is just a simple FAQ bot, it may not be necessary to answer a few common questions, but if it is other more complex and detailed businesses, it needs to be provided to users. Modeling, the same problem, the response that the bot gives to each person must be different, the reason is very simple. User modeling needs to involve not only simple basic user information and some explicit feedback information of the user, but more importantly the history conversations of the user, these implicit feedback information. It’s like before the recommendation system went viral, everyone was selling things fairly, but some smart people started to analyze user behavior, not only those likes, but also the “clues” left by users inadvertently. In this way, we know what users are potentially interested in, which is what the recommendation system is doing later. Modeling the user is to make a personalized bot, and each response generated has the distinctive characteristics of the user.</p>
+<h2 id="Corpus"><a href="#Corpus" class="headerlink" title="Corpus"></a>Corpus</h2><p>Large-scale corpora are used to train open-domain bot dialogue generation models, and data sources are generally from social networking sites. For task-oriented bots, the size of customer data is generally very small. This is one of the main reasons why it is difficult to directly apply data driven solutions to task-oriented bots.</p>
+<p>The survey of bot training corpus is given in [1].</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yfyvum5j30l208hgmg.jpg"></p>
+<p>The picture comes from the article [13]. There are indeed many English corpora. The corpus of Sina Weibo was released by Huawei’s Noah’s Ark Lab [12]. If bot data is generated from twitter or Weibo, the effect of “conversational in nature” is not as good as the data generated from chat rooms such as ubuntu chat logs, which is more suitable for training response generation models, because it is more natural and pollution-free. The article [5] also uses a large Chinese corpus, with data from Baidu Tieba.</p>
+<h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><p>There are too many papers studying bots. This is a very active research field, and there are many subdivisions. Next, we will introduce some models according to the research questions targeted.</p>
+<h3 id="1-seq2seq-generative-model"><a href="#1-seq2seq-generative-model" class="headerlink" title="1. seq2seq generative model"></a>1. seq2seq generative model</h3><p>The most popular solution now is seq2seq+attention, the encoder feeds the user query feed in, outputs a vector representation to represent the entire query, and then serves as the condition of the decoder, and the decoder is essentially a language model that generates the response step by step, [2 ] Adopting this kind of scheme, Google used a large number of parameters to train such a model and got a good bot.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0ygs7tbtj30gt04eaa0.jpg"></p>
+<p>There is a problem with typical seq2seq, that is, it is easy to generate some “huh” responses, that is, some very safe, grammatical but meaningless responses, such as “I don’t know!”. The reason is that traditional seq2seq uses MLE (Maximum Likelihood Estimate) as the objective function in the decoding process, that is, to generate the most grammatical words, not the most useful words. These safe sentences appear in large numbers in the training corpus. After the model learns, It is inevitable that such a response is always generated, and the article [3] draws on some experience in speech recognition, and uses MMI (Maximum Mutual Information) as the objective function when decoding, which improves the diversity of the response.</p>
+<p>The article [4] believes that the fundamental reason for the low quality of human speech generated by language models like RNNLM is that the random feature or noise hidden in utterance is not handled properly, thus generating next token (short term goal) and future tokens (long term goal) have a mediocre effect.</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk0yhyje8pj30lq0bnwfn.jpg"></p>
+<p>When generating each utterance, four parts are needed, encoder RNN, context RNN, latent variable, decoder RNN, which are input and output in sequence. The latent variable here is a bit similar to the LSI in the IR. Latent shows that we can’t tell what they are, but it may represent a topic or sentiment, a representation of dimensionality reduction.</p>
+<p>The article [5] proposed a method called content introducing to generate short text response.</p>
+<p>Step 1 After a given query, predict a keyword as the topic of the response. This topic part of speech is a noun. The keyword here cannot capture complex semantics and grammar, but only predicts a PMI (Pointwise Mutual) based on each word in the query. Information) The highest noun is used as the keyword.</p>
+<p>The model of step 2 [5] is called Sequence To Backward and Forward Sequences. First, a backward step is performed. Given a query, express it with an encoder to get a context. In the decoder part, first give the keyword as the first word, and then perform decoding. The generated part is equivalent to the part in front of the keyword; the next step is forward step, which is also a typical seq2seq. The query is expressed as a context with an encoder, and then given the words generated by the backward and the keyword as the first half of the decoder, continue decoding Generate the second half. The entire process is briefly described as follows:</p>
+<p>step 1 query + keyword =&gt; backward sequence</p>
+<p>step 2 query + keyword + backward sequence(reverse) =&gt; forward sequence</p>
+<p>step 3 response = backward (reverse) sequence + keyword + forward sequence</p>
+ 
       <!-- reward -->
       
     </div>
@@ -130,30 +154,32 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2017/10/13/py12-API/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2020/08/13/shallow_bot1/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bot/" rel="tag">bot</a></li></ul>
+
     </footer>
   </div>
 
    
   <nav class="article-nav">
     
-      <a href="/2020/08/13/shallow_bot1/" class="article-nav-link">
+      <a href="/2020/08/20/shallow_bot2/" class="article-nav-link">
         <strong class="article-nav-caption">last article</strong>
         <div class="article-nav-title">
           
-            Think about Bot 1
+            Think about Bot 2
           
         </div>
       </a>
     
     
-      <a href="/2017/10/13/py11-download/" class="article-nav-link">
+      <a href="/2017/10/13/py12-API/" class="article-nav-link">
         <strong class="article-nav-caption">next article</strong>
-        <div class="article-nav-title">Download Data</div>
+        <div class="article-nav-title">API</div>
       </a>
     
   </nav>
